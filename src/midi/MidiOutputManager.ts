@@ -39,11 +39,24 @@ export class MidiOutputManager {
   private preferredId: string | null | undefined
   private generation = 0
   private displayTimer: ReturnType<typeof setTimeout> | undefined
+  private demoActive = false
+  private demoInterruptedListeners = new Set<() => void>()
+  private activeNote = TEST_NOTE
+  private offDeadlines = new WeakMap<MIDIOutput, number>()
 
   getSnapshot = () => this.snapshot
   subscribe = (listener: () => void) => {
     this.listeners.add(listener)
     return () => { this.listeners.delete(listener) }
+  }
+  subscribeDemoInterrupted = (listener: () => void) => {
+    this.demoInterruptedListeners.add(listener)
+    return () => { this.demoInterruptedListeners.delete(listener) }
+  }
+  private interruptDemo() {
+    if (!this.demoActive) return
+    this.demoActive = false
+    this.demoInterruptedListeners.forEach((listener) => listener())
   }
   private publish(patch: Partial<MidiOutputSnapshot>) {
     this.snapshot = { ...this.snapshot, ...patch }
@@ -92,6 +105,7 @@ export class MidiOutputManager {
         return
       }
       this.publish({ status: 'connected', message: `${output.name || 'MIDI出力'} · ${output.manufacturer || 'メーカー不明'}` })
+      this.waitForPendingOff(output)
     }).catch(() => {
       if (generation !== this.generation) return
       this.publish({ status: 'error', message: 'MIDI出力機器を開けませんでした。「出力を再接続」で再試行してください。' })
@@ -111,10 +125,12 @@ export class MidiOutputManager {
     const output = this.readyOutput()
     if (!output || this.snapshot.playing) return
     const now = performance.now()
+    this.activeNote = TEST_NOTE
     try {
       output.send(NOTE_ON)
       // Schedule at the MIDI port, not a JS timer: background timer throttling must not hold the note.
       output.send(NOTE_OFF, now + TEST_DURATION_MS)
+      this.offDeadlines.set(output, now + TEST_DURATION_MS)
       this.publish({ playing: true, latestMessage: { type: 'noteon', data: [...NOTE_ON], timestamp: now } })
       this.displayTimer = setTimeout(() => {
         this.displayTimer = undefined
@@ -127,6 +143,44 @@ export class MidiOutputManager {
     }
   }
 
+  beginDemo = () => {
+    if (!this.readyOutput() || this.snapshot.playing) return false
+    this.demoActive = true
+    this.publish({ playing: true })
+    return true
+  }
+  playDemoNote = (midiNote: number, onTime: number, offTime: number) => {
+    const output = this.readyOutput()
+    const now = performance.now()
+    if (!this.demoActive || !output || !Number.isInteger(midiNote) || midiNote < 0 || midiNote > 127
+      || !Number.isFinite(onTime) || !Number.isFinite(offTime) || onTime > now || offTime <= now) return false
+    this.cancelDisplayTimer()
+    this.activeNote = midiNote
+    const noteOn = [0x90 | channelByte, midiNote, TEST_VELOCITY]
+    const noteOff = [0x80 | channelByte, midiNote, 0]
+    try {
+      // onTime is now/past: only Note Off is ever placed in the future MIDI queue.
+      output.send(noteOn, onTime)
+      output.send(noteOff, offTime)
+      this.offDeadlines.set(output, offTime)
+      this.publish({ latestMessage: { type: 'noteon', data: noteOn, timestamp: onTime } })
+      this.displayTimer = setTimeout(() => {
+        this.displayTimer = undefined
+        this.publish({ latestMessage: { type: 'noteoff', data: noteOff, timestamp: offTime } })
+      }, Math.max(0, offTime - performance.now()))
+      return true
+    } catch {
+      this.stopAllNotes()
+      this.publish({ status: 'error', message: 'MIDI出力を送信できませんでした。接続を確認し、「出力を再接続」で再試行してください。' })
+      return false
+    }
+  }
+  finishDemo = () => {
+    this.demoActive = false
+    this.cancelDisplayTimer()
+    this.publish({ playing: false, latestMessage: { type: 'noteoff', data: [0x80 | channelByte, this.activeNote, 0], timestamp: performance.now() } })
+  }
+
   /** Each stop attempt is independent: CC123 is still attempted if clear or Note Off fails. */
   private sendStop(output: MIDIOutput) {
     let succeeded = true
@@ -134,26 +188,42 @@ export class MidiOutputManager {
     // clear() is in the Web MIDI spec but is not implemented in every browser/type library.
     const clearable = output as MIDIOutput & { clear?: () => void }
     if (typeof clearable.clear === 'function') {
-      try { clearable.clear(); cleared = true } catch { succeeded = false }
+      try { clearable.clear(); cleared = true; this.offDeadlines.delete(output) } catch { succeeded = false }
     }
-    for (const action of [() => output.send(NOTE_OFF), () => output.send(ALL_NOTES_OFF)]) {
+    for (const action of [() => output.send([0x80 | channelByte, this.activeNote, 0]), () => output.send(ALL_NOTES_OFF)]) {
       try { action() } catch { succeeded = false }
     }
     return { succeeded, cleared }
   }
 
   stopAllNotes = () => {
+    this.interruptDemo()
     // Keep emergency stop available after a send failure, as long as the port is still present.
     const output = this.output
-    if (!output || output.state !== 'connected') { this.readyOutput(); return }
-    const { succeeded, cleared } = this.sendStop(output)
-    // Without clear(), the queued Note Off still exists. Wait out its original 500ms
-    // before another C4 can start, so that old Note Off cannot cut the next test short.
-    if (cleared) this.cancelDisplayTimer()
-    this.publish({ playing: cleared ? false : this.snapshot.playing, ...(succeeded
+    if (!output || output.state !== 'connected') {
+      this.cancelDisplayTimer()
+      this.publish({ playing: false })
+      this.readyOutput()
+      return
+    }
+    const { succeeded } = this.sendStop(output)
+    // Without clear(), wait until the queued Note Off expires before another note/demo
+    // can start, so that an old Note Off cannot cut the next playback short.
+    this.cancelDisplayTimer()
+    this.waitForPendingOff(output)
+    this.publish({ ...(succeeded
       ? { latestMessage: { type: 'allnotesoff' as const, data: [...ALL_NOTES_OFF], timestamp: performance.now() }, message: 'Note OffとAll Notes Offを送信しました。' }
       : { status: 'error' as const, message: '停止メッセージを送信できませんでした。接続とPX-100の発音状態を確認してください。' }),
     })
+  }
+
+  private waitForPendingOff(output: MIDIOutput) {
+    const remaining = Math.max(0, (this.offDeadlines.get(output) ?? 0) - performance.now())
+    this.publish({ playing: remaining > 0 })
+    if (remaining > 0) this.displayTimer = setTimeout(() => {
+      this.displayTimer = undefined
+      this.publish({ playing: false })
+    }, remaining)
   }
 
   private cancelDisplayTimer() {
@@ -161,6 +231,7 @@ export class MidiOutputManager {
     this.displayTimer = undefined
   }
   private releaseOutput() {
+    this.interruptDemo()
     ++this.generation
     this.cancelDisplayTimer()
     const output = this.output

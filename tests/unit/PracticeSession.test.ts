@@ -3,7 +3,7 @@ import type { MidiNoteEvent } from '../../src/midi/midiTypes'
 import { PracticeSession } from '../../src/practice/PracticeSession'
 
 const melody = [60, 60, 67, 67, 69, 69, 67, 65, 65, 64, 64, 62, 62, 60]
-const scoreNotes = melody.map((midiNote) => ({ midiNote }))
+const scoreNotes = melody.map((midiNote) => ({ midiNote, durationBeats: 1 }))
 const event = (midiNote: number, type: 'noteon' | 'noteoff' = 'noteon', velocity = 72, channel = 1): MidiNoteEvent => ({ type, midiNote, velocity, channel, timestamp: 123.5 })
 function strike(session: PracticeSession, note: number) {
   session.handleMidiEvent(event(note))

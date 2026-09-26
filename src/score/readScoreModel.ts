@@ -15,7 +15,10 @@ export function readScoreModel(source: ScoreSource, cursor: Cursor, octaveXmlDif
       const pitch = current[0].Pitch
       const midiNote = 12 * (pitch.Octave + octaveXmlDifference + 1) + pitch.FundamentalNote + pitch.AccidentalHalfTones
       if (!Number.isInteger(midiNote) || midiNote < 0 || midiNote > 127) throw new Error('Invalid MIDI pitch in score')
-      notes.push({ midiNote })
+      // OSMD Length is a fraction of a whole note; our beat unit is a quarter note.
+      const durationBeats = current[0].Length.RealValue * 4
+      if (!Number.isFinite(durationBeats) || durationBeats <= 0) throw new Error('Invalid note duration in score')
+      notes.push({ midiNote, durationBeats })
       cursor.next()
     }
     if (notes.length === 0) throw new Error('The score has no notes')

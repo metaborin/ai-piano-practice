@@ -1,6 +1,7 @@
 import type { MidiConnectionStatus } from '../midi/midiTypes'
 import type { MidiOutputSnapshot } from '../midi/MidiOutputManager'
 import { OUTPUT_CHANNEL } from '../midi/MidiOutputManager'
+import { midiNoteName } from '../midi/parseMidiMessage'
 
 type Props = {
   output: MidiOutputSnapshot
@@ -36,7 +37,7 @@ export function MidiOutputPanel({ output, inputStatus, onSelect, onPlay, onStop,
         <p data-testid="latest-output">{latest
           ? latest.type === 'allnotesoff'
             ? `All Notes Off / CC 123 / Value 0 / Channel ${OUTPUT_CHANNEL}`
-            : `C4 / ${latest.type === 'noteon' ? 'Note On' : 'Note Off'} / MIDI Note 60 / Velocity ${latest.data[2]} / Channel ${OUTPUT_CHANNEL}`
+            : `${midiNoteName(latest.data[1])} / ${latest.type === 'noteon' ? 'Note On' : 'Note Off'} / MIDI Note ${latest.data[1]} / Velocity ${latest.data[2]} / Channel ${OUTPUT_CHANNEL}`
           : 'まだ送信していません。'}</p>
       </div>
       <p className="debug-note">PX-100本体から約0.5秒のドを鳴らす接続確認です。表示は送信要求・予約時刻に基づきます。実際の音は耳で確認してください。</p>

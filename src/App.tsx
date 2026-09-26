@@ -1,3 +1,6 @@
+import { useCallback } from 'react'
+import { useDemoPlayer } from './audio/useDemoPlayer'
+import { DemoControls } from './components/DemoControls'
 import { DeveloperControls } from './components/DeveloperControls'
 import { MidiDebugPanel } from './components/MidiDebugPanel'
 import { MidiStatus } from './components/MidiStatus'
@@ -7,18 +10,29 @@ import { ScoreView } from './components/ScoreView'
 import { useMidi } from './midi/useMidi'
 import { usePracticeSession } from './practice/usePracticeSession'
 import { twinkleScore } from './score/ScoreModel'
+import type { ScoreModel } from './score/ScoreModel'
 import './App.css'
 
 export default function App() {
-  const { midi, connect, selectInput, events, output, selectOutput, playTestNote, stopAllNotes, retryOutput } = useMidi()
-  const { practice, start, restart, moveCursor, onScoreReady } = usePracticeSession(events)
-  const { currentNoteIndex: cursorIndex, totalNotes: noteCount } = practice
+  const { midi, connect, selectInput, events, output, outputManager, selectOutput, playTestNote, stopAllNotes, retryOutput } = useMidi()
+  const { session, practice, start, restart, moveCursor } = usePracticeSession(events)
+  const { demo, player } = useDemoPlayer(outputManager, session)
+  const onScoreReady = useCallback((model: ScoreModel | null) => {
+    player.loadScore(model)
+    session.loadScore(model)
+  }, [player, session])
+  const showDemoCursor = demo.status !== 'idle' && practice.status !== 'practicing' && practice.status !== 'completed'
+  const cursorIndex = showDemoCursor ? demo.currentNoteIndex : practice.currentNoteIndex
+  const noteCount = practice.totalNotes
+  const practiceBlocked = demo.status === 'playing' || (showDemoCursor && output.playing)
+  const startPractice = () => { if (!practiceBlocked) { player.resetDisplay(); start() } }
+  const restartPractice = () => { if (!practiceBlocked) { player.resetDisplay(); restart() } }
 
   return (
     <main className="app">
       <header className="app-header">
         <div>
-          <p className="eyebrow">ピアノ練習 · Phase 2C-A</p>
+          <p className="eyebrow">ピアノ練習 · Phase 2C-B</p>
           <h1>{twinkleScore.title}</h1>
           <p className="subtitle">{twinkleScore.partLabel} · はじめの4小節</p>
         </div>
@@ -31,7 +45,8 @@ export default function App() {
         </div>
         <ScoreView score={twinkleScore} cursorIndex={cursorIndex} onReady={onScoreReady} />
       </section>
-      <PracticeControls practice={practice} midiConnected={midi.status === 'connected'} onStart={start} onRestart={restart} />
+      <DemoControls demo={demo} outputReady={output.status === 'connected'} outputBusy={output.playing} onPlay={player.start} onStop={player.stop} />
+      <PracticeControls practice={practice} midiConnected={midi.status === 'connected'} blocked={practiceBlocked} onStart={startPractice} onRestart={restartPractice} />
       <section className="midi-connection" aria-label="MIDI接続設定">
         <div className="connection-copy">
           <h2>MIDI入力</h2>
@@ -49,10 +64,10 @@ export default function App() {
           {midi.requesting ? '接続しています…' : midi.status === 'connected' ? 'MIDI接続済み' : 'MIDI接続'}
         </button>
       </section>
-      <DeveloperControls practice={practice} onPrevious={() => moveCursor(-1)} onNext={() => moveCursor(1)} />
+      <DeveloperControls practice={practice} blocked={showDemoCursor} onPrevious={() => moveCursor(-1)} onNext={() => moveCursor(1)} />
       <MidiDebugPanel latest={midi.latestEvent} lastNoteOn={midi.lastNoteOn} lastNoteOff={midi.lastNoteOff} />
       <MidiOutputPanel output={output} inputStatus={midi.status} onSelect={selectOutput} onPlay={playTestNote} onStop={stopAllNotes} onRetry={retryOutput} />
-      <footer>Phase 2C-A · 音順練習とMIDI出力の接続確認</footer>
+      <footer>Phase 2C-B · 手本を聴いて、順番に弾いてみよう</footer>
     </main>
   )
 }

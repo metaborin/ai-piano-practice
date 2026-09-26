@@ -12,7 +12,7 @@ export function useMidi() {
   }, [manager])
   return {
     midi, connect: manager.connect, selectInput: manager.selectInput, events: manager,
-    output, selectOutput: manager.output.selectOutput, playTestNote: manager.output.playTestNote,
+    output, outputManager: manager.output, selectOutput: manager.output.selectOutput, playTestNote: manager.output.playTestNote,
     stopAllNotes: manager.output.stopAllNotes, retryOutput: manager.output.retry,
   }
 }

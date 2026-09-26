@@ -15,6 +15,8 @@
 .score-view { padding: 0 16px 12px; overflow-x: auto; }
 .score-renderer { min-height: 260px; position: relative; isolation: isolate; }
 .practice-controls { padding: 20px 0 22px; text-align: center; }
+.demo-controls { margin-top: 22px; text-align: center; }
+.demo-message { min-height: 28px; margin-top: 12px; color: #466154; }
 .practice-feedback { min-height: 48px; margin-bottom: 12px; font-size: 22px; font-weight: 700; }
 .practice-feedback.correct, .practice-feedback.completed { color: #28694e; }
 .practice-feedback.incorrect { color: #816120; }

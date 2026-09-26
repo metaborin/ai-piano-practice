@@ -12,7 +12,7 @@ export function usePracticeSession(events: MidiEventSource) {
     return () => { unsubscribeNotes(); unsubscribeReset() }
   }, [events, session])
   return {
-    practice, start: session.start, restart: session.restart,
+    session, practice, start: session.start, restart: session.restart,
     moveCursor: session.moveCursor, onScoreReady: session.loadScore,
   }
 }

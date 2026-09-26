@@ -2,6 +2,8 @@
 
 実装日: 2026-09-26
 
+**受入結果（2026-09-26）: ユーザーからChromebook + U2MIDI Pro + PX-100で、C4 / MIDI 60 / Velocity 80 / Channel 1の実際の発音と、約500ms後のNote Offを確認したと報告がありました。Phase 2C-Aは完了です。** 以下は実装時の記録であり、当時の「未確認」欄はこの受入結果を参照してください。次の依頼範囲は [Phase 2C-Bの手本演奏](PHASE2CB.md) です。
+
 公開URL: **https://metaborin.github.io/ai-piano-practice/**
 
 Phase 2BはユーザーによるChromebook + CME U2MIDI Pro + CASIO Privia PX-100実機確認が完了しています。今回はMIDI出力のC4テストだけを追加しました。Phase 2C-Aの実装・自動検証と、PX-100本体の実際の発音確認は区別します。

@@ -1,11 +1,12 @@
-# AIピアノ練習アプリ — Phase 2C-A
+# AIピアノ練習アプリ — Phase 2C-B
 
 きらきら星の楽譜を見て、電子ピアノで正しい鍵盤を順番に弾く練習アプリです。React + TypeScript + Vite、OpenSheetMusicDisplay（OSMD）、Web MIDI API を使用しています。
 
 公開URL: **https://metaborin.github.io/ai-piano-practice/**
 
-**Phase 2A・Phase 2B はユーザーによる Chromebook + U2MIDI Pro + PX-100 実機確認が完了しています。今回追加したPhase 2C-AのC4出力は実機確認待ちです。**
+**Phase 2A・2B・2C-AはユーザーによるChromebook + U2MIDI Pro + PX-100実機確認が完了しています。今回追加したPhase 2C-Bの手本演奏・カーソル同期は実機確認待ちです。**
 
+- [Phase 2C-B の実装報告・手本演奏・13項目のチェックリスト](docs/PHASE2CB.md)
 - [Phase 2C-A の実装報告・MIDI出力テスト・10項目のチェックリスト](docs/PHASE2CA.md)
 - [Phase 2B の実装報告・実機確認・12項目のチェックリスト](docs/PHASE2B.md)
 - [GitHub Pages の公開設定・更新手順・ChromeのMIDI許可](docs/GITHUB_PAGES.md)
@@ -22,7 +23,20 @@
 
 練習開始前のMIDI入力はデバッグ表示のみ更新します。開発確認用の「前の音／次の音」は「開発者用」を開くと使えます。誤操作を避けるため、練習中・完了後は手動移動を無効にします。
 
-リズム・テンポ・音の長さ・和音・左手・両手・AI・点数・履歴保存・手本再生は今回の対象外です。
+練習時のリズム・テンポ・音の長さの評価、和音・左手・両手・AI・点数・履歴保存は今回の対象外です。
+
+## 手本を聴く（Phase 2C-B）
+
+1. MIDI出力の接続済み表示を確認して「手本を聴く」を押すと、現在のMusicXMLから読み込んだ14音をPX-100本体で再生します。カーソルも1音目から進みます。
+2. 固定100 BPM。四分音符600ms、二分音符1200msの間隔で、音価の90%の位置にNote Offを入れます。同音も独立して鳴らします。
+3. 「停止」で途中停止します。再度「手本を聴く」を押すと1音目から再生します。
+4. 最後のNote Offで「手本の再生が終わりました」と表示し、カーソルは最後に残します。「練習開始」で最初から弾けます。
+
+手本を押すと、それまでの練習をリセットして `demoPlaying` に切り替えます。手本中の鍵盤入力・MIDIループバックはデバッグ表示だけに反映し、正誤判定を行いません。音高・音価は `ScoreModel` が唯一の元データです。曲の音列を別途ハードコードしていません。
+
+予約を消せない環境での確実な停止を優先し、未来のNote Onをまとめてキューへ送りません。開始時刻から計算した絶対時刻で1音ずつNote Onを送り、Note OffはMIDIのtimestampで予約します。画面処理の大きな遅延や別タブへの移動では停止します。停止直後、残ったNote Offが過ぎるまで操作が一時的に無効になる場合があります。[スケジュール方法と実機確認](docs/PHASE2CB.md)
+
+再生速度・テンポ変更UI、部分再生、反復、メトロノームは追加していません。
 
 ## MIDI出力の接続確認（Phase 2C-A）
 
@@ -33,7 +47,7 @@
 3. 「すべての音を停止」はC4のNote OffとCC123 / All Notes Offを送ります。
 4. 「最後のMIDI出力」でNote On → Note Off、停止操作でAll Notes Offを確認します。これは送信要求の表示で、発音を検知した表示ではありません。
 
-テスト音は曲の自動演奏ではありません。出力はPracticeSessionやNoteMatcherへ入力せず、既存の鍵盤入力と練習は独立して動きます。[実機確認と注意点](docs/PHASE2CA.md#9-chromebook実機確認手順)を参照してください。
+このC4テストは下部の接続確認用として維持しています。手本再生中はC4テストを無効化し、「すべての音を停止」からも手本を停止できます。[C4テストの実機確認](docs/PHASE2CA.md#9-chromebook実機確認手順)を参照してください。
 
 ## 開発環境で起動
 
@@ -70,6 +84,9 @@ npm run test:pages
 
 ```text
 src/
+  audio/
+    DemoPlayer.ts          # ScoreModelの音価から手本イベント・再生位置・停止を管理
+    useDemoPlayer.ts       # 手本・練習モードの接続と非表示時の停止
   midi/
     MidiManager.ts          # 接続・全イベント通知・最新入力表示用データ
     MidiOutputManager.ts    # 共有MIDIAccessの出力選択・C4送信・停止
@@ -77,7 +94,7 @@ src/
     parseMidiMessage.ts     # Note On / Offの正規化・表示用音名
     useMidi.ts
   score/
-    ScoreModel.ts           # 楽譜ソース・カーソルと同順序のMIDI音列
+    ScoreModel.ts           # 楽譜ソース・カーソルと同順序のMIDI音列とdurationBeats
     readScoreModel.ts       # OSMDの各カーソル位置から音列を取得
   practice/
     NoteMatcher.ts         # MIDI Note Numberの一致比較だけ
@@ -90,6 +107,7 @@ src/
     MidiStatus.tsx
     MidiDebugPanel.tsx
     MidiOutputPanel.tsx
+    DemoControls.tsx
   scores/twinkle.musicxml
   App.tsx
   App.css
@@ -106,15 +124,15 @@ MIDI受信、楽譜データ、描画、判定、練習状態を分離してい�
 
 ## 検証・公開
 
-- 単体テスト: 53件。
-- ブラウザーテスト: 開発用16件、本番用17件（MIDI入出力は模擬）。
+- 単体テスト: 70件。
+- ブラウザーテスト: 開発用21件、本番用22件（MIDI入出力は模擬）。
 - lint、アプリとテストの型検査、buildを実行。
 - `main` にpushすると GitHub Actions が検査・ビルド・ブラウザーテスト後に `dist/` を公開します。
-- 今回の実機受入は [Phase 2C-Aチェックリスト](docs/PHASE2CA.md#10-phase-2c-a完了条件) を使います。
+- 今回の実機受入は [Phase 2C-Bチェックリスト](docs/PHASE2CB.md#13-phase-2c-b完了条件) を使います。
 
 ## npmパッケージ
 
-Phase 2B・2C-Aで新しいnpmパッケージは追加していません。`package-lock.json` を維持しています。
+Phase 2B・2C-A・2C-Bで新しいnpmパッケージは追加していません。`package-lock.json` を維持しています。
 
 | 用途 | パッケージ | バージョン |
 | --- | --- | --- |

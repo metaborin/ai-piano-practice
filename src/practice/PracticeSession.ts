@@ -8,7 +8,7 @@ export type PracticeSnapshot = {
   readonly totalNotes: number
   readonly expectedMidiNote: number | null
   readonly correctNoteCount: number
-  readonly status: 'idle' | 'practicing' | 'completed'
+  readonly status: 'idle' | 'practicing' | 'completed' | 'demoPlaying'
   readonly feedback: NoteMatch | null
 }
 
@@ -43,12 +43,19 @@ export class PracticeSession {
   loadScore = (score: ScoreModel | null) => { this.setNotes(score?.notes ?? []) }
 
   start = () => {
-    if (this.notes.length === 0) return
+    if (this.notes.length === 0 || this.snapshot.status === 'demoPlaying') return
     // Preserve held keys, including keys pressed before start or during a restart.
     this.publish({ currentNoteIndex: 0, expectedMidiNote: this.notes[0].midiNote, correctNoteCount: 0, status: 'practicing', feedback: null })
   }
 
   restart = () => { this.start() }
+
+  beginDemo = () => {
+    this.publish({ currentNoteIndex: 0, expectedMidiNote: this.notes[0]?.midiNote ?? null, correctNoteCount: 0, feedback: null, status: 'demoPlaying' })
+  }
+  endDemo = () => {
+    if (this.snapshot.status === 'demoPlaying') this.publish({ status: 'idle' })
+  }
 
   moveCursor = (direction: -1 | 1) => {
     if (this.snapshot.status !== 'idle' || this.notes.length === 0) return

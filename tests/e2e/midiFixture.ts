@@ -8,11 +8,13 @@ declare global {
       failOpen: boolean
       failOutputOpen: boolean
       failSend: boolean
+      loopback: boolean
       outputMessages: { id: string; data: number[]; timestamp: number; requestedAt: number }[]
       outputClears: string[]
       send: (data: number[], id?: string) => void
       setConnected: (id: string, connected: boolean) => void
       setOutputConnected: (id: string, connected: boolean) => void
+      disableOutputClear: () => void
     }
   }
 }
@@ -64,6 +66,7 @@ export async function mockMidi(page: Page, initiallyConnected = true) {
       send(data: number[], timestamp = 0) {
         if (this.state !== 'connected' || window.midiTest.failSend) throw new DOMException('Unavailable', 'InvalidStateError')
         window.midiTest.outputMessages.push({ id: this.id, data: [...data], timestamp, requestedAt: performance.now() })
+        if (window.midiTest.loopback) window.midiTest.send(data)
       }
       clear() { window.midiTest.outputClears.push(this.id) }
     }
@@ -83,7 +86,7 @@ export async function mockMidi(page: Page, initiallyConnected = true) {
     Object.defineProperty(access, 'outputs', { value: outputs })
     window.midiTest = {
       requests: 0, denied: false, failOpen: false,
-      failOutputOpen: false, failSend: false, outputMessages: [], outputClears: [],
+      failOutputOpen: false, failSend: false, loopback: false, outputMessages: [], outputClears: [],
       send(data, id = 'cme') {
         const event = new Event('midimessage')
         Object.defineProperty(event, 'data', { value: new Uint8Array(data) })
@@ -96,6 +99,9 @@ export async function mockMidi(page: Page, initiallyConnected = true) {
       setOutputConnected(id, connected) {
         outputs.get(id)!.state = connected ? 'connected' : 'disconnected'
         access.dispatchEvent(new Event('statechange'))
+      },
+      disableOutputClear() {
+        outputs.forEach((port) => Object.defineProperty(port, 'clear', { value: undefined }))
       },
     }
     Object.defineProperty(navigator, 'requestMIDIAccess', {
