@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Compatibility, ImportedSong } from '../songs/Song'
-import { COMPATIBILITY_VERSION } from '../songs/inspectMusicXml'
+import { COMPATIBILITY_VERSION, compatibilityFromModel } from '../songs/inspectMusicXml'
 import { readSongFile } from '../songs/readSongFile'
 import type { ReadSongFileResult } from '../songs/readSongFile'
-import type { ScoreSource } from '../score/ScoreModel'
+import type { ScoreModel, ScoreSource } from '../score/ScoreModel'
 import { ScoreView } from './ScoreView'
 
 type Draft = ReadSongFileResult & { requestId: number; score: ScoreSource }
@@ -35,17 +35,17 @@ export function SongImport({ disabled, onAdd }: Props) {
       const result = await readSongFile(file)
       if (requestId !== generation.current) return
       setTitle(result.title); setComposer(result.composer)
-      setDraft({ ...result, requestId, score: { id: 'import-preview', title: result.title, partLabel: '単旋律', musicXml: result.musicXml } })
-      if (result.reasons.length) setCompatibility({ status: 'unsupported', version: COMPATIBILITY_VERSION, reasons: result.reasons })
+      setDraft({ ...result, requestId, score: { id: 'import-preview', title: result.title, partLabel: '追加曲', musicXml: result.musicXml } })
+      if (!result.model) setCompatibility(result.compatibility)
     } catch (error) {
       if (requestId === generation.current) setError(error instanceof Error ? error.message : 'ファイルを読み込めませんでした。')
     } finally { if (requestId === generation.current) setReading(false) }
   }
-  const ready = useCallback((id: number) => {
-    if (id === generation.current) setCompatibility({ status: 'supported', version: COMPATIBILITY_VERSION, reasons: [] })
+  const ready = useCallback((id: number, model: ScoreModel) => {
+    if (id === generation.current) setCompatibility(compatibilityFromModel(model))
   }, [])
   const fail = useCallback((id: number, message: string) => {
-    if (id === generation.current) setCompatibility({ status: 'unsupported', version: COMPATIBILITY_VERSION, reasons: [message] })
+    if (id === generation.current) setCompatibility({ status: 'unsupported', version: COMPATIBILITY_VERSION, practiceCompatibility: 'unsupported', reasons: [message] })
   }, [])
   const save = async () => {
     if (!draft || !compatibility || !title.trim() || savingRef.current) return
@@ -79,6 +79,8 @@ export function SongImport({ disabled, onAdd }: Props) {
       <div role="status" className="compatibility-message">
         {!compatibility ? '楽譜と練習対象を確認中…' : compatibility.status === 'supported'
           ? 'この曲は現在の練習モードで使用できます。'
+          : compatibility.parseCompatibility === 'supported' && compatibility.practiceCompatibility === 'polyphonicPending'
+          ? 'この曲は解析・表示できます。練習・手本演奏は次Phase（2E-C2）で対応します。理由：' + compatibility.reasons.join('、')
           : '曲は保存できますが、現在の練習機能では未対応です。練習・手本演奏は利用できません。理由：' + compatibility.reasons.join('、')}
       </div>
       <div className="library-actions"><button type="button" onClick={cancel} disabled={saving}>キャンセル</button><button className="primary-button" type="submit" disabled={!compatibility || !title.trim() || saving}>{saving ? '保存中…' : '追加する'}</button></div>

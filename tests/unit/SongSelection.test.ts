@@ -3,6 +3,8 @@ import { SongSelection } from '../../src/score/SongSelection'
 import { BuiltInSongRepository } from '../../src/songs/BuiltInSongRepository'
 import { PracticeSession } from '../../src/practice/PracticeSession'
 import type { ScoreModel } from '../../src/score/ScoreModel'
+import { toPracticeScore } from '../../src/score/toPracticeScore'
+import { noteXml, parseFixture, parseXml, scoreXml } from './xmlFixture'
 
 const songs = await new BuiltInSongRepository().listSongs()
 
@@ -19,8 +21,9 @@ function setup() {
   const apply = vi.fn(practice.loadScore)
   const selection = new SongSelection(songs[0], { reset, apply, obtain: (song) => loads[songs.indexOf(song)].promise })
   const model = (id: number): ScoreModel => ({
+    ...parseXml(scoreXml(noteXml('G', 2))),
     id: songs[id].id, title: songs[id].title, partLabel: songs[id].partLabel,
-    musicXml: 'xml-' + id, notes: [{ midiNote: 67, durationBeats: 2 }],
+    musicXml: 'xml-' + id,
   })
   return { loads, practice, reset, apply, selection, model }
 }
@@ -40,7 +43,7 @@ it('last selection wins even when earlier acquisition, rendering and errors arri
   selection.ready(aId, model(0))
   selection.fail(bId, 'old rendering failure')
   expect(selection.getSnapshot()).toMatchObject({ song: songs[2], status: 'ready', source: { id: songs[2].id }, error: null })
-  expect(apply).toHaveBeenCalledExactlyOnceWith(model(2))
+  expect(apply).toHaveBeenCalledExactlyOnceWith(toPracticeScore(model(2)))
 })
 
 it('clears practice synchronously, ignores input during load, and enables only a matching rendered model', async () => {
@@ -86,4 +89,15 @@ it('cancellation invalidates delayed acquisition and OSMD completion', async () 
   selection.ready(id, model(0))
   expect(apply).not.toHaveBeenCalled()
   expect(selection.getSnapshot().source).toBeNull()
+})
+
+it('retains a complex rendered model while never handing it to the legacy session/player', async () => {
+  const { loads, selection, apply, practice } = setup()
+  const pending = selection.select(songs[0])
+  loads[0].resolve('xml-0'); await pending
+  const model = { ...parseFixture('c-grand-staff'), id: songs[0].id, musicXml: 'xml-0' }
+  selection.ready(selection.getSnapshot().requestId, model)
+  expect(selection.getSnapshot()).toMatchObject({ status: 'ready', model, canPractice: false })
+  expect(apply).not.toHaveBeenCalled()
+  expect(practice.getSnapshot().totalNotes).toBe(0)
 })

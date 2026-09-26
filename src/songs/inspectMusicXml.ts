@@ -1,61 +1,43 @@
 import type { Compatibility, Song } from './Song'
+import type { ScoreModel } from '../score/ScoreModel'
+import { child, descendants, readMusicXmlDocument, value } from '../score/musicXmlDocument'
+import { parseMusicXml } from '../score/parseMusicXml'
 
-export const COMPATIBILITY_VERSION = 1
-export const MAX_PRACTICE_NOTES = 1000
-export const MAX_PRACTICE_MEASURES = 500
-
-/** Basic validity and practice support are separate: unsupported scores remain intact. */
-export function inspectMusicXml(xml: string, fileName = '') {
-  const doc = new DOMParser().parseFromString(xml, 'application/xml')
-  if (doc.querySelector('parsererror')) throw new Error('MusicXMLの形式が正しくありません。XMLが壊れています。')
-  const root = doc.documentElement.localName
-  if (root !== 'score-partwise' && root !== 'score-timewise') throw new Error('MusicXMLではないXMLです。score-partwise または score-timewise が必要です。')
-  if (!doc.querySelector('part')) throw new Error('MusicXMLにpartがありません。')
-  if (!doc.querySelector(root === 'score-partwise' ? 'part > measure' : 'measure > part')) throw new Error('MusicXMLにmeasureがありません。')
-  const text = (selector: string) => doc.querySelector(selector)?.textContent?.trim() ?? ''
-  const title = text('work > work-title') || text('movement-title') || fileName.replace(/\.[^.]+$/, '') || '無題'
-  const composer = [...doc.querySelectorAll('identification > creator[type="composer"]')].map((node) => node.textContent?.trim()).filter(Boolean).join(' / ')
-  const reasons: string[] = []
-  const notes = [...doc.querySelectorAll('part note')]
-  const voices = new Set(notes.map((note) => note.querySelector('voice')?.textContent?.trim() || '1'))
-  if (root === 'score-timewise') reasons.push('score-timewise形式')
-  if (root === 'score-partwise' && doc.querySelectorAll('score-partwise > part').length !== 1) reasons.push('複数パート')
-  if (voices.size > 1) reasons.push('複数声部')
-  if ([...doc.querySelectorAll('staves, note > staff')].some((node) => Number(node.textContent) !== 1)) reasons.push('複数Staff')
-  const unsupported: [string, string][] = [
-    ['chord', '和音'], ['rest', '休符'], ['grace, cue', '装飾音・小音符'], ['tie, tied', 'タイ'],
-    ['repeat, ending, segno, coda, sound[da-capo], sound[dal-segno], sound[dacapo], sound[dalsegno], sound[tocoda], sound[fine]', '反復・演奏順の指定'],
-    ['backup, forward', '声部・時刻の移動'], ['transpose, octave-shift', '移調・オクターブ移動'],
-    ['unpitched', '打楽器音'], ['time-modification, tremolo', '連符・トレモロ'],
-    ['image, credit-image, part-link, link', '画像・外部参照'],
-  ]
-  for (const [selector, reason] of unsupported) if (doc.querySelector(selector)) reasons.push(reason)
-  const pitchedNoteCount = doc.querySelectorAll('part note > pitch').length
-  if (pitchedNoteCount === 0) reasons.push('練習対象の音がありません')
-  if (notes.length > MAX_PRACTICE_NOTES || doc.querySelectorAll('measure').length > MAX_PRACTICE_MEASURES) reasons.push('表示上限（1000音・500小節）を超える楽譜')
-  // External/internal entities and embedded external assets are never passed to OSMD.
-  if (/<!ENTITY\s/i.test(xml)) reasons.push('XMLエンティティ定義')
-  return { title, composer, reasons, pitchedNoteCount }
+export const COMPATIBILITY_VERSION = 2
+export function compatibilityFromModel(model: ScoreModel): Compatibility {
+  return { version: COMPATIBILITY_VERSION, status: model.practiceCompatibility === 'simpleMelody' ? 'supported' : 'unsupported',
+    parseCompatibility: 'supported', practiceCompatibility: model.practiceCompatibility, reasons: model.practiceReasons }
 }
 
-/** Recheck structure on every read. Versioned OSMD results are hints, never play authorization. */
-export function recheckCompatibility(song: Song): Song {
-  if (song.source !== 'imported' || song.musicXml.type !== 'text') return song
+/** Valid XML can be saved even when its timeline is outside the supported parser subset. */
+export function inspectMusicXml(xml: string, fileName = '') {
+  const doc = readMusicXmlDocument(xml)
+  const root = doc.documentElement
+  const work = child(root, 'work')
+  const title = (work ? value(work, 'work-title') : '') || value(root, 'movement-title') || fileName.replace(/\.[^.]+$/, '') || '無題'
+  const composer = descendants(doc, 'creator').filter((node) => node.getAttribute('type') === 'composer').map((node) => node.textContent?.trim()).filter(Boolean).join(' / ')
+  let model: ScoreModel | null = null
   let compatibility: Compatibility
   try {
-    const { reasons } = inspectMusicXml(song.musicXml.value, song.originalFileName)
-    compatibility = reasons.length > 0
-      ? { status: 'unsupported', version: COMPATIBILITY_VERSION, reasons }
-      : song.compatibility?.version === COMPATIBILITY_VERSION
-        ? song.compatibility
-        : { status: 'unknown', version: COMPATIBILITY_VERSION, reasons: [] }
+    model = parseMusicXml({ id: 'inspection', title, partLabel: '追加曲', musicXml: xml }, doc)
+    compatibility = compatibilityFromModel(model)
   } catch (error) {
-    compatibility = { status: 'unsupported', version: COMPATIBILITY_VERSION, reasons: [error instanceof Error ? error.message : 'MusicXMLを検証できませんでした。'] }
+    compatibility = { version: COMPATIBILITY_VERSION, status: 'unsupported', parseCompatibility: 'unsupported', practiceCompatibility: 'unsupported', reasons: [error instanceof Error ? error.message : 'MusicXMLを解析できませんでした。'] }
   }
-  return { ...song, compatibility }
+  return { title, composer, model, compatibility, reasons: model ? [] : compatibility.reasons, pitchedNoteCount: model?.notes.length ?? descendants(doc, 'pitch').length }
+}
+
+/** Never migrate or delete persisted records: reanalyse XML into current in-memory metadata. */
+export function recheckCompatibility(song: Song): Song {
+  if (song.source !== 'imported' || song.musicXml.type !== 'text') return song
+  try { return { ...song, compatibility: inspectMusicXml(song.musicXml.value, song.originalFileName).compatibility } }
+  catch (error) {
+    return { ...song, compatibility: { status: 'unsupported', version: COMPATIBILITY_VERSION, parseCompatibility: 'unsupported', practiceCompatibility: 'unsupported', reasons: [error instanceof Error ? error.message : 'MusicXMLを検証できませんでした。'] } }
+  }
 }
 
 export function compatibilityLabel(song: Song) {
+  if (song.compatibility?.parseCompatibility === 'supported' && song.compatibility.practiceCompatibility === 'polyphonicPending') return '解析可能・練習は次Phase（2E-C2対応予定）'
   if (song.compatibility?.status === 'unsupported') return '現在の練習機能では未対応'
   if (song.compatibility?.status === 'supported') return '練習可能（選択時にも再確認）'
   return '未確認（選択時に確認）'

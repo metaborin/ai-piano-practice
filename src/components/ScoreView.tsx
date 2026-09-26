@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react'
 import type { OpenSheetMusicDisplay } from 'opensheetmusicdisplay'
 import type { ScoreModel, ScoreSource } from '../score/ScoreModel'
 import { readScoreModel } from '../score/readScoreModel'
-import { validateMusicXml } from '../score/validateMusicXml'
-import { inspectMusicXml } from '../songs/inspectMusicXml'
+import { parseMusicXml } from '../score/parseMusicXml'
+import { toPracticeScore } from '../score/toPracticeScore'
 type Props = {
   requestId: number
   score: ScoreSource
@@ -31,6 +31,7 @@ export function ScoreView({ requestId, score, cursorIndex, onReady, onError }: P
     let lastWidth = 0
     let loading = false
     let disposed = false
+    let practiceCursor = false
     const dispose = () => {
       host.remove()
       // OSMD.load can still be running. Dispose again after it settles, not mid-import.
@@ -51,13 +52,15 @@ export function ScoreView({ requestId, score, cursorIndex, onReady, onError }: P
       display.render()
       display.cursor.reset()
       for (let index = 0; index < currentIndexRef.current; index++) display.cursor.next()
-      display.cursor.show()
+      if (practiceCursor) display.cursor.show()
+      else display.cursor.hide()
       display.cursor.cursorElement.alt = ''
       display.cursor.cursorElement.setAttribute('aria-hidden', 'true')
     }
     const load = async () => {
       try {
-        try { validateMusicXml(score.musicXml) }
+        let model: ScoreModel
+        try { model = parseMusicXml(score) }
         catch (error) {
           fail(error instanceof Error ? error.message : 'MusicXMLを検証できませんでした。')
           return
@@ -76,18 +79,22 @@ export function ScoreView({ requestId, score, cursorIndex, onReady, onError }: P
         finally { loading = false }
         if (cancelled) return
         currentIndexRef.current = 0
+        const practiceScore = toPracticeScore(model)
+        practiceCursor = practiceScore !== null
         render()
-        let model: ScoreModel
         try {
-          model = readScoreModel(score, display.cursor, Pitch.OctaveXmlDifference)
-          if (model.notes.length !== inspectMusicXml(score.musicXml).pitchedNoteCount) throw new Error('OSMD omitted notes')
+          if (practiceScore) {
+            const rendered = readScoreModel(score, display.cursor, Pitch.OctaveXmlDifference)
+            if (rendered.notes.length !== practiceScore.notes.length || rendered.notes.some((note, index) =>
+              note.midiNote !== practiceScore.notes[index].midiNote || Math.abs(note.durationBeats - practiceScore.notes[index].durationBeats) > 1e-9)) throw new Error('OSMD cursor differs from parsed timeline')
+          }
         }
         catch {
           fail('練習対象の音を解析できませんでした。1パートの単旋律を使用してください。')
           return
         }
-        display.cursor.show()
-        displayRef.current = display
+        if (practiceCursor) display.cursor.show()
+        displayRef.current = practiceCursor ? display : null
         host.style.visibility = 'visible'
         onReady(requestId, model)
         lastWidth = container.clientWidth

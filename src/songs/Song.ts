@@ -4,6 +4,9 @@ export type Compatibility = {
   readonly status: 'supported' | 'unsupported' | 'unknown'
   readonly version: number
   readonly reasons: readonly string[]
+  /** Optional for records saved by Phase 2E-B. Recomputed from the original XML. */
+  readonly parseCompatibility?: 'supported' | 'unsupported' | 'unknown'
+  readonly practiceCompatibility?: 'simpleMelody' | 'polyphonicPending' | 'unsupported'
 }
 
 export type MusicXmlLocation =

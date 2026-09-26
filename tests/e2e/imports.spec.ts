@@ -142,16 +142,21 @@ const unsupported: [string, string][] = [
   ['解析できませんでした', xml.replaceAll('<octave>4</octave>', '<octave>10</octave>')],
   ['画像・外部参照', xml.replace('<part-list>', '<credit><credit-image source="https://invalid.example/user.png"/></credit><part-list>')],
 ]
-for (const [reason, content] of unsupported) test(reason + ': stores unchanged XML as unsupported and disables practice/demo', async ({ page }) => {
+for (const [reason, content] of unsupported) test(reason + ': stores unchanged XML and gates practice/demo independently of parse support', async ({ page }) => {
+  const parsedPending = ['複数声部', '複数Staff', '休符'].includes(reason)
   await setup(page)
   await upload(page, 'complex.xml', content)
-  await expect(form(page)).toContainText('現在の練習機能では未対応')
+  await expect(form(page)).toContainText(parsedPending ? 'この曲は解析・表示できます' : '現在の練習機能では未対応')
   await expect(form(page)).toContainText(reason)
   await form(page).getByRole('button', { name: '追加する', exact: true }).click()
-  await expect(cards(page)).toContainText('現在の練習機能では未対応')
+  await expect(cards(page)).toContainText(parsedPending ? '解析可能・練習は次Phase' : '現在の練習機能では未対応')
   expect((await records(page))[0].musicXml.value).toBe(content)
   await cards(page).getByRole('button', { name: '選択', exact: true }).click()
-  await expect(page.locator('.score-card').getByRole('alert')).toContainText(reason)
+  if (parsedPending) {
+    await expect(page.locator('.score-card').getByRole('status')).toContainText('次Phase')
+    await expect(page.locator('.score-renderer svg')).toBeVisible()
+    await expect(page.locator('.score-card').getByRole('alert')).toHaveCount(0)
+  } else await expect(page.locator('.score-card').getByRole('alert')).toContainText(reason)
   await expect(page.locator('.position')).toHaveText('— / — 音')
   for (const name of ['練習開始', '手本を聴く']) await expect(page.getByRole('button', { name, exact: true })).toBeDisabled()
   await page.getByRole('combobox', { name: '練習する曲' }).selectOption('twinkle-opening')
@@ -254,7 +259,7 @@ test('compatibility is rechecked from XML and stale cached versions are not trus
   }))
   await page.reload()
   await expect(cards(page)).toHaveCount(2)
-  await expect(cards(page).filter({ hasText: '未確認' })).toHaveCount(1)
+  await expect(cards(page).filter({ hasText: '練習可能' })).toHaveCount(1)
   const forged = page.locator('[data-song-id="imported:forged"]')
   await expect(forged).toContainText('現在の練習機能では未対応')
   await forged.getByRole('button', { name: '選択', exact: true }).click()

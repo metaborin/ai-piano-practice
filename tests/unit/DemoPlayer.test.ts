@@ -3,7 +3,7 @@ import { buildDemoNotes, DemoPlayer } from '../../src/audio/DemoPlayer'
 import type { DemoOutput } from '../../src/audio/DemoPlayer'
 import { MidiOutputManager } from '../../src/midi/MidiOutputManager'
 import { PracticeSession } from '../../src/practice/PracticeSession'
-import type { ScoreModel } from '../../src/score/ScoreModel'
+import type { PracticeScore as ScoreModel } from '../../src/score/ScoreModel'
 
 const melody = [60, 60, 67, 67, 69, 69, 67, 65, 65, 64, 64, 62, 62, 60]
 const score: ScoreModel = { id: 'test', title: '', partLabel: '', musicXml: '', notes: melody.map((midiNote, index) => ({ midiNote, durationBeats: index === 6 || index === 13 ? 2 : 1 })) }

@@ -1,5 +1,5 @@
 import type { MidiNoteEvent } from '../midi/midiTypes'
-import type { ScoreModel, ScoreNote } from '../score/ScoreModel'
+import type { PracticeScore as ScoreModel, PracticeNote as ScoreNote } from '../score/ScoreModel'
 import { matchNote } from './NoteMatcher'
 import type { NoteMatch } from './NoteMatcher'
 

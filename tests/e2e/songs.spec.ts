@@ -231,7 +231,7 @@ const failures: { name: string; xml?: string; message: string }[] = [
   { name: 'network', message: '取得できませんでした' },
   { name: 'invalid XML', xml: '<score-partwise><broken>', message: '形式が正しくありません' },
   { name: 'no target notes', xml: original.replace(/<note>.*?<\/note>/g, ''), message: '練習対象の音がありません' },
-  { name: 'unsupported rest', xml: original.replace('<pitch><step>C</step><octave>4</octave></pitch>', '<rest/>'), message: '未対応' },
+  { name: 'unsupported grace', xml: original.replace('<note>', '<note><grace/>'), message: '未対応' },
   { name: 'invalid MIDI pitch', xml: original.replaceAll('<octave>4</octave>', '<octave>10</octave>'), message: '解析できませんでした' },
 ]
 for (const failure of failures) {

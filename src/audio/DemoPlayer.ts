@@ -1,4 +1,4 @@
-import type { ScoreModel } from '../score/ScoreModel'
+import type { PracticeScore as ScoreModel } from '../score/ScoreModel'
 
 export const DEFAULT_TEMPO_BPM = 100
 export const DEMO_GATE_RATIO = 0.9

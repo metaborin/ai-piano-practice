@@ -4,7 +4,7 @@
 
 公開先: https://metaborin.github.io/ai-piano-practice/
 
-本Phaseの実装・自動テストと、Chromebook + CME U2MIDI Pro + CASIO PX-100による実機受入を分けます。実機受入は未実施で、Phase 2E-B全体を完了扱いにしません。Phase 2E-C以降は実装していません。
+追記：ユーザーからChromebook + CME U2MIDI Pro + CASIO PX-100による実機確認も問題なく完了したとの報告を受け、Phase 2E-Bは完了しました。以下は実装時の記録です。次の実装・受入は [Phase 2E-C1](PHASE2EC1.md) に分けて記録します。
 
 ## 作成・変更ファイル
 

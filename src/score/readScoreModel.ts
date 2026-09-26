@@ -1,7 +1,7 @@
 import type { Cursor } from 'opensheetmusicdisplay'
-import type { ScoreModel, ScoreNote, ScoreSource } from './ScoreModel'
+import type { PracticeScore as ScoreModel, PracticeNote as ScoreNote, ScoreSource } from './ScoreModel'
 
-/** Read the same cursor sequence the view uses; never maintain a second melody list. */
+/** Legacy OSMD cursor reader, retained only to verify a simple timeline's cursor correspondence. */
 export function readScoreModel(source: ScoreSource, cursor: Cursor, octaveXmlDifference: number): ScoreModel {
   const notes: ScoreNote[] = []
   cursor.reset()

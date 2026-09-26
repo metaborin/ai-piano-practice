@@ -1,8 +1,6 @@
-import { inspectMusicXml } from '../songs/inspectMusicXml'
+import { parseMusicXml } from './parseMusicXml'
 
-/** Validate the supported subset before OSMD's tolerant importer can drop elements. */
+/** Parse support is independent of the current practice mode. */
 export function validateMusicXml(xml: string): void {
-  const { reasons, pitchedNoteCount } = inspectMusicXml(xml)
-  if (pitchedNoteCount === 0) throw new Error('練習対象の音がありません。')
-  if (reasons.length > 0) throw new Error('この楽譜は未対応です：' + reasons.join('、') + '。休符・和音・反復のない1パート・1声部・1Staffの単旋律を使用してください。')
+  parseMusicXml({ id: 'validation', title: '', partLabel: '', musicXml: xml })
 }

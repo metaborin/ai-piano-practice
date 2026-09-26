@@ -1,4 +1,5 @@
-import type { ScoreModel, ScoreSource } from './ScoreModel'
+import type { PracticeScore, ScoreModel, ScoreSource } from './ScoreModel'
+import { toPracticeScore } from './toPracticeScore'
 import { loadSongMusicXml } from '../songs/loadSongMusicXml'
 import type { Song } from '../songs/Song'
 
@@ -8,10 +9,12 @@ export type SongSnapshot = {
   readonly status: 'idle' | 'loading' | 'ready' | 'error'
   readonly source: ScoreSource | null
   readonly error: string | null
+  readonly model: ScoreModel | null
+  readonly canPractice: boolean
 }
 type Dependencies = {
   reset: () => void
-  apply: (model: ScoreModel) => void
+  apply: (model: PracticeScore) => void
   obtain?: (song: Song) => Promise<string>
 }
 
@@ -23,7 +26,7 @@ export class SongSelection {
   private readonly dependencies: Dependencies
   constructor(initial: Song | null, dependencies: Dependencies) {
     this.dependencies = dependencies
-    this.snapshot = { requestId: 0, song: initial, status: 'idle', source: null, error: null }
+    this.snapshot = { requestId: 0, song: initial, status: 'idle', source: null, error: null, model: null, canPractice: false }
   }
   getSnapshot = () => this.snapshot
   subscribe = (listener: () => void) => {
@@ -38,7 +41,7 @@ export class SongSelection {
     const requestId = ++this.generation
     // Synchronous, before the first await: grading stops before MIDI output stops.
     this.dependencies.reset()
-    this.publish({ requestId, song, status: 'loading', source: null, error: null })
+    this.publish({ requestId, song, status: 'loading', source: null, error: null, model: null, canPractice: false })
     try {
       const xml = await (this.dependencies.obtain ?? loadSongMusicXml)(song)
       this.acceptMusicXml(requestId, xml)
@@ -55,17 +58,18 @@ export class SongSelection {
   ready = (requestId: number, model: ScoreModel) => {
     if (requestId !== this.generation || this.snapshot.status !== 'loading') return
     const source = this.snapshot.source
-    if (!source || source.id !== model.id || source.musicXml !== model.musicXml || model.notes.length === 0) {
+    if (!source || source.id !== model.id || source.musicXml !== model.musicXml || model.measures.length === 0 || (model.notes.length === 0 && model.rests.length === 0)) {
       this.fail(requestId, '練習対象の音を読み込めませんでした。別の曲を選んでください。')
       return
     }
-    this.dependencies.apply(model)
-    this.publish({ status: 'ready' })
+    const practiceScore = toPracticeScore(model)
+    if (practiceScore) this.dependencies.apply(practiceScore)
+    this.publish({ status: 'ready', model, canPractice: practiceScore !== null })
   }
   fail = (requestId: number, error: string) => {
     if (requestId !== this.generation) return
     this.dependencies.reset()
-    this.publish({ status: 'error', source: null, error })
+    this.publish({ status: 'error', source: null, error, model: null, canPractice: false })
   }
   cancel = () => {
     ++this.generation

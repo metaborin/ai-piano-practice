@@ -1,11 +1,12 @@
-# AIピアノ練習アプリ — Phase 2E-B
+# AIピアノ練習アプリ — Phase 2E-C1
 
 曲一覧から練習曲を選び、楽譜を見ながら電子ピアノで正しい鍵盤を順番に弾く練習アプリです。React + TypeScript + Vite、OpenSheetMusicDisplay（OSMD）、Web MIDI API を使用しています。
 
 公開URL: **https://metaborin.github.io/ai-piano-practice/**
 
-**ユーザーからPhase 2E-AのChromebook実機確認完了との報告を受けています。Phase 2E-BはMusicXML/MXLの追加・IndexedDB保存・削除を実装しています。Chromebook + U2MIDI Pro + PX-100での新しい実機受入は未実施です。Phase 2E-C以降へは進みません。**
+**Phase 2E-BはユーザーのChromebook実機確認まで完了済みです。Phase 2E-C1では和音・2Staff・複数VoiceをMoment形式へ解析し、元XMLの楽譜を表示します。既存の単旋律練習・手本は維持しています。今回のChromebook + U2MIDI Pro + PX-100による実機受入は未実施です。Phase 2E-C2は実装していません。**
 
+- [Phase 2E-C1 の実装報告・正規化モデル・17項目の完了条件・実機確認](docs/PHASE2EC1.md)
 - [Phase 2E-B の実装報告・保存設計・15項目の完了条件・実機確認](docs/PHASE2EB.md)
 - [Phase 2E-A の実装報告・設計・13項目の完了条件・実機確認](docs/PHASE2EA.md)
 - [Phase 2D の実装報告・曲の追加手順・実機チェックリスト](docs/PHASE2D.md)
@@ -29,7 +30,7 @@
 
 「＋ 曲を追加」から `.musicxml` / `.xml` / `.mxl` を選び、曲名・作曲者・対応状況を確認して「追加する」を押すと「自分の曲」に保存されます。追加曲はこのブラウザのIndexedDBに保存し、GitHubやサーバーへ送信しません。ページ再読み込み・ブラウザ再起動後も保存領域が残っていれば復元します。サイトデータの削除やプライベート閲覧の終了では失われるため、元のファイルは保管してください。
 
-対応曲は「選択」で既存の練習・手本演奏を使えます。和音・複数声部などはXML原文を保存して「未対応」と表示し、練習・手本演奏を無効にします。「削除」→画面内の「削除する」で追加曲だけを削除できます。選択中の曲を削除すると発音・予約を停止してきらきら星へ戻ります。PDF/画像はまだ取り込めません。
+単旋律曲は「選択」で既存の練習・手本演奏を使えます。和音・2Staff・複数Voice・休符・タイを含む曲は解析・表示し、「解析可能・練習は次Phase」と表示して練習・手本演奏を無効にします。開発者用の「Score解析」でStaff・Voice・Moment・Notes・Restなどを確認できます。複数Partなど解析範囲外の曲も原文を保存でき、未対応理由を表示します。「削除」→画面内の「削除する」で追加曲だけを削除できます。選択中の曲を削除すると発音・予約を停止してきらきら星へ戻ります。PDF/画像はまだ取り込めません。
 
 練習開始前のMIDI入力はデバッグ表示のみ更新します。開発確認用の「前の音／次の音」は「開発者用」を開くと使えます。誤操作を避けるため、練習中・完了後は手動移動を無効にします。
 
@@ -118,8 +119,12 @@ src/
     SongSelection.ts       # 取得・要求ID・描画完了の照合・失敗/復帰
     useSongSelection.ts    # 曲変更時の練習停止・消音とモデル適用
     validateMusicXml.ts    # XML形式・対応範囲・対象音の検証
-    ScoreModel.ts           # 楽譜ソース・カーソルと同順序のMIDI音列とdurationBeats
-    readScoreModel.ts       # OSMDの各カーソル位置から音列を取得
+    ScoreModel.ts           # 正規化Note/Rest/Moment、拍・Staff・Voice・Tie・Tempo
+    Beat.ts                 # BigIntによる正確な分数の拍計算
+    musicXmlDocument.ts     # XML構文検証・DOM読み取り
+    parseMusicXml.ts        # chord/backup/forwardから絶対拍位置へ正規化
+    toPracticeScore.ts      # 単旋律のみ旧PracticeScoreへ変換
+    readScoreModel.ts       # 単旋律のOSMDカーソルと新Parser結果を照合
   practice/
     NoteMatcher.ts         # MIDI Note Numberの一致比較だけ
     PracticeSession.ts     # 開始・現在音・完了・再開・保持鍵盤
@@ -152,14 +157,16 @@ MIDI受信、楽譜データ、描画、判定、練習状態を分離してい�
 
 ## 検証・公開
 
-- 検証項目と今回の結果は [Phase 2E-Bの実装報告](docs/PHASE2EB.md) を参照。MIDI入出力は模擬し、IndexedDBはブラウザの実装を使用します。
+- 検証項目と今回の結果は [Phase 2E-C1の実装報告](docs/PHASE2EC1.md) を参照。MIDI入出力は模擬し、IndexedDBはブラウザの実装を使用します。
 - lint、アプリとテストの型検査、buildを実行。
 - `main` にpushすると GitHub Actions が検査・ビルド・ブラウザーテスト後に `dist/` を公開します。
-- 今回の実機受入は [Phase 2E-Bチェックリスト](docs/PHASE2EB.md) を使います。
+- 今回の実機受入は [Phase 2E-C1チェックリスト](docs/PHASE2EC1.md) を使います。
 
 ## npmパッケージ
 
 Phase 2E-BではMXL展開にJSZip 3.10.1を直接依存として追加しました（以前はOSMDの間接依存）。IndexedDBはブラウザ標準APIを使用し、追加ラッパーはありません。
+
+Phase 2E-C1ではNode単体テスト用に `@xmldom/xmldom 0.9.12` を開発依存へ追加しました。公開アプリのParserはブラウザ標準のDOMParserを使用します。DBは引き続きversion 1で、既存曲のXML・メタデータを書き換えません。
 
 | 用途 | パッケージ | バージョン |
 | --- | --- | --- |
