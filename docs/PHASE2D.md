@@ -4,7 +4,7 @@
 
 公開先: https://metaborin.github.io/ai-piano-practice/
 
-Phase 2C-BまではユーザーによるChromebook実機確認済みです。Phase 2Dは実装・自動確認と、ユーザーによる実機受入を分けます。下記の実機8項目が確認されるまではPhase 2D全体を完了扱いにしません。Phase 3は実装していません。
+ユーザーから「Phase 2Dまで完了」と報告を受けています。以下はPhase 2D実装時点の記録を残しています。現在の曲ライブラリ構成・追加手順・実機確認は [Phase 2E-A](PHASE2EA.md) を参照してください。
 
 ## 収録曲
 

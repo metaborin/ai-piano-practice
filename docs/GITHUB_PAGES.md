@@ -4,12 +4,12 @@
 
 公開URL: **https://metaborin.github.io/ai-piano-practice/**
 
-Phase 2Aの楽譜・MIDI入力、Phase 2Bの音順練習、Phase 2C-AのC4出力、Phase 2C-Bの手本演奏、Phase 2Dの曲選択をChromeOSのChromeからHTTPSで利用するための公開設定です。Chromebookでの利用にNode.jsやLinux開発環境は必要ありません。
+Phase 2E-Aの曲ライブラリと、既存の楽譜・MIDI入力・音順練習・MIDI出力・手本演奏・曲選択をChromeOSのChromeからHTTPSで利用するための公開設定です。Chromebookでの利用にNode.jsやLinux開発環境は必要ありません。
 
 ## 変更内容
 
 - `vite.config.ts` の `base` を `/ai-piano-practice/` に設定しました。JavaScript、CSS、OSMD の遅延読み込みチャンクもこのパスで配信します。
-- 全曲のMusicXMLは `src/score/songCatalog.ts` の動的な `?raw` import で、曲ごとのJavaScriptに埋め込みます。Viteが `/ai-piano-practice/assets/...` のURLを生成します。実行時に `/src/scores/...` を取得せず、`public/` への複製も不要です。
+- 全曲のMusicXMLは `src/songs/BuiltInSongRepository.ts` の `?url&no-inline` import で参照します。ViteがXMLファイルを `/ai-piano-practice/assets/...` に出力し、そのURLをSongへ登録します。選択時に `loadSongMusicXml` が取得し、既存の検証・OSMD・ScoreModel処理へ渡します。`public/` への複製やサイトルート固定のパスは不要です。
 - MusicXML の DOCTYPE の HTTP URL は文書形式の宣言です。アプリから DTD を取得する処理はありません。
 - `.github/workflows/deploy-pages.yml` で `main` への push と手動実行に対応します。Node.js 24、`npm ci`、lint、型検査、単体テスト、build、ブラウザーテストが成功した場合のみ `dist/` を Pages に公開します。
 - 公式 GitHub Actions をバージョンに対応するコミット SHA で固定しました。追加のアクセストークンを Secrets に登録する必要はありません。デプロイには GitHub が発行する `GITHUB_TOKEN` を使用します。
@@ -74,7 +74,7 @@ npx playwright install chromium
 npm run test:pages
 ```
 
-このコマンドはbuild後、4174番ポートで `dist/` を起動し、曲選択・既存機能・手本演奏・サブパスのテスト36件を実行します。MIDI入出力を模擬し、実際の演奏機器は操作しません。
+このコマンドはbuild後、4174番ポートで `dist/` を起動し、曲ライブラリ・曲選択・既存機能・手本演奏・サブパスのテスト39件を実行します。3つのXMLが実際にassets配下から取得されることも確認します。MIDI入出力を模擬し、実際の演奏機器は操作しません。
 
 公開済みサイトを PowerShell から同じテストで確認する場合:
 
@@ -97,7 +97,7 @@ Remove-Item Env:PLAYWRIGHT_BASE_URL
 9. **練習開始** を押すと先頭へ戻ります。間違った音は「もう一度♪」と表示され、正しい音は「できた！」と表示されて1音進みます。
 10. 最初のドは「押す→離す→もう一度押す」で2音進めます。14音を順番に弾いて「できました！」を確認し、「もう一度」で最初から再開します。[Phase 2Bの詳しい確認手順](PHASE2B.md#10-chromebook実機確認手順)
 11. Phase 2C-Aの実機確認では再読み込み後、練習開始前に下部の「MIDI出力テスト」を使います。出力機器を選び「テスト音 C4」でPX-100本体が鳴って止まること、「すべての音を停止」で停止することを確認します。[Phase 2C-Aの詳細手順](PHASE2CA.md#9-chromebook実機確認手順)
-12. 「練習する曲」で3曲を切り替え、曲ごとの判定・終了・手本演奏・再生中の曲変更を確認します。[Phase 2Dの詳細手順](PHASE2D.md)
+12. 曲ライブラリの内蔵3曲と「自分の曲」の空表示を確認します。「＋ 曲を追加」は画面内の案内だけを表示します。3曲を切り替え、判定・終了・手本演奏・再生中の曲変更を確認します。[Phase 2E-Aの詳細手順](PHASE2EA.md)
 
 ### 許可ダイアログが出ない／以前拒否した場合
 
@@ -122,12 +122,13 @@ Remove-Item Env:PLAYWRIGHT_BASE_URL
 - [ ] 間違い・Note Off・押しっぱなしの重複入力では進まない。
 - [ ] 14音目で「できました！」になり、「もう一度」で1音目へ戻る。
 - [ ] 抜き差し後に接続状態が更新され、再び受信できる。
-- [ ] 上部にPhase 2Dと「練習する曲」、主要操作に「手本を聴く」「停止」、下部にMIDI出力テストが表示される。
+- [ ] 上部にPhase 2E-Aと曲ライブラリ、「練習する曲」の内蔵3曲、「自分の曲」の空表示、「＋ 曲を追加」が表示される。
+- [ ] 追加ボタンは通常の画面内メッセージだけを表示し、練習状態を変えない。
 - [ ] 追加曲の楽譜が表示され、7音／5音・先頭C4／G4で練習と手本演奏を開始できる。
 - [ ] 曲変更で前曲の発音・予約・進捗をリセットし、MIDI接続と機器選択を維持する。
 - [ ] 出力機器の選択、C4の発音・Note Off、All Notes Off、出力デバッグが正常。
 - [ ] 手本の音順・音価・カーソル同期・途中停止・終了が正常で、手本中に練習判定が進まない。
 
-Phase 2C-Bまではユーザーによる実機確認が完了しています。今回の実機結果は [Phase 2Dの受入チェックリスト](PHASE2D.md) に記録してください。ブラウザー自動テストは実機確認の代わりにはなりません。
+ユーザーからPhase 2Dまで完了との報告を受けています。今回の実機結果は [Phase 2E-Aの受入チェックリスト](PHASE2EA.md) に記録してください。ブラウザー自動テストは実機確認の代わりにはなりません。
 
 参考: [Vite の GitHub Pages 設定](https://vite.dev/guide/static-deploy#github-pages)。OSMD のチャンクサイズ警告は既存のもので、ビルドは成功します。

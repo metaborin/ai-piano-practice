@@ -1,11 +1,11 @@
 import type { ScoreModel, ScoreSource } from './ScoreModel'
-import { getSongMusicXml } from './songCatalog'
-import type { Song } from './songCatalog'
+import { loadSongMusicXml } from '../songs/loadSongMusicXml'
+import type { Song } from '../songs/Song'
 
 export type SongSnapshot = {
   readonly requestId: number
-  readonly song: Song
-  readonly status: 'loading' | 'ready' | 'error'
+  readonly song: Song | null
+  readonly status: 'idle' | 'loading' | 'ready' | 'error'
   readonly source: ScoreSource | null
   readonly error: string | null
 }
@@ -21,9 +21,9 @@ export class SongSelection {
   private listeners = new Set<() => void>()
   private snapshot: SongSnapshot
   private readonly dependencies: Dependencies
-  constructor(initial: Song, dependencies: Dependencies) {
+  constructor(initial: Song | null, dependencies: Dependencies) {
     this.dependencies = dependencies
-    this.snapshot = { requestId: 0, song: initial, status: 'loading', source: null, error: null }
+    this.snapshot = { requestId: 0, song: initial, status: 'idle', source: null, error: null }
   }
   getSnapshot = () => this.snapshot
   subscribe = (listener: () => void) => {
@@ -40,7 +40,7 @@ export class SongSelection {
     this.dependencies.reset()
     this.publish({ requestId, song, status: 'loading', source: null, error: null })
     try {
-      const xml = await (this.dependencies.obtain ?? getSongMusicXml)(song)
+      const xml = await (this.dependencies.obtain ?? loadSongMusicXml)(song)
       this.acceptMusicXml(requestId, xml)
     } catch {
       this.fail(requestId, 'MusicXMLを取得できませんでした。通信を確認し、別の曲を選んでください。')
@@ -48,7 +48,7 @@ export class SongSelection {
   }
   /** Accept already acquired XML separately, leaving room for future acquisition sources. */
   private acceptMusicXml(requestId: number, musicXml: string) {
-    if (requestId !== this.generation) return
+    if (requestId !== this.generation || !this.snapshot.song) return
     const { id, title, partLabel } = this.snapshot.song
     this.publish({ source: { id, title, partLabel, musicXml } })
   }

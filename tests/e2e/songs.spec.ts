@@ -239,7 +239,7 @@ for (const failure of failures) {
     await setup(page)
     await page.route('**/*do-re-mi*', (route: Route) => failure.xml === undefined
       ? route.abort('failed')
-      : route.fulfill({ contentType: 'application/javascript', body: 'export default ' + JSON.stringify(failure.xml) }))
+      : route.fulfill({ contentType: 'application/vnd.recordare.musicxml+xml', body: failure.xml }))
     await page.getByRole('button', { name: '練習開始', exact: true }).click()
     await strike(page, 60)
     await select(page, 'do-re-mi')

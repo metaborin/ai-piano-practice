@@ -1,11 +1,12 @@
-# AIピアノ練習アプリ — Phase 2D
+# AIピアノ練習アプリ — Phase 2E-A
 
 曲一覧から練習曲を選び、楽譜を見ながら電子ピアノで正しい鍵盤を順番に弾く練習アプリです。React + TypeScript + Vite、OpenSheetMusicDisplay（OSMD）、Web MIDI API を使用しています。
 
 公開URL: **https://metaborin.github.io/ai-piano-practice/**
 
-**Phase 2C-BまではユーザーによるChromebook + U2MIDI Pro + PX-100実機確認が完了しています。Phase 2Dの曲選択は実機確認待ちです。Phase 3には進んでいません。**
+**ユーザーからPhase 2Dまで完了との報告を受けています。Phase 2E-Aの曲ライブラリ基盤は実装・自動確認を行い、Chromebook + U2MIDI Pro + PX-100での実機確認を待ちます。Phase 2E-B以降は実装していません。**
 
+- [Phase 2E-A の実装報告・設計・13項目の完了条件・実機確認](docs/PHASE2EA.md)
 - [Phase 2D の実装報告・曲の追加手順・実機チェックリスト](docs/PHASE2D.md)
 
 - [Phase 2C-B の実装報告・手本演奏・13項目のチェックリスト](docs/PHASE2CB.md)
@@ -18,12 +19,14 @@
 
 1. PX-100 MIDI OUT → CME U2MIDI Pro → Chromebook の接続を使い、Chromeで公開URLを開きます。
 2. 「MIDI接続」を押し、Chromeで許可します。`U2MIDI Pro MIDI 1 / CME Pro` を確認します。
-3. 「練習する曲」で曲を選びます。初期選択は「きらきら星」。読み込み後に「練習開始」を押すと、選択曲の先頭から始まります。
+3. 「曲ライブラリ」の「練習する曲」で内蔵曲を選びます。初期選択は「きらきら星」。読み込み後に「練習開始」を押すと、選択曲の先頭から始まります。
 4. 正しい音は「できた！」と表示され、カーソルが1音進みます。間違った音は「もう一度♪」と表示され、位置を保ちます。
 5. 同じ音が続くところは、鍵盤を離してからもう一度押してください。
 6. 選択曲の最後まで弾くと「できました！」を表示します。「もう一度」で最初から再開できます。音数はきらきら星14音、ドレミの練習7音、短いメロディ5音です。
 
 練習中・手本再生中にも曲を変更できます。変更時は発音と予約を停止し、進捗をリセットして新しい曲の待機状態になります。MIDI接続と機器選択は維持します。読み込み中・失敗時は練習と手本を開始できません。失敗したら別の曲を選んでください。
+
+「自分の曲」は現在空です。「＋ 曲を追加」はMusicXML / MXLの追加機能を次のPhaseで提供する案内を画面内に表示します。ファイル選択・IndexedDB保存・PDF/画像の追加や表示はまだ行いません。
 
 練習開始前のMIDI入力はデバッグ表示のみ更新します。開発確認用の「前の音／次の音」は「開発者用」を開くと使えます。誤操作を避けるため、練習中・完了後は手動移動を無効にします。
 
@@ -73,7 +76,7 @@ npm run build
 npm run preview
 ```
 
-本番ビルドのローカルURLは http://localhost:4173/ai-piano-practice/ です。GitHub Pages のサブパス `/ai-piano-practice/` を維持しています。MusicXML は `?raw` import でビルドに埋め込みます。
+本番ビルドのローカルURLは http://localhost:4173/ai-piano-practice/ です。GitHub Pages のサブパス `/ai-piano-practice/` を維持しています。MusicXML は `?url&no-inline` importでViteが生成したURLをRepositoryに登録し、選択時に取得します。XML本文は変更していません。
 
 本番ビルドのブラウザーテスト（初回はChromiumをインストール）:
 
@@ -88,6 +91,13 @@ npm run test:pages
 
 ```text
 src/
+  songs/
+    Song.ts                # 保存可能な曲メタデータ、URL/text、元PDF/画像の参照
+    SongRepository.ts      # 非同期listSongs/getSong契約
+    BuiltInSongRepository.ts # 非公開の内蔵3曲データと取得
+    libraryRepository.ts   # Repositoryの組み立てと初期選択ID
+    loadSongMusicXml.ts    # URL取得・保存済み文字列を同じXML処理へ渡す
+    useSongLibrary.ts      # Repositoryから一覧取得・初期選択・再試行
   audio/
     DemoPlayer.ts          # ScoreModelの音価から手本イベント・再生位置・停止を管理
     useDemoPlayer.ts       # 手本・練習モードの接続と非表示時の停止
@@ -98,7 +108,6 @@ src/
     parseMidiMessage.ts     # Note On / Offの正規化・表示用音名
     useMidi.ts
   score/
-    songCatalog.ts         # 曲ID・表示名・MusicXMLの動的raw import
     SongSelection.ts       # 取得・要求ID・描画完了の照合・失敗/復帰
     useSongSelection.ts    # 曲変更時の練習停止・消音とモデル適用
     validateMusicXml.ts    # XML形式・対応範囲・対象音の検証
@@ -109,6 +118,7 @@ src/
     PracticeSession.ts     # 開始・現在音・完了・再開・保持鍵盤
     usePracticeSession.ts  # MIDIイベントとセッションの接続
   components/
+    SongLibrary.tsx        # 内蔵曲・自分の曲・追加ボタンの案内
     ScoreView.tsx
     PracticeControls.tsx
     DeveloperControls.tsx
@@ -134,15 +144,15 @@ MIDI受信、楽譜データ、描画、判定、練習状態を分離してい�
 
 ## 検証・公開
 
-- 単体テスト: 78件。
-- ブラウザーテスト: 開発用35件、本番用36件（MIDI入出力は模擬）。
+- 単体テスト: 88件。
+- ブラウザーテスト: 開発用38件、本番用39件（MIDI入出力は模擬）。
 - lint、アプリとテストの型検査、buildを実行。
 - `main` にpushすると GitHub Actions が検査・ビルド・ブラウザーテスト後に `dist/` を公開します。
-- 今回の実機受入は [Phase 2Dチェックリスト](docs/PHASE2D.md) を使います。
+- 今回の実機受入は [Phase 2E-Aチェックリスト](docs/PHASE2EA.md) を使います。
 
 ## npmパッケージ
 
-Phase 2B・2C-A・2C-B・2Dで新しいnpmパッケージは追加していません。`package-lock.json` を維持しています。
+Phase 2B・2C-A・2C-B・2D・2E-Aで新しいnpmパッケージは追加していません。`package-lock.json` を維持しています。
 
 | 用途 | パッケージ | バージョン |
 | --- | --- | --- |

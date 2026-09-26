@@ -1,8 +1,10 @@
 import { expect, it, vi } from 'vitest'
 import { SongSelection } from '../../src/score/SongSelection'
-import { songs } from '../../src/score/songCatalog'
+import { BuiltInSongRepository } from '../../src/songs/BuiltInSongRepository'
 import { PracticeSession } from '../../src/practice/PracticeSession'
 import type { ScoreModel } from '../../src/score/ScoreModel'
+
+const songs = await new BuiltInSongRepository().listSongs()
 
 function deferred() {
   let resolve!: (xml: string) => void

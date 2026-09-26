@@ -3,10 +3,9 @@ import type { DemoPlayer } from '../audio/DemoPlayer'
 import type { MidiOutputManager } from '../midi/MidiOutputManager'
 import type { PracticeSession } from '../practice/PracticeSession'
 import { SongSelection } from './SongSelection'
-import { songs } from './songCatalog'
 
 export function useSongSelection(session: PracticeSession, player: DemoPlayer, output: MidiOutputManager) {
-  const [selection] = useState(() => new SongSelection(songs[0], {
+  const [selection] = useState(() => new SongSelection(null, {
     reset: () => {
       session.loadScore(null)
       player.loadScore(null)
@@ -19,9 +18,6 @@ export function useSongSelection(session: PracticeSession, player: DemoPlayer, o
     },
   }))
   const songState = useSyncExternalStore(selection.subscribe, selection.getSnapshot, selection.getSnapshot)
-  useEffect(() => {
-    void selection.select(songs[0])
-    return selection.cancel
-  }, [selection])
+  useEffect(() => selection.cancel, [selection])
   return { selection, songState }
 }

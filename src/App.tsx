@@ -6,9 +6,11 @@ import { MidiStatus } from './components/MidiStatus'
 import { MidiOutputPanel } from './components/MidiOutputPanel'
 import { PracticeControls } from './components/PracticeControls'
 import { ScoreView } from './components/ScoreView'
+import { SongLibrary } from './components/SongLibrary'
 import { useMidi } from './midi/useMidi'
 import { usePracticeSession } from './practice/usePracticeSession'
-import { songs } from './score/songCatalog'
+import { DEFAULT_SONG_ID, songRepository } from './songs/libraryRepository'
+import { useSongLibrary } from './songs/useSongLibrary'
 import { useSongSelection } from './score/useSongSelection'
 import './App.css'
 
@@ -17,6 +19,8 @@ export default function App() {
   const { session, practice, start, restart, moveCursor } = usePracticeSession(events)
   const { demo, player } = useDemoPlayer(outputManager, session)
   const { selection, songState } = useSongSelection(session, player, outputManager)
+  const { library, retry } = useSongLibrary(songRepository, selection.select, DEFAULT_SONG_ID)
+  const title = songState.song?.title ?? 'AIピアノ練習アプリ'
   const scoreReady = songState.status === 'ready'
   const showDemoCursor = demo.status !== 'idle' && practice.status !== 'practicing' && practice.status !== 'completed'
   const cursorIndex = showDemoCursor ? demo.currentNoteIndex : practice.currentNoteIndex
@@ -29,22 +33,14 @@ export default function App() {
     <main className="app">
       <header className="app-header">
         <div>
-          <p className="eyebrow">ピアノ練習 · Phase 2D</p>
-          <h1>{songState.song.title}</h1>
-          <p className="subtitle">{songState.song.partLabel}</p>
+          <p className="eyebrow">ピアノ練習 · Phase 2E-A</p>
+          <h1>{title}</h1>
+          <p className="subtitle">{songState.song?.partLabel ?? '曲を選んで練習しましょう'}</p>
         </div>
         <MidiStatus status={midi.status} />
       </header>
-      <label className="song-selector">
-        <span>練習する曲</span>
-        <select value={songState.song.id} onChange={(event) => {
-          const song = songs.find((entry) => entry.id === event.target.value)
-          if (song) void selection.select(song)
-        }}>
-          {songs.map((song) => <option key={song.id} value={song.id}>{song.title}</option>)}
-        </select>
-      </label>
-      <section className="score-card" aria-label={songState.song.title + 'の楽譜'} aria-busy={!scoreReady && songState.status === 'loading'}>
+      <SongLibrary library={library} selectedId={songState.song?.id ?? ''} onSelect={selection.select} onRetry={retry} />
+      <section className="score-card" aria-label={songState.song ? title + 'の楽譜' : '楽譜'} aria-busy={!scoreReady && songState.status === 'loading'}>
         <div className="score-heading">
           <span className="cursor-legend"><span aria-hidden="true" />緑の帯が現在位置</span>
           <span className="position" aria-live="polite">{scoreReady && noteCount > 0 ? `${cursorIndex + 1} / ${noteCount} 音` : '— / — 音'}</span>
@@ -75,7 +71,7 @@ export default function App() {
       <DeveloperControls practice={practice} blocked={!scoreReady || showDemoCursor} onPrevious={() => moveCursor(-1)} onNext={() => moveCursor(1)} />
       <MidiDebugPanel latest={midi.latestEvent} lastNoteOn={midi.lastNoteOn} lastNoteOff={midi.lastNoteOff} />
       <MidiOutputPanel output={output} inputStatus={midi.status} onSelect={selectOutput} onPlay={playTestNote} onStop={stopAllNotes} onRetry={retryOutput} />
-      <footer>Phase 2D · 曲を選んで、順番に弾いてみよう</footer>
+      <footer>Phase 2E-A · 曲を選んで、順番に弾いてみよう</footer>
     </main>
   )
 }

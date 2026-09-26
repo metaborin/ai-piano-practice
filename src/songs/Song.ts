@@ -1,0 +1,26 @@
+export type SongSource = 'builtin' | 'imported'
+
+export type MusicXmlLocation =
+  | { readonly type: 'url'; readonly value: string }
+  | { readonly type: 'text'; readonly value: string }
+
+/** Reference only. The original PDF/image is stored separately from musical data. */
+export type OriginalScore = {
+  readonly type: 'pdf' | 'image'
+  readonly storageId: string
+  readonly fileName?: string
+}
+
+/** Serializable metadata; no loaders, DOM, MIDI state or binary attachments. */
+export type Song = {
+  readonly id: string
+  readonly title: string
+  readonly composer?: string
+  readonly source: SongSource
+  readonly partLabel: string
+  readonly musicXml: MusicXmlLocation
+  readonly tempoBpm?: number
+  readonly difficulty?: number
+  readonly createdAt?: number
+  readonly originalScore?: OriginalScore
+}
