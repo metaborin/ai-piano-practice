@@ -30,10 +30,21 @@ test('renders the score, traverses all notes in both directions and retains posi
   const cursor = page.locator('.score-renderer img')
   await expect(cursor).toHaveCount(1)
   await expect(cursor).toBeVisible()
-  const scorePosition = () => cursor.evaluate((element) => {
-    const image = element as HTMLImageElement
-    return { x: image.offsetLeft, y: image.offsetTop }
-  })
+  const scorePosition = async () => {
+    let position: { x: number; y: number } | null = null
+    // Resizing replaces the cursor image. Read from the stable host atomically, and
+    // wait for the new SVG width/image instead of comparing a detached image's 0,0.
+    await expect.poll(async () => {
+      position = await page.locator('.score-renderer').evaluate((host) => {
+        const image = host.querySelector('img')
+        const svg = host.querySelector('svg')
+        if (!image?.offsetParent || !image.complete || !svg || svg.getBoundingClientRect().width > host.clientWidth + 1) return null
+        return { x: image.offsetLeft, y: image.offsetTop }
+      })
+      return position !== null
+    }).toBe(true)
+    return position
+  }
   const initial = await scorePosition()
   await expect(page.locator('.expected-note')).toContainText('MIDI Note 60')
   await expect(page.getByRole('button', { name: '前の音' })).toBeDisabled()

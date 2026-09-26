@@ -19,7 +19,7 @@ Phase 2C-Aはユーザーの実機報告により完了しています。今回�
 - `docs/PHASE2CB.md`: 本報告書。
 - `docs/phase2cb-playing.png`、`docs/phase2cb-completed.png`: 模擬MIDIでの画面例。
 
-変更18ファイル:
+変更19ファイル:
 
 - `src/score/ScoreModel.ts`、`src/score/readScoreModel.ts`: durationBeatsを追加。
 - `src/midi/MidiOutputManager.ts`、`src/midi/useMidi.ts`: 既存出力を手本と共有、任意音高の送信・停止・使用中の排他処理。
@@ -30,6 +30,7 @@ Phase 2C-Aはユーザーの実機報告により完了しています。今回�
 - `tests/unit/PracticeSession.test.ts`: 既存テストのScoreNoteに音価を追加。
 - `tests/e2e/midiFixture.ts`: 出力ループバックとclear非対応のモック。
 - `tests/e2e/output.spec.ts`: Phase表示の期待値更新。
+- `tests/e2e/practice.spec.ts`: 画面幅変更後のSVG・カーソル再描画を待って座標を比較。
 - `index.html`、`README.md`、`docs/GITHUB_PAGES.md`、`docs/PHASE2CA.md`: 現在の機能・検証・受入記録。
 
 MusicXML自体、OSMD表示部品、NoteMatcher、MIDI入力解析・デバッグ部品、Viteのbase、GitHub Actions、npm依存・ロックファイルは維持しています。
