@@ -53,6 +53,13 @@ dd { margin: 2px 0 0; font-size: 24px; font-weight: 700; font-variant-numeric: t
 .debug-note { margin-top: 14px; font-size: 14px; }
 .error-message { padding: 20px; color: #9f2f24; }
 footer { margin-top: 24px; color: #647168; text-align: center; font-size: 14px; }
+.output-panel { margin-top: 22px; padding: 22px 24px; border: 1px solid #b9ccd9; border-radius: 12px; background: #f0f5f9; }
+.output-panel > p { margin-top: 8px; overflow-wrap: anywhere; }
+.output-status { font-weight: 700; }
+.output-buttons { display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0; }
+.output-buttons button { min-width: 174px; }
+.output-debug { border-top: 1px solid #cddbe5; padding-top: 16px; overflow-wrap: anywhere; }
+.output-debug p { margin-top: 6px; }
 @media (max-width: 700px) {
   .app { padding: 20px 16px; }
   .app-header { align-items: flex-start; gap: 10px; }
@@ -64,6 +71,8 @@ footer { margin-top: 24px; color: #647168; text-align: center; font-size: 14px; 
   .practice-buttons button { min-width: 0; flex: 1; }
   .practice-feedback { min-height: 70px; font-size: 20px; }
   .debug-panel { padding: 18px; }
+  .output-panel { padding: 18px; }
+  .output-buttons button { width: 100%; }
   .latest-input { gap: 20px; align-items: flex-start; }
   .latest-input dl { grid-template-columns: repeat(2, 1fr); gap: 14px; }
   .event-summaries { grid-template-columns: 1fr; gap: 16px; }

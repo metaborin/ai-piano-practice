@@ -1,11 +1,12 @@
-# AIピアノ練習アプリ — Phase 2B
+# AIピアノ練習アプリ — Phase 2C-A
 
 きらきら星の楽譜を見て、電子ピアノで正しい鍵盤を順番に弾く練習アプリです。React + TypeScript + Vite、OpenSheetMusicDisplay（OSMD）、Web MIDI API を使用しています。
 
 公開URL: **https://metaborin.github.io/ai-piano-practice/**
 
-**Phase 2A はユーザーによる Chromebook 実機確認が完了しています。Phase 2B の実装・自動テストと、今回追加した音順練習の実機受入確認は区別して記録します。**
+**Phase 2A・Phase 2B はユーザーによる Chromebook + U2MIDI Pro + PX-100 実機確認が完了しています。今回追加したPhase 2C-AのC4出力は実機確認待ちです。**
 
+- [Phase 2C-A の実装報告・MIDI出力テスト・10項目のチェックリスト](docs/PHASE2CA.md)
 - [Phase 2B の実装報告・実機確認・12項目のチェックリスト](docs/PHASE2B.md)
 - [GitHub Pages の公開設定・更新手順・ChromeのMIDI許可](docs/GITHUB_PAGES.md)
 - [Phase 2A の実機確認記録](docs/PHASE2A_CHECKLIST.md)
@@ -22,6 +23,17 @@
 練習開始前のMIDI入力はデバッグ表示のみ更新します。開発確認用の「前の音／次の音」は「開発者用」を開くと使えます。誤操作を避けるため、練習中・完了後は手動移動を無効にします。
 
 リズム・テンポ・音の長さ・和音・左手・両手・AI・点数・履歴保存・手本再生は今回の対象外です。
+
+## MIDI出力の接続確認（Phase 2C-A）
+
+双方向の接続に加え、**U2MIDI ProのMIDI OUT → PX-100のMIDI IN** を確認します。上記の「MIDI接続」で入出力の許可を共有します。SysExは使いません。
+
+1. ページ下部の「MIDI出力テスト」で出力機器を選び、MIDI出力が接続済みになることを確認します。CME / U2MIDIに関連する名前・メーカーを優先して自動選択します。
+2. 「テスト音 C4」でChannel 1にNote 60 / Velocity 80を送り、500ms後の明示的Note Offを予約します。PX-100本体の中央のドが鳴り、止まることを耳で確認します。
+3. 「すべての音を停止」はC4のNote OffとCC123 / All Notes Offを送ります。
+4. 「最後のMIDI出力」でNote On → Note Off、停止操作でAll Notes Offを確認します。これは送信要求の表示で、発音を検知した表示ではありません。
+
+テスト音は曲の自動演奏ではありません。出力はPracticeSessionやNoteMatcherへ入力せず、既存の鍵盤入力と練習は独立して動きます。[実機確認と注意点](docs/PHASE2CA.md#9-chromebook実機確認手順)を参照してください。
 
 ## 開発環境で起動
 
@@ -60,6 +72,7 @@ npm run test:pages
 src/
   midi/
     MidiManager.ts          # 接続・全イベント通知・最新入力表示用データ
+    MidiOutputManager.ts    # 共有MIDIAccessの出力選択・C4送信・停止
     midiTypes.ts            # timestamp / velocity を含むMIDI型
     parseMidiMessage.ts     # Note On / Offの正規化・表示用音名
     useMidi.ts
@@ -76,6 +89,7 @@ src/
     DeveloperControls.tsx
     MidiStatus.tsx
     MidiDebugPanel.tsx
+    MidiOutputPanel.tsx
   scores/twinkle.musicxml
   App.tsx
   App.css
@@ -92,15 +106,15 @@ MIDI受信、楽譜データ、描画、判定、練習状態を分離してい�
 
 ## 検証・公開
 
-- 単体テスト: 40件。
-- ブラウザーテスト: 開発用11件、本番用12件（MIDIは模擬）。
+- 単体テスト: 53件。
+- ブラウザーテスト: 開発用16件、本番用17件（MIDI入出力は模擬）。
 - lint、アプリとテストの型検査、buildを実行。
 - `main` にpushすると GitHub Actions が検査・ビルド・ブラウザーテスト後に `dist/` を公開します。
-- 実機受入は [Phase 2Bチェックリスト](docs/PHASE2B.md#11-phase-2b完了条件) を使います。
+- 今回の実機受入は [Phase 2C-Aチェックリスト](docs/PHASE2CA.md#10-phase-2c-a完了条件) を使います。
 
 ## npmパッケージ
 
-Phase 2Bで新しいnpmパッケージは追加していません。`package-lock.json` を維持しています。
+Phase 2B・2C-Aで新しいnpmパッケージは追加していません。`package-lock.json` を維持しています。
 
 | 用途 | パッケージ | バージョン |
 | --- | --- | --- |

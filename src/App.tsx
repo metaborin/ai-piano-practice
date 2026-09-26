@@ -1,6 +1,7 @@
 import { DeveloperControls } from './components/DeveloperControls'
 import { MidiDebugPanel } from './components/MidiDebugPanel'
 import { MidiStatus } from './components/MidiStatus'
+import { MidiOutputPanel } from './components/MidiOutputPanel'
 import { PracticeControls } from './components/PracticeControls'
 import { ScoreView } from './components/ScoreView'
 import { useMidi } from './midi/useMidi'
@@ -9,7 +10,7 @@ import { twinkleScore } from './score/ScoreModel'
 import './App.css'
 
 export default function App() {
-  const { midi, connect, selectInput, events } = useMidi()
+  const { midi, connect, selectInput, events, output, selectOutput, playTestNote, stopAllNotes, retryOutput } = useMidi()
   const { practice, start, restart, moveCursor, onScoreReady } = usePracticeSession(events)
   const { currentNoteIndex: cursorIndex, totalNotes: noteCount } = practice
 
@@ -17,7 +18,7 @@ export default function App() {
     <main className="app">
       <header className="app-header">
         <div>
-          <p className="eyebrow">ピアノ練習 · Phase 2B</p>
+          <p className="eyebrow">ピアノ練習 · Phase 2C-A</p>
           <h1>{twinkleScore.title}</h1>
           <p className="subtitle">{twinkleScore.partLabel} · はじめの4小節</p>
         </div>
@@ -50,7 +51,8 @@ export default function App() {
       </section>
       <DeveloperControls practice={practice} onPrevious={() => moveCursor(-1)} onNext={() => moveCursor(1)} />
       <MidiDebugPanel latest={midi.latestEvent} lastNoteOn={midi.lastNoteOn} lastNoteOff={midi.lastNoteOff} />
-      <footer>Phase 2B · 音を順番に弾いてみよう</footer>
+      <MidiOutputPanel output={output} inputStatus={midi.status} onSelect={selectOutput} onPlay={playTestNote} onStop={stopAllNotes} onRetry={retryOutput} />
+      <footer>Phase 2C-A · 音順練習とMIDI出力の接続確認</footer>
     </main>
   )
 }

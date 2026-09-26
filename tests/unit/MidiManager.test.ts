@@ -15,7 +15,7 @@ function environment(requestMIDIAccess: () => Promise<MIDIAccess>) {
 }
 
 function emptyAccess() {
-  return Object.assign(new EventTarget(), { inputs: new Map() }) as unknown as MIDIAccess
+  return Object.assign(new EventTarget(), { inputs: new Map(), outputs: new Map() }) as unknown as MIDIAccess
 }
 
 it('does not request permission until connect is called and ignores a permission result after unmount', async () => {
@@ -58,7 +58,7 @@ it('closes a port whose pending open finishes after disconnect and stops listeni
     id: 'cme', name: 'U2MIDI Pro MIDI 1', manufacturer: 'CME Pro', state: 'connected',
     open: vi.fn(() => opened.promise), close: vi.fn(() => Promise.resolve()),
   }) as unknown as MIDIInput
-  const access = Object.assign(new EventTarget(), { inputs: new Map([['cme', port]]) }) as unknown as MIDIAccess
+  const access = Object.assign(new EventTarget(), { inputs: new Map([['cme', port]]), outputs: new Map() }) as unknown as MIDIAccess
   environment(() => Promise.resolve(access))
   const manager = new MidiManager()
   const listener = vi.fn()

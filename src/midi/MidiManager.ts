@@ -1,5 +1,6 @@
 import type { MidiNoteEvent, MidiSnapshot } from './midiTypes'
 import { parseMidiMessage } from './parseMidiMessage'
+import { MidiOutputManager } from './MidiOutputManager'
 
 function initialSnapshot(): MidiSnapshot {
   return {
@@ -12,6 +13,7 @@ function initialSnapshot(): MidiSnapshot {
 
 /** Owns browser MIDI access only; it has no knowledge of the score or cursor. */
 export class MidiManager {
+  readonly output = new MidiOutputManager()
   private snapshot = initialSnapshot()
   private listeners = new Set<() => void>()
   private noteListeners = new Set<(event: MidiNoteEvent) => void>()
@@ -54,12 +56,13 @@ export class MidiManager {
     const generation = ++this.generation
     this.publish({ status: 'waiting', requesting: true, message: 'MIDIの使用許可を確認しています…' })
     try {
-      // Called only from the connection button. SysEx and MIDI output are unused.
+      // Input and output share this one permission request; SysEx is not needed.
       const access = this.access ?? await navigator.requestMIDIAccess({ sysex: false })
       if (generation !== this.generation) return
       this.access = access
       access.addEventListener('statechange', this.onStateChange)
       this.publish({ requesting: false })
+      this.output.attachAccess(access)
       this.refreshInputs(true)
     } catch (error) {
       if (generation !== this.generation) return
@@ -77,7 +80,7 @@ export class MidiManager {
     const input = this.access?.inputs.get(id)
     if (input?.state === 'connected') this.activateInput(input)
   }
-  private onStateChange = () => { this.refreshInputs() }
+  private onStateChange = () => { this.refreshInputs(); this.output.refreshOutputs() }
 
   private refreshInputs(force = false) {
     if (!this.access) return
@@ -138,6 +141,7 @@ export class MidiManager {
     this.access?.removeEventListener('statechange', this.onStateChange)
     this.access = null
     this.releaseInput()
+    this.output.disconnect()
     this.snapshot = initialSnapshot()
     this.listeners.forEach((listener) => listener())
   }

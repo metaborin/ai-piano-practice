@@ -78,7 +78,7 @@ test('MIDI is opt-in, prefers CME, reports note data and does not advance before
   await page.evaluate(() => window.midiTest.setConnected('other', true))
   await page.getByRole('button', { name: 'MIDI接続', exact: true }).click()
   await expect(page.locator('.midi-status')).toHaveText('MIDI 接続中')
-  await expect(page.getByRole('combobox')).toHaveValue('cme')
+  await expect(page.getByRole('combobox', { name: '入力機器' })).toHaveValue('cme')
   await expect(page.locator('.connection-copy')).toContainText('CME Pro')
   const before = await page.locator('.score-renderer img').boundingBox()
   for (const velocity of [20, 33, 96]) {
@@ -96,7 +96,7 @@ test('MIDI is opt-in, prefers CME, reports note data and does not advance before
   await expect(page.getByTestId('latest-input').locator('dd')).toHaveText(['67', '0', 'Note Off', '16'])
   await expect(page.locator('.position')).toHaveText('1 / 14 音')
   expect(await page.locator('.score-renderer img').boundingBox()).toEqual(before)
-  await page.getByRole('combobox').selectOption('other')
+  await page.getByRole('combobox', { name: '入力機器' }).selectOption('other')
   await page.evaluate(() => window.midiTest.send([0x91, 72, 55], 'other'))
   await expect(page.getByTestId('latest-input').locator('dd')).toHaveText(['72', '55', 'Note On', '2'])
 })
