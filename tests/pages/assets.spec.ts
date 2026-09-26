@@ -1,0 +1,29 @@
+import { expect, test } from '@playwright/test'
+
+test('the Pages build loads its bundled MusicXML, styles and OSMD from the repository subpath', async ({ page, baseURL }) => {
+  const failures: string[] = []
+  const scripts: string[] = []
+  const styles: string[] = []
+  page.on('pageerror', (error) => failures.push(error.message))
+  page.on('requestfailed', (request) => failures.push(request.url()))
+  page.on('response', (response) => {
+    if (response.status() >= 400) failures.push(`${response.status()} ${response.url()}`)
+    if (response.request().resourceType() === 'script') scripts.push(response.url())
+    if (response.request().resourceType() === 'stylesheet') styles.push(response.url())
+  })
+  const response = await page.goto('./')
+  expect(response?.status()).toBe(200)
+  await expect(page.locator('.position')).toHaveText('1 / 14 音')
+  await expect(page.locator('.score-renderer .vf-stavenote')).toHaveCount(14)
+  await expect(page.locator('.score-renderer img')).toBeVisible()
+  expect(scripts.length).toBeGreaterThanOrEqual(2)
+  expect(styles.length).toBeGreaterThanOrEqual(1)
+  const assetsPrefix = new URL('assets/', baseURL).href
+  for (const url of [...scripts, ...styles]) expect(url.startsWith(assetsPrefix)).toBe(true)
+  // The ?raw MusicXML is inside the application bundle, so there is no runtime XML URL.
+  expect(failures).toEqual([])
+  await page.reload()
+  await expect(page.locator('.position')).toHaveText('1 / 14 音')
+  await expect(page.locator('.score-renderer .vf-stavenote')).toHaveCount(14)
+  expect(failures).toEqual([])
+})

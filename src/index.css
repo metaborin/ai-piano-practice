@@ -1,0 +1,21 @@
+:root {
+  font-family: 'Noto Sans JP', 'Yu Gothic', 'Meiryo', system-ui, sans-serif;
+  color: #23332f;
+  background: #f5f7f5;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  line-height: 1.6;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button, select { font: inherit; }
+button { min-height: 56px; padding: 12px 26px; border: 1px solid #b8c8c0; border-radius: 10px; background: white; color: #23332f; font-weight: 700; cursor: pointer; touch-action: manipulation; }
+button:hover:not(:disabled) { background: #eaf2ed; }
+button:disabled { cursor: default; color: #66716c; background: #edf0ee; border-color: #d9dfdb; }
+button:focus-visible, select:focus-visible { outline: 3px solid #2269c0; outline-offset: 4px; }
+h1, h2, p { margin: 0; }
+h1 { font-size: clamp(30px, 4vw, 38px); line-height: 1.4; letter-spacing: 0.04em; }
+h2 { font-size: 20px; }
