@@ -1,6 +1,6 @@
 import { BuiltInSongRepository } from './BuiltInSongRepository'
-import type { SongRepository } from './SongRepository'
+import { IndexedDbSongRepository } from './IndexedDbSongRepository'
+import { LibrarySongRepository } from './LibrarySongRepository'
 
-/** Composition point: a future combined built-in/IndexedDB repository goes here. */
-export const songRepository: SongRepository = new BuiltInSongRepository()
+export const songRepository = new LibrarySongRepository(new BuiltInSongRepository(), new IndexedDbSongRepository())
 export const DEFAULT_SONG_ID = 'twinkle-opening'

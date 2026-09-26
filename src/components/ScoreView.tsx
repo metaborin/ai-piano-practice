@@ -3,6 +3,7 @@ import type { OpenSheetMusicDisplay } from 'opensheetmusicdisplay'
 import type { ScoreModel, ScoreSource } from '../score/ScoreModel'
 import { readScoreModel } from '../score/readScoreModel'
 import { validateMusicXml } from '../score/validateMusicXml'
+import { inspectMusicXml } from '../songs/inspectMusicXml'
 type Props = {
   requestId: number
   score: ScoreSource
@@ -77,7 +78,10 @@ export function ScoreView({ requestId, score, cursorIndex, onReady, onError }: P
         currentIndexRef.current = 0
         render()
         let model: ScoreModel
-        try { model = readScoreModel(score, display.cursor, Pitch.OctaveXmlDifference) }
+        try {
+          model = readScoreModel(score, display.cursor, Pitch.OctaveXmlDifference)
+          if (model.notes.length !== inspectMusicXml(score.musicXml).pitchedNoteCount) throw new Error('OSMD omitted notes')
+        }
         catch {
           fail('練習対象の音を解析できませんでした。1パートの単旋律を使用してください。')
           return

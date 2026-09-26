@@ -2,6 +2,8 @@
 
 実装日: 2026-09-26
 
+追記: ユーザーからPhase 2E-AのChromebook実機確認は問題なく完了したとの報告を受けました。以下は実装時点の記録です。現在の作業は [Phase 2E-B](PHASE2EB.md) を参照してください。
+
 公開先: https://metaborin.github.io/ai-piano-practice/
 
 ユーザーから「Phase 2Dまで完了」と報告を受けています。今回は曲モデル・Repository・ライブラリUIの基盤だけを実装しました。Phase 2E-AのChromebook実機確認後に、別の依頼としてPhase 2E-Bへ進みます。

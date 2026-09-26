@@ -19,7 +19,14 @@ export default function App() {
   const { session, practice, start, restart, moveCursor } = usePracticeSession(events)
   const { demo, player } = useDemoPlayer(outputManager, session)
   const { selection, songState } = useSongSelection(session, player, outputManager)
-  const { library, retry } = useSongLibrary(songRepository, selection.select, DEFAULT_SONG_ID)
+  const { library, retry, addSong, deleteSong } = useSongLibrary(songRepository, selection.select, DEFAULT_SONG_ID)
+  const removeSong = async (id: string) => {
+    if (songState.song?.id === id) {
+      const fallback = library.songs.find((song) => song.id === DEFAULT_SONG_ID)
+      if (fallback) void selection.select(fallback)
+    }
+    await deleteSong(id)
+  }
   const title = songState.song?.title ?? 'AIピアノ練習アプリ'
   const scoreReady = songState.status === 'ready'
   const showDemoCursor = demo.status !== 'idle' && practice.status !== 'practicing' && practice.status !== 'completed'
@@ -33,13 +40,13 @@ export default function App() {
     <main className="app">
       <header className="app-header">
         <div>
-          <p className="eyebrow">ピアノ練習 · Phase 2E-A</p>
+          <p className="eyebrow">ピアノ練習 · Phase 2E-B</p>
           <h1>{title}</h1>
           <p className="subtitle">{songState.song?.partLabel ?? '曲を選んで練習しましょう'}</p>
         </div>
         <MidiStatus status={midi.status} />
       </header>
-      <SongLibrary library={library} selectedId={songState.song?.id ?? ''} onSelect={selection.select} onRetry={retry} />
+      <SongLibrary library={library} selectedId={songState.song?.id ?? ''} onSelect={selection.select} onRetry={retry} onAdd={addSong} onDelete={removeSong} />
       <section className="score-card" aria-label={songState.song ? title + 'の楽譜' : '楽譜'} aria-busy={!scoreReady && songState.status === 'loading'}>
         <div className="score-heading">
           <span className="cursor-legend"><span aria-hidden="true" />緑の帯が現在位置</span>
@@ -71,7 +78,7 @@ export default function App() {
       <DeveloperControls practice={practice} blocked={!scoreReady || showDemoCursor} onPrevious={() => moveCursor(-1)} onNext={() => moveCursor(1)} />
       <MidiDebugPanel latest={midi.latestEvent} lastNoteOn={midi.lastNoteOn} lastNoteOff={midi.lastNoteOff} />
       <MidiOutputPanel output={output} inputStatus={midi.status} onSelect={selectOutput} onPlay={playTestNote} onStop={stopAllNotes} onRetry={retryOutput} />
-      <footer>Phase 2E-A · 曲を選んで、順番に弾いてみよう</footer>
+      <footer>Phase 2E-B · 曲を選んで、順番に弾いてみよう</footer>
     </main>
   )
 }

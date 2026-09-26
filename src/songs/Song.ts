@@ -1,5 +1,11 @@
 export type SongSource = 'builtin' | 'imported'
 
+export type Compatibility = {
+  readonly status: 'supported' | 'unsupported' | 'unknown'
+  readonly version: number
+  readonly reasons: readonly string[]
+}
+
 export type MusicXmlLocation =
   | { readonly type: 'url'; readonly value: string }
   | { readonly type: 'text'; readonly value: string }
@@ -23,4 +29,16 @@ export type Song = {
   readonly difficulty?: number
   readonly createdAt?: number
   readonly originalScore?: OriginalScore
+  readonly originalFileName?: string
+  readonly fileFormat?: 'musicxml' | 'mxl'
+  readonly compatibility?: Compatibility
+}
+
+export type ImportedSong = Song & {
+  readonly source: 'imported'
+  readonly musicXml: { readonly type: 'text'; readonly value: string }
+  readonly originalFileName: string
+  readonly fileFormat: 'musicxml' | 'mxl'
+  readonly createdAt: number
+  readonly compatibility: Compatibility
 }

@@ -15,7 +15,7 @@ test('library groups the three built-in songs, shows an empty personal area, and
   await page.screenshot({ path: 'test-results/phase2ea-desktop.png', fullPage: true })
 })
 
-test('add-song button only shows an inline notice and preserves the current practice and MIDI connection', async ({ page }) => {
+test('opening and cancelling the file picker preserves the current practice and MIDI connection', async ({ page }) => {
   const dialogs: string[] = []
   let fileChoosers = 0
   page.on('dialog', async (dialog) => { dialogs.push(dialog.type()); await dialog.dismiss() })
@@ -29,20 +29,18 @@ test('add-song button only shows an inline notice and preserves the current prac
   const add = page.getByRole('button', { name: '＋ 曲を追加', exact: true })
   await add.click()
   await add.click()
-  await expect(add).toHaveAttribute('aria-expanded', 'true')
-  await expect(page.locator('#add-song-message')).toHaveText('MusicXML / MXLから曲を追加する機能は次のPhaseで追加します。')
   await expect(page.locator('.position')).toHaveText('2 / 14 音')
   await expect(page.locator('.practice-controls')).toHaveAttribute('data-correct-count', '1')
   await expect(page.locator('.practice-controls')).toHaveAttribute('data-practice-status', 'practicing')
   await expect(page.locator('.midi-status')).toHaveText('MIDI 接続中')
   expect(await page.evaluate(() => window.midiTest.requests)).toBe(1)
-  await expect(page.locator('input[type="file"]')).toHaveCount(0)
+  await expect(page.locator('input[type="file"]')).toHaveAttribute('accept', '.musicxml,.xml,.mxl')
   expect(dialogs).toEqual([])
-  expect(fileChoosers).toBe(0)
+  expect(fileChoosers).toBe(2)
   await page.getByRole('combobox', { name: '練習する曲' }).selectOption('short-melody')
   await expect(page.locator('.position')).toHaveText('1 / 5 音')
   await expect(page.locator('.practice-controls')).toHaveAttribute('data-correct-count', '0')
-  await expect(page.locator('#add-song-message')).toBeVisible()
+  await expect(page.getByRole('form', { name: '曲の登録確認' })).toHaveCount(0)
 })
 
 test('library is usable by keyboard and touch at Chromebook and narrow screen widths', async ({ page }) => {
@@ -62,7 +60,5 @@ test('library is usable by keyboard and touch at Chromebook and narrow screen wi
     expect(addBox!.height).toBeGreaterThanOrEqual(48)
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   }
-  await page.getByRole('button', { name: '＋ 曲を追加' }).click()
-  await expect(page.locator('#add-song-message')).toBeVisible()
   await page.screenshot({ path: 'test-results/phase2ea-mobile.png', fullPage: true })
 })

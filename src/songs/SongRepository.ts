@@ -1,4 +1,4 @@
-import type { Song } from './Song'
+import type { ImportedSong, Song } from './Song'
 
 /** Async reads work equally for bundled metadata and a future IndexedDB store. */
 export interface SongRepository {
@@ -6,5 +6,8 @@ export interface SongRepository {
   getSong(id: string): Promise<Song | undefined>
 }
 
-// A future writable repository can extend this contract with addSong/deleteSong.
-// The built-in repository deliberately exposes no write operations.
+export interface WritableSongRepository extends SongRepository {
+  addSong(song: ImportedSong): Promise<void>
+  deleteSong(id: string): Promise<void>
+  getStorageError?(): string | null
+}

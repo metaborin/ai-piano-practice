@@ -1,11 +1,12 @@
-# AIピアノ練習アプリ — Phase 2E-A
+# AIピアノ練習アプリ — Phase 2E-B
 
 曲一覧から練習曲を選び、楽譜を見ながら電子ピアノで正しい鍵盤を順番に弾く練習アプリです。React + TypeScript + Vite、OpenSheetMusicDisplay（OSMD）、Web MIDI API を使用しています。
 
 公開URL: **https://metaborin.github.io/ai-piano-practice/**
 
-**ユーザーからPhase 2Dまで完了との報告を受けています。Phase 2E-Aの曲ライブラリ基盤は実装・自動確認を行い、Chromebook + U2MIDI Pro + PX-100での実機確認を待ちます。Phase 2E-B以降は実装していません。**
+**ユーザーからPhase 2E-AのChromebook実機確認完了との報告を受けています。Phase 2E-BはMusicXML/MXLの追加・IndexedDB保存・削除を実装しています。Chromebook + U2MIDI Pro + PX-100での新しい実機受入は未実施です。Phase 2E-C以降へは進みません。**
 
+- [Phase 2E-B の実装報告・保存設計・15項目の完了条件・実機確認](docs/PHASE2EB.md)
 - [Phase 2E-A の実装報告・設計・13項目の完了条件・実機確認](docs/PHASE2EA.md)
 - [Phase 2D の実装報告・曲の追加手順・実機チェックリスト](docs/PHASE2D.md)
 
@@ -26,7 +27,9 @@
 
 練習中・手本再生中にも曲を変更できます。変更時は発音と予約を停止し、進捗をリセットして新しい曲の待機状態になります。MIDI接続と機器選択は維持します。読み込み中・失敗時は練習と手本を開始できません。失敗したら別の曲を選んでください。
 
-「自分の曲」は現在空です。「＋ 曲を追加」はMusicXML / MXLの追加機能を次のPhaseで提供する案内を画面内に表示します。ファイル選択・IndexedDB保存・PDF/画像の追加や表示はまだ行いません。
+「＋ 曲を追加」から `.musicxml` / `.xml` / `.mxl` を選び、曲名・作曲者・対応状況を確認して「追加する」を押すと「自分の曲」に保存されます。追加曲はこのブラウザのIndexedDBに保存し、GitHubやサーバーへ送信しません。ページ再読み込み・ブラウザ再起動後も保存領域が残っていれば復元します。サイトデータの削除やプライベート閲覧の終了では失われるため、元のファイルは保管してください。
+
+対応曲は「選択」で既存の練習・手本演奏を使えます。和音・複数声部などはXML原文を保存して「未対応」と表示し、練習・手本演奏を無効にします。「削除」→画面内の「削除する」で追加曲だけを削除できます。選択中の曲を削除すると発音・予約を停止してきらきら星へ戻ります。PDF/画像はまだ取り込めません。
 
 練習開始前のMIDI入力はデバッグ表示のみ更新します。開発確認用の「前の音／次の音」は「開発者用」を開くと使えます。誤操作を避けるため、練習中・完了後は手動移動を無効にします。
 
@@ -93,8 +96,12 @@ npm run test:pages
 src/
   songs/
     Song.ts                # 保存可能な曲メタデータ、URL/text、元PDF/画像の参照
-    SongRepository.ts      # 非同期listSongs/getSong契約
+    SongRepository.ts      # 読み取り契約と、追加/削除の書き込み契約
     BuiltInSongRepository.ts # 非公開の内蔵3曲データと取得
+    IndexedDbSongRepository.ts # 追加曲の永続化、トランザクション完了確認
+    LibrarySongRepository.ts # 内蔵曲＋追加曲、内蔵曲の書き込み保護
+    readSongFile.ts        # XML/MXLの取得と展開サイズ制限
+    inspectMusicXml.ts     # メタデータ、基本検証、対応範囲の判定
     libraryRepository.ts   # Repositoryの組み立てと初期選択ID
     loadSongMusicXml.ts    # URL取得・保存済み文字列を同じXML処理へ渡す
     useSongLibrary.ts      # Repositoryから一覧取得・初期選択・再試行
@@ -118,7 +125,8 @@ src/
     PracticeSession.ts     # 開始・現在音・完了・再開・保持鍵盤
     usePracticeSession.ts  # MIDIイベントとセッションの接続
   components/
-    SongLibrary.tsx        # 内蔵曲・自分の曲・追加ボタンの案内
+    SongLibrary.tsx        # 内蔵曲・自分の曲・選択・削除確認
+    SongImport.tsx         # ファイル選択、登録確認、実ScoreModelの検証
     ScoreView.tsx
     PracticeControls.tsx
     DeveloperControls.tsx
@@ -144,20 +152,20 @@ MIDI受信、楽譜データ、描画、判定、練習状態を分離してい�
 
 ## 検証・公開
 
-- 単体テスト: 88件。
-- ブラウザーテスト: 開発用38件、本番用39件（MIDI入出力は模擬）。
+- 検証項目と今回の結果は [Phase 2E-Bの実装報告](docs/PHASE2EB.md) を参照。MIDI入出力は模擬し、IndexedDBはブラウザの実装を使用します。
 - lint、アプリとテストの型検査、buildを実行。
 - `main` にpushすると GitHub Actions が検査・ビルド・ブラウザーテスト後に `dist/` を公開します。
-- 今回の実機受入は [Phase 2E-Aチェックリスト](docs/PHASE2EA.md) を使います。
+- 今回の実機受入は [Phase 2E-Bチェックリスト](docs/PHASE2EB.md) を使います。
 
 ## npmパッケージ
 
-Phase 2B・2C-A・2C-B・2D・2E-Aで新しいnpmパッケージは追加していません。`package-lock.json` を維持しています。
+Phase 2E-BではMXL展開にJSZip 3.10.1を直接依存として追加しました（以前はOSMDの間接依存）。IndexedDBはブラウザ標準APIを使用し、追加ラッパーはありません。
 
 | 用途 | パッケージ | バージョン |
 | --- | --- | --- |
 | UI | react / react-dom | 19.3.0 / 19.3.0 |
 | 楽譜 | opensheetmusicdisplay | 2.1.3 |
+| MXL展開 | jszip | 3.10.1 |
 | 開発・ビルド | vite / @vitejs/plugin-react | 8.3.1 / 6.1.1 |
 | 型検査 | typescript | 6.0.3 |
 | 型定義 | @types/react / @types/react-dom / @types/node | 19.3.0 / 19.3.0 / 24.19.0 |
