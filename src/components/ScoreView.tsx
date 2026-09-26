@@ -1,31 +1,48 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import type { OpenSheetMusicDisplay } from 'opensheetmusicdisplay'
 import type { ScoreModel, ScoreSource } from '../score/ScoreModel'
 import { readScoreModel } from '../score/readScoreModel'
-type Props = { score: ScoreSource; cursorIndex: number; onReady: (model: ScoreModel | null) => void }
+import { validateMusicXml } from '../score/validateMusicXml'
+type Props = {
+  requestId: number
+  score: ScoreSource
+  cursorIndex: number
+  onReady: (requestId: number, model: ScoreModel) => void
+  onError: (requestId: number, message: string) => void
+}
 
-export function ScoreView({ score, cursorIndex, onReady }: Props) {
+export function ScoreView({ requestId, score, cursorIndex, onReady, onError }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const displayRef = useRef<OpenSheetMusicDisplay | null>(null)
   const currentIndexRef = useRef(0)
-  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
     // Each effect owns its host: cancelled loads cannot interfere with StrictMode's new render.
     const host = document.createElement('div')
+    host.style.visibility = 'hidden'
     container.append(host)
     let cancelled = false
     let display: OpenSheetMusicDisplay | null = null
     let observer: ResizeObserver | null = null
     let frame = 0
     let lastWidth = 0
-    const fail = () => {
+    let loading = false
+    let disposed = false
+    const dispose = () => {
+      host.remove()
+      // OSMD.load can still be running. Dispose again after it settles, not mid-import.
+      if (loading || disposed) return
+      disposed = true
+      display?.cursors.forEach((cursor) => cursor.Dispose())
+      display?.clear()
+    }
+    const fail = (message = '楽譜を表示できませんでした。別の曲を選んでください。') => {
       if (cancelled) return
       displayRef.current = null
-      onReady(null)
-      setError('楽譜を表示できませんでした。ページを再読み込みしてください。')
+      host.style.visibility = 'hidden'
+      onError(requestId, message)
     }
     const render = () => {
       if (!display || cancelled) return
@@ -39,6 +56,11 @@ export function ScoreView({ score, cursorIndex, onReady }: Props) {
     }
     const load = async () => {
       try {
+        try { validateMusicXml(score.musicXml) }
+        catch (error) {
+          fail(error instanceof Error ? error.message : 'MusicXMLを検証できませんでした。')
+          return
+        }
         const { OpenSheetMusicDisplay, Pitch } = await import('opensheetmusicdisplay')
         if (cancelled) return
         display = new OpenSheetMusicDisplay(host, {
@@ -48,15 +70,22 @@ export function ScoreView({ score, cursorIndex, onReady }: Props) {
           cursorsOptions: [{ type: 0, color: '#299b70', alpha: 0.32, follow: false }],
         })
         display.EngravingRules.StretchLastSystemLine = true
-        await display.load(score.musicXml)
+        loading = true
+        try { await display.load(score.musicXml) }
+        finally { loading = false }
         if (cancelled) return
         currentIndexRef.current = 0
         render()
-        const model = readScoreModel(score, display.cursor, Pitch.OctaveXmlDifference)
+        let model: ScoreModel
+        try { model = readScoreModel(score, display.cursor, Pitch.OctaveXmlDifference) }
+        catch {
+          fail('練習対象の音を解析できませんでした。1パートの単旋律を使用してください。')
+          return
+        }
         display.cursor.show()
         displayRef.current = display
-        setError(null)
-        onReady(model)
+        host.style.visibility = 'visible'
+        onReady(requestId, model)
         lastWidth = container.clientWidth
         observer = new ResizeObserver(() => {
           const width = container.clientWidth
@@ -67,6 +96,7 @@ export function ScoreView({ score, cursorIndex, onReady }: Props) {
         })
         observer.observe(container)
       } catch { fail() }
+      finally { if (cancelled) dispose() }
     }
     void load()
     return () => {
@@ -74,24 +104,26 @@ export function ScoreView({ score, cursorIndex, onReady }: Props) {
       observer?.disconnect()
       cancelAnimationFrame(frame)
       displayRef.current = null
-      display?.cursors.forEach((cursor) => cursor.Dispose())
-      display?.clear()
-      host.remove()
+      dispose()
     }
-  }, [score, onReady])
+  }, [requestId, score, onReady, onError])
 
   useEffect(() => {
     const display = displayRef.current
     if (!display) return
-    while (currentIndexRef.current < cursorIndex) { display.cursor.next(); currentIndexRef.current++ }
-    while (currentIndexRef.current > cursorIndex) { display.cursor.previous(); currentIndexRef.current-- }
-    display.cursor.show()
-  }, [cursorIndex])
+    try {
+      while (currentIndexRef.current < cursorIndex) { display.cursor.next(); currentIndexRef.current++ }
+      while (currentIndexRef.current > cursorIndex) { display.cursor.previous(); currentIndexRef.current-- }
+      display.cursor.show()
+    } catch {
+      displayRef.current = null
+      onError(requestId, '楽譜の現在位置を表示できませんでした。別の曲を選んでください。')
+    }
+  }, [cursorIndex, requestId, onError])
 
   return (
     <div className="score-view">
-      {error && <p className="error-message" role="alert">{error}</p>}
-      <div ref={containerRef} className="score-renderer" role="img" aria-label="ト音記号、4分の4拍子。ド ド ソ ソ、ラ ラ ソー、ファ ファ ミ ミ、レ レ ドー。" />
+      <div ref={containerRef} className="score-renderer" role="img" aria-label={score.title + 'の楽譜'} />
     </div>
   )
 }

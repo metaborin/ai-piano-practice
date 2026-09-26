@@ -8,9 +8,9 @@ export function readScoreModel(source: ScoreSource, cursor: Cursor, octaveXmlDif
   try {
     while (!cursor.Iterator.EndReached) {
       const current = cursor.NotesUnderCursor()
-      // Phase 2B supports this single-voice, pitched melody only.
+      // Only a single-voice, pitched melody is supported.
       if (current.length !== 1 || current[0].isRest() || current[0].IsGraceNote || !current[0].Pitch) {
-        throw new Error('Phase 2B requires one pitched note per cursor position')
+        throw new Error('One pitched note is required per cursor position')
       }
       const pitch = current[0].Pitch
       const midiNote = 12 * (pitch.Octave + octaveXmlDifference + 1) + pitch.FundamentalNote + pitch.AccidentalHalfTones

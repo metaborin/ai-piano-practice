@@ -82,7 +82,7 @@ export class PracticeSession {
     }
     const correctNoteCount = this.snapshot.correctNoteCount + 1
     if (this.snapshot.currentNoteIndex === this.notes.length - 1) {
-      // Keep the cursor on the final note: there is no position 15 / 14.
+      // Keep the cursor on the final target note.
       this.publish({ correctNoteCount, feedback, status: 'completed' })
       return
     }

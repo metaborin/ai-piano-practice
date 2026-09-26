@@ -1,10 +1,12 @@
-# AIピアノ練習アプリ — Phase 2C-B
+# AIピアノ練習アプリ — Phase 2D
 
-きらきら星の楽譜を見て、電子ピアノで正しい鍵盤を順番に弾く練習アプリです。React + TypeScript + Vite、OpenSheetMusicDisplay（OSMD）、Web MIDI API を使用しています。
+曲一覧から練習曲を選び、楽譜を見ながら電子ピアノで正しい鍵盤を順番に弾く練習アプリです。React + TypeScript + Vite、OpenSheetMusicDisplay（OSMD）、Web MIDI API を使用しています。
 
 公開URL: **https://metaborin.github.io/ai-piano-practice/**
 
-**Phase 2A・2B・2C-AはユーザーによるChromebook + U2MIDI Pro + PX-100実機確認が完了しています。今回追加したPhase 2C-Bの手本演奏・カーソル同期は実機確認待ちです。**
+**Phase 2C-BまではユーザーによるChromebook + U2MIDI Pro + PX-100実機確認が完了しています。Phase 2Dの曲選択は実機確認待ちです。Phase 3には進んでいません。**
+
+- [Phase 2D の実装報告・曲の追加手順・実機チェックリスト](docs/PHASE2D.md)
 
 - [Phase 2C-B の実装報告・手本演奏・13項目のチェックリスト](docs/PHASE2CB.md)
 - [Phase 2C-A の実装報告・MIDI出力テスト・10項目のチェックリスト](docs/PHASE2CA.md)
@@ -16,10 +18,12 @@
 
 1. PX-100 MIDI OUT → CME U2MIDI Pro → Chromebook の接続を使い、Chromeで公開URLを開きます。
 2. 「MIDI接続」を押し、Chromeで許可します。`U2MIDI Pro MIDI 1 / CME Pro` を確認します。
-3. 「練習開始」を押すと先頭の C4 から始まります。
+3. 「練習する曲」で曲を選びます。初期選択は「きらきら星」。読み込み後に「練習開始」を押すと、選択曲の先頭から始まります。
 4. 正しい音は「できた！」と表示され、カーソルが1音進みます。間違った音は「もう一度♪」と表示され、位置を保ちます。
 5. 同じ音が続くところは、鍵盤を離してからもう一度押してください。
-6. 最後まで弾くと `14 / 14 音` と「できました！」を表示します。「もう一度」で最初から再開できます。
+6. 選択曲の最後まで弾くと「できました！」を表示します。「もう一度」で最初から再開できます。音数はきらきら星14音、ドレミの練習7音、短いメロディ5音です。
+
+練習中・手本再生中にも曲を変更できます。変更時は発音と予約を停止し、進捗をリセットして新しい曲の待機状態になります。MIDI接続と機器選択は維持します。読み込み中・失敗時は練習と手本を開始できません。失敗したら別の曲を選んでください。
 
 練習開始前のMIDI入力はデバッグ表示のみ更新します。開発確認用の「前の音／次の音」は「開発者用」を開くと使えます。誤操作を避けるため、練習中・完了後は手動移動を無効にします。
 
@@ -27,12 +31,12 @@
 
 ## 手本を聴く（Phase 2C-B）
 
-1. MIDI出力の接続済み表示を確認して「手本を聴く」を押すと、現在のMusicXMLから読み込んだ14音をPX-100本体で再生します。カーソルも1音目から進みます。
+1. MIDI出力の接続済み表示を確認して「手本を聴く」を押すと、選択曲のMusicXMLから読み込んだ音をPX-100本体で再生します。カーソルも1音目から進みます。
 2. 固定100 BPM。四分音符600ms、二分音符1200msの間隔で、音価の90%の位置にNote Offを入れます。同音も独立して鳴らします。
 3. 「停止」で途中停止します。再度「手本を聴く」を押すと1音目から再生します。
 4. 最後のNote Offで「手本の再生が終わりました」と表示し、カーソルは最後に残します。「練習開始」で最初から弾けます。
 
-手本を押すと、それまでの練習をリセットして `demoPlaying` に切り替えます。手本中の鍵盤入力・MIDIループバックはデバッグ表示だけに反映し、正誤判定を行いません。音高・音価は `ScoreModel` が唯一の元データです。曲の音列を別途ハードコードしていません。
+手本を押すと、それまでの練習をリセットして `demoPlaying` に切り替えます。手本中の鍵盤入力・MIDIループバックはデバッグ表示だけに反映し、正誤判定を行いません。MusicXMLを唯一の原本として、同じXMLからOSMDの楽譜と `ScoreModel` の音高・音価を生成します。曲の音列を別途ハードコードしていません。
 
 予約を消せない環境での確実な停止を優先し、未来のNote Onをまとめてキューへ送りません。開始時刻から計算した絶対時刻で1音ずつNote Onを送り、Note OffはMIDIのtimestampで予約します。画面処理の大きな遅延や別タブへの移動では停止します。停止直後、残ったNote Offが過ぎるまで操作が一時的に無効になる場合があります。[スケジュール方法と実機確認](docs/PHASE2CB.md)
 
@@ -94,6 +98,10 @@ src/
     parseMidiMessage.ts     # Note On / Offの正規化・表示用音名
     useMidi.ts
   score/
+    songCatalog.ts         # 曲ID・表示名・MusicXMLの動的raw import
+    SongSelection.ts       # 取得・要求ID・描画完了の照合・失敗/復帰
+    useSongSelection.ts    # 曲変更時の練習停止・消音とモデル適用
+    validateMusicXml.ts    # XML形式・対応範囲・対象音の検証
     ScoreModel.ts           # 楽譜ソース・カーソルと同順序のMIDI音列とdurationBeats
     readScoreModel.ts       # OSMDの各カーソル位置から音列を取得
   practice/
@@ -109,6 +117,8 @@ src/
     MidiOutputPanel.tsx
     DemoControls.tsx
   scores/twinkle.musicxml
+  scores/do-re-mi.musicxml
+  scores/short-melody.musicxml
   App.tsx
   App.css
   index.css
@@ -124,15 +134,15 @@ MIDI受信、楽譜データ、描画、判定、練習状態を分離してい�
 
 ## 検証・公開
 
-- 単体テスト: 70件。
-- ブラウザーテスト: 開発用21件、本番用22件（MIDI入出力は模擬）。
+- 単体テスト: 78件。
+- ブラウザーテスト: 開発用35件、本番用36件（MIDI入出力は模擬）。
 - lint、アプリとテストの型検査、buildを実行。
 - `main` にpushすると GitHub Actions が検査・ビルド・ブラウザーテスト後に `dist/` を公開します。
-- 今回の実機受入は [Phase 2C-Bチェックリスト](docs/PHASE2CB.md#13-phase-2c-b完了条件) を使います。
+- 今回の実機受入は [Phase 2Dチェックリスト](docs/PHASE2D.md) を使います。
 
 ## npmパッケージ
 
-Phase 2B・2C-A・2C-Bで新しいnpmパッケージは追加していません。`package-lock.json` を維持しています。
+Phase 2B・2C-A・2C-B・2Dで新しいnpmパッケージは追加していません。`package-lock.json` を維持しています。
 
 | 用途 | パッケージ | バージョン |
 | --- | --- | --- |

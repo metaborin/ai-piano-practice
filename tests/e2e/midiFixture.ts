@@ -15,6 +15,7 @@ declare global {
       setConnected: (id: string, connected: boolean) => void
       setOutputConnected: (id: string, connected: boolean) => void
       disableOutputClear: () => void
+      inputListenerCount: () => number
     }
   }
 }
@@ -31,6 +32,15 @@ export async function mockMidi(page: Page, initiallyConnected = true) {
       id: string
       name: string
       manufacturer: string
+      midiListeners = new Set<EventListenerOrEventListenerObject>()
+      addEventListener(type: string, listener: EventListenerOrEventListenerObject | null, options?: boolean | AddEventListenerOptions) {
+        if (type === 'midimessage' && listener) this.midiListeners.add(listener)
+        super.addEventListener(type, listener, options)
+      }
+      removeEventListener(type: string, listener: EventListenerOrEventListenerObject | null, options?: boolean | EventListenerOptions) {
+        if (type === 'midimessage' && listener) this.midiListeners.delete(listener)
+        super.removeEventListener(type, listener, options)
+      }
       constructor(id: string, name: string, manufacturer: string) {
         super()
         this.id = id
@@ -86,6 +96,7 @@ export async function mockMidi(page: Page, initiallyConnected = true) {
     Object.defineProperty(access, 'outputs', { value: outputs })
     window.midiTest = {
       requests: 0, denied: false, failOpen: false,
+      inputListenerCount: () => [...inputs.values()].reduce((count, input) => count + input.midiListeners.size, 0),
       failOutputOpen: false, failSend: false, loopback: false, outputMessages: [], outputClears: [],
       send(data, id = 'cme') {
         const event = new Event('midimessage')

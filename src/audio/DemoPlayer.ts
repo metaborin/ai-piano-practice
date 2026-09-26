@@ -66,6 +66,7 @@ export class DemoPlayer {
   }
   loadScore = (score: ScoreModel | null) => {
     this.stop()
+    this.cancelTimers()
     this.score = score
     this.publish({ status: 'idle', currentNoteIndex: 0, totalNotes: score?.notes.length ?? 0, message: '' })
   }
@@ -89,8 +90,10 @@ export class DemoPlayer {
     // Synchronous: reset/disable grading before any MIDI output or possible loopback.
     this.beforeStart()
     this.publish({ status: 'playing', currentNoteIndex: 0, message: '手本を再生中です' })
-    this.unsubscribeOutput = this.output.subscribeDemoInterrupted(() => this.interrupted())
     const generation = ++this.generation
+    this.unsubscribeOutput = this.output.subscribeDemoInterrupted(() => {
+      if (generation === this.generation) this.interrupted()
+    })
     const startedAt = performance.now()
     const play = (index: number) => {
       if (generation !== this.generation || this.snapshot.status !== 'playing') return

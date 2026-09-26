@@ -1,5 +1,6 @@
 import { afterEach, expect, it, vi } from 'vitest'
 import { buildDemoNotes, DemoPlayer } from '../../src/audio/DemoPlayer'
+import type { DemoOutput } from '../../src/audio/DemoPlayer'
 import { MidiOutputManager } from '../../src/midi/MidiOutputManager'
 import { PracticeSession } from '../../src/practice/PracticeSession'
 import type { ScoreModel } from '../../src/score/ScoreModel'
@@ -7,6 +8,51 @@ import type { ScoreModel } from '../../src/score/ScoreModel'
 const melody = [60, 60, 67, 67, 69, 69, 67, 65, 65, 64, 64, 62, 62, 60]
 const score: ScoreModel = { id: 'test', title: '', partLabel: '', musicXml: '', notes: melody.map((midiNote, index) => ({ midiNote, durationBeats: index === 6 || index === 13 ? 2 : 1 })) }
 afterEach(() => { vi.useRealTimers() })
+
+it.each([true, false])('changing songs releases sounding notes and cancels future playback (clear=%s)', async (clearSupported) => {
+  const { player, practice, port, output } = await setup(clearSupported)
+  player.start()
+  vi.advanceTimersByTime(1250)
+  practice.loadScore(null)
+  player.loadScore(null)
+  expect(port.send.mock.calls.slice(-2)).toEqual([[[0x80, 67, 0]], [[0xb0, 123, 0]]])
+  const sends = port.send.mock.calls.length
+  const changed = { ...score, id: 'changed', notes: [{ midiNote: 65, durationBeats: 2 }] }
+  player.loadScore(changed)
+  practice.loadScore(changed)
+  vi.advanceTimersByTime(20000)
+  expect(port.send).toHaveBeenCalledTimes(sends)
+  expect(player.getSnapshot()).toMatchObject({ status: 'idle', totalNotes: 1, currentNoteIndex: 0 })
+  expect(practice.getSnapshot()).toMatchObject({ status: 'idle', correctNoteCount: 0 })
+  expect(output.getSnapshot().playing).toBe(false)
+  player.start()
+  expect(port.send.mock.calls.at(-2)?.[0]).toEqual([0x90, 65, 80])
+})
+
+it.each([false, true])('ignores a cancelled old position/completion timer and interruption callback (final=%s)', (final) => {
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'performance'] })
+  let oldInterrupted = () => {}
+  const output: DemoOutput = {
+    beginDemo: () => true, playDemoNote: vi.fn(() => true), finishDemo: vi.fn(), stopAllNotes: vi.fn(),
+    subscribeDemoInterrupted: (listener) => { oldInterrupted = listener; return () => {} },
+  }
+  const timer = vi.spyOn(globalThis, 'setTimeout')
+  const player = new DemoPlayer(output)
+  player.loadScore(final ? { ...score, notes: score.notes.slice(0, 1) } : score)
+  player.start()
+  const oldTimer = timer.mock.calls.at(-1)![0] as () => void
+  const interruption = oldInterrupted
+  player.loadScore({ ...score, notes: [{ midiNote: 67, durationBeats: 2 }] })
+  player.start()
+  const before = player.getSnapshot()
+  oldTimer()
+  interruption()
+  expect(player.getSnapshot()).toBe(before)
+  expect(output.playDemoNote).toHaveBeenCalledTimes(2)
+  expect(output.finishDemo).not.toHaveBeenCalled()
+  player.stop()
+  timer.mockRestore()
+})
 
 async function setup(clearSupported = true) {
   vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'performance'] })
