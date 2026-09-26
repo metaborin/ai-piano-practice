@@ -1,4 +1,4 @@
-import type { MidiSnapshot } from './midiTypes'
+import type { MidiNoteEvent, MidiSnapshot } from './midiTypes'
 import { parseMidiMessage } from './parseMidiMessage'
 
 function initialSnapshot(): MidiSnapshot {
@@ -14,6 +14,8 @@ function initialSnapshot(): MidiSnapshot {
 export class MidiManager {
   private snapshot = initialSnapshot()
   private listeners = new Set<() => void>()
+  private noteListeners = new Set<(event: MidiNoteEvent) => void>()
+  private inputResetListeners = new Set<() => void>()
   private access: MIDIAccess | null = null
   private input: MIDIInput | null = null
   private generation = 0
@@ -22,6 +24,16 @@ export class MidiManager {
   subscribe = (listener: () => void) => {
     this.listeners.add(listener)
     return () => { this.listeners.delete(listener) }
+  }
+
+  subscribeNoteEvents = (listener: (event: MidiNoteEvent) => void) => {
+    this.noteListeners.add(listener)
+    return () => { this.noteListeners.delete(listener) }
+  }
+
+  subscribeInputReset = (listener: () => void) => {
+    this.inputResetListeners.add(listener)
+    return () => { this.inputResetListeners.delete(listener) }
   }
 
   private publish(patch: Partial<MidiSnapshot>) {
@@ -108,6 +120,8 @@ export class MidiManager {
     const event = parseMidiMessage(message.data, message.timeStamp)
     if (!event) return
     this.publish({ latestEvent: event, ...(event.type === 'noteon' ? { lastNoteOn: event } : { lastNoteOff: event }) })
+    // Deliver every event, not just the latest React-rendered debug snapshot.
+    this.noteListeners.forEach((listener) => listener(event))
   }
 
   private releaseInput() {
@@ -115,6 +129,7 @@ export class MidiManager {
     this.input = null
     if (!input) return
     input.removeEventListener('midimessage', this.onMidiMessage)
+    this.inputResetListeners.forEach((listener) => listener())
     void input.close().catch(() => { /* The device may already be unplugged. */ })
   }
 

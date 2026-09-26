@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import type { OpenSheetMusicDisplay } from 'opensheetmusicdisplay'
-import type { ScoreModel } from '../score/ScoreModel'
-type Props = { score: ScoreModel; cursorIndex: number; onReady: (noteCount: number) => void }
+import type { ScoreModel, ScoreSource } from '../score/ScoreModel'
+import { readScoreModel } from '../score/readScoreModel'
+type Props = { score: ScoreSource; cursorIndex: number; onReady: (model: ScoreModel | null) => void }
 
 export function ScoreView({ score, cursorIndex, onReady }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -23,7 +24,7 @@ export function ScoreView({ score, cursorIndex, onReady }: Props) {
     const fail = () => {
       if (cancelled) return
       displayRef.current = null
-      onReady(0)
+      onReady(null)
       setError('楽譜を表示できませんでした。ページを再読み込みしてください。')
     }
     const render = () => {
@@ -38,7 +39,7 @@ export function ScoreView({ score, cursorIndex, onReady }: Props) {
     }
     const load = async () => {
       try {
-        const { OpenSheetMusicDisplay } = await import('opensheetmusicdisplay')
+        const { OpenSheetMusicDisplay, Pitch } = await import('opensheetmusicdisplay')
         if (cancelled) return
         display = new OpenSheetMusicDisplay(host, {
           autoResize: false, backend: 'svg', drawTitle: false, drawSubtitle: false,
@@ -51,18 +52,11 @@ export function ScoreView({ score, cursorIndex, onReady }: Props) {
         if (cancelled) return
         currentIndexRef.current = 0
         render()
-        // Count cursor positions from MusicXML; do not duplicate the melody in UI code.
-        let count = 0
-        display.cursor.reset()
-        while (!display.cursor.Iterator.EndReached) {
-          count++
-          display.cursor.next()
-        }
-        display.cursor.reset()
+        const model = readScoreModel(score, display.cursor, Pitch.OctaveXmlDifference)
         display.cursor.show()
         displayRef.current = display
         setError(null)
-        onReady(count)
+        onReady(model)
         lastWidth = container.clientWidth
         observer = new ResizeObserver(() => {
           const width = container.clientWidth

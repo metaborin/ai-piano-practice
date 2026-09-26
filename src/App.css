@@ -15,11 +15,20 @@
 .score-view { padding: 0 16px 12px; overflow-x: auto; }
 .score-renderer { min-height: 260px; position: relative; isolation: isolate; }
 .practice-controls { padding: 20px 0 22px; text-align: center; }
+.practice-feedback { min-height: 48px; margin-bottom: 12px; font-size: 22px; font-weight: 700; }
+.practice-feedback.correct, .practice-feedback.completed { color: #28694e; }
+.practice-feedback.incorrect { color: #816120; }
+.practice-buttons { display: flex; gap: 16px; justify-content: center; }
+.practice-buttons button { min-width: 174px; font-size: 20px; }
+.practice-hint { margin-top: 10px; color: #596860; }
+.developer-controls { margin-top: 22px; border: 1px solid #d9e1dc; border-radius: 12px; padding: 4px 20px 12px; }
+.developer-controls summary { min-height: 48px; padding: 12px 0; cursor: pointer; font-weight: 700; }
+.developer-controls summary:focus-visible { outline: 3px solid #2269c0; outline-offset: 2px; }
+.developer-controls p { margin: 4px 0 12px; color: #596860; }
 .cursor-buttons { display: flex; gap: 16px; justify-content: center; }
 .cursor-buttons button { min-width: 174px; font-size: 20px; }
 .primary-button { background: #28694e; color: white; border-color: #28694e; }
 .primary-button:hover:not(:disabled) { background: #1e563d; }
-.practice-controls p { margin-top: 10px; color: #596860; }
 .midi-connection { display: flex; align-items: center; gap: 24px; justify-content: space-between; padding: 22px 24px; background: #edf2ee; border: 1px solid #d9e1dc; border-radius: 12px; }
 .connection-copy { flex: 1; min-width: 0; }
 .connection-copy p { margin-top: 5px; overflow-wrap: anywhere; }
@@ -52,6 +61,8 @@ footer { margin-top: 24px; color: #647168; text-align: center; font-size: 14px; 
   .score-view { padding: 0 4px 8px; }
   .midi-connection { flex-direction: column; align-items: stretch; gap: 16px; padding: 18px; }
   .cursor-buttons button { min-width: 0; flex: 1; }
+  .practice-buttons button { min-width: 0; flex: 1; }
+  .practice-feedback { min-height: 70px; font-size: 20px; }
   .debug-panel { padding: 18px; }
   .latest-input { gap: 20px; align-items: flex-start; }
   .latest-input dl { grid-template-columns: repeat(2, 1fr); gap: 14px; }

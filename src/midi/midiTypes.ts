@@ -9,6 +9,10 @@ export type MidiNoteEvent = {
 }
 
 export type MidiConnectionStatus = 'disconnected' | 'waiting' | 'connected' | 'error'
+export type MidiEventSource = {
+  subscribeNoteEvents: (listener: (event: MidiNoteEvent) => void) => () => void
+  subscribeInputReset: (listener: () => void) => () => void
+}
 export type MidiInputDevice = { id: string; name: string; manufacturer: string }
 export type MidiSnapshot = {
   status: MidiConnectionStatus

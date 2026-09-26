@@ -5,5 +5,5 @@ export function useMidi() {
   const [manager] = useState(() => new MidiManager())
   const midi = useSyncExternalStore(manager.subscribe, manager.getSnapshot)
   useEffect(() => () => manager.disconnect(), [manager])
-  return { midi, connect: manager.connect, selectInput: manager.selectInput }
+  return { midi, connect: manager.connect, selectInput: manager.selectInput, events: manager }
 }

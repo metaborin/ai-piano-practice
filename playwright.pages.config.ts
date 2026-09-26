@@ -4,7 +4,7 @@ import config from './playwright.config'
 const publishedUrl = process.env.PLAYWRIGHT_BASE_URL
 const previewUrl = 'http://127.0.0.1:4174/ai-piano-practice/'
 
-/** Run the same Phase 2A checks against dist or the published HTTPS site. */
+/** Run the practice checks against dist or the published HTTPS site. */
 export default defineConfig({
   ...config,
   testDir: './tests',

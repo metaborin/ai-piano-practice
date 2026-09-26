@@ -1,26 +1,23 @@
-import { useCallback, useState } from 'react'
+import { DeveloperControls } from './components/DeveloperControls'
 import { MidiDebugPanel } from './components/MidiDebugPanel'
 import { MidiStatus } from './components/MidiStatus'
 import { PracticeControls } from './components/PracticeControls'
 import { ScoreView } from './components/ScoreView'
 import { useMidi } from './midi/useMidi'
+import { usePracticeSession } from './practice/usePracticeSession'
 import { twinkleScore } from './score/ScoreModel'
 import './App.css'
 
 export default function App() {
-  const { midi, connect, selectInput } = useMidi()
-  const [cursorIndex, setCursorIndex] = useState(0)
-  const [noteCount, setNoteCount] = useState(0)
-  const handleScoreReady = useCallback((count: number) => {
-    setNoteCount(count)
-    setCursorIndex(0)
-  }, [])
+  const { midi, connect, selectInput, events } = useMidi()
+  const { practice, start, restart, moveCursor, onScoreReady } = usePracticeSession(events)
+  const { currentNoteIndex: cursorIndex, totalNotes: noteCount } = practice
 
   return (
     <main className="app">
       <header className="app-header">
         <div>
-          <p className="eyebrow">ピアノ練習 · Phase 2A</p>
+          <p className="eyebrow">ピアノ練習 · Phase 2B</p>
           <h1>{twinkleScore.title}</h1>
           <p className="subtitle">{twinkleScore.partLabel} · はじめの4小節</p>
         </div>
@@ -31,11 +28,9 @@ export default function App() {
           <span className="cursor-legend"><span aria-hidden="true" />緑の帯が現在位置</span>
           <span className="position" aria-live="polite">{noteCount > 0 ? `${cursorIndex + 1} / ${noteCount} 音` : '楽譜を準備中'}</span>
         </div>
-        <ScoreView score={twinkleScore} cursorIndex={cursorIndex} onReady={handleScoreReady} />
+        <ScoreView score={twinkleScore} cursorIndex={cursorIndex} onReady={onScoreReady} />
       </section>
-      <PracticeControls cursorIndex={cursorIndex} noteCount={noteCount}
-        onPrevious={() => setCursorIndex((index) => Math.max(0, index - 1))}
-        onNext={() => setCursorIndex((index) => Math.min(noteCount - 1, index + 1))} />
+      <PracticeControls practice={practice} midiConnected={midi.status === 'connected'} onStart={start} onRestart={restart} />
       <section className="midi-connection" aria-label="MIDI接続設定">
         <div className="connection-copy">
           <h2>MIDI入力</h2>
@@ -53,8 +48,9 @@ export default function App() {
           {midi.requesting ? '接続しています…' : midi.status === 'connected' ? 'MIDI接続済み' : 'MIDI接続'}
         </button>
       </section>
+      <DeveloperControls practice={practice} onPrevious={() => moveCursor(-1)} onNext={() => moveCursor(1)} />
       <MidiDebugPanel latest={midi.latestEvent} lastNoteOn={midi.lastNoteOn} lastNoteOff={midi.lastNoteOff} />
-      <footer>Phase 2A · 楽譜表示とMIDI入力の確認</footer>
+      <footer>Phase 2B · 音を順番に弾いてみよう</footer>
     </main>
   )
 }

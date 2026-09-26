@@ -2,6 +2,8 @@ import { readFileSync } from 'node:fs'
 import { expect, test } from '@playwright/test'
 import { mockMidi } from './midiFixture'
 
+const melody = [60, 60, 67, 67, 69, 69, 67, 65, 65, 64, 64, 62, 62, 60]
+
 test('MusicXML contains the requested fourteen pitches and four complete bars', async ({ page }) => {
   await page.goto('./')
   const xml = readFileSync(new URL('../../src/scores/twinkle.musicxml', import.meta.url), 'utf8')
@@ -22,35 +24,38 @@ test('renders the score, traverses all notes in both directions and retains posi
   page.on('pageerror', (error) => errors.push(error.message))
   await page.goto('./')
   await expect(page.locator('.position')).toHaveText('1 / 14 音')
+  await page.getByText('開発者用', { exact: true }).click()
   await expect(page.locator('.score-renderer svg')).toHaveCount(1)
   await expect(page.locator('.score-renderer .vf-stavenote')).toHaveCount(14)
   const cursor = page.locator('.score-renderer img')
   await expect(cursor).toHaveCount(1)
   await expect(cursor).toBeVisible()
-  const initial = await cursor.boundingBox()
+  const scorePosition = () => cursor.evaluate((element) => {
+    const image = element as HTMLImageElement
+    return { x: image.offsetLeft, y: image.offsetTop }
+  })
+  const initial = await scorePosition()
+  await expect(page.locator('.expected-note')).toContainText('MIDI Note 60')
   await expect(page.getByRole('button', { name: '前の音' })).toBeDisabled()
   for (let index = 2; index <= 14; index++) {
-    const previous = await cursor.boundingBox()
+    const previous = await scorePosition()
     await page.getByRole('button', { name: '次の音' }).click()
     await expect(page.locator('.position')).toHaveText(`${index} / 14 音`)
-    expect(await cursor.boundingBox()).not.toEqual(previous)
+    expect(await scorePosition()).not.toEqual(previous)
+    await expect(page.locator('.expected-note')).toContainText(`MIDI Note ${melody[index - 1]}`)
   }
   await expect(page.getByRole('button', { name: '次の音' })).toBeDisabled()
   for (let index = 13; index >= 1; index--) {
     await page.getByRole('button', { name: '前の音' }).click()
     await expect(page.locator('.position')).toHaveText(`${index} / 14 音`)
   }
-  expect(await cursor.boundingBox()).toEqual(initial)
+  expect(await scorePosition()).toEqual(initial)
   await page.getByRole('button', { name: '次の音' }).click()
   await page.setViewportSize({ width: 390, height: 844 })
   await expect(page.locator('.position')).toHaveText('2 / 14 音')
   await expect(cursor).toBeVisible()
   await expect.poll(async () => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
   // Compare score-relative coordinates: Playwright scrolls the viewport to reach touch controls.
-  const scorePosition = () => cursor.evaluate((element) => {
-    const image = element as HTMLImageElement
-    return { x: image.offsetLeft, y: image.offsetTop }
-  })
   const resizedSecond = await scorePosition()
   await page.getByRole('button', { name: '前の音' }).click()
   await expect(page.locator('.position')).toHaveText('1 / 14 音')
@@ -58,13 +63,14 @@ test('renders the score, traverses all notes in both directions and retains posi
   await page.getByRole('button', { name: '次の音' }).click()
   expect(await scorePosition()).toEqual(resizedSecond)
   await page.getByRole('button', { name: '前の音' }).click()
+  await page.getByText('開発者用', { exact: true }).click()
   await page.screenshot({ path: 'test-results/mobile.png', fullPage: true })
   await page.setViewportSize({ width: 1280, height: 800 })
   await page.screenshot({ path: 'test-results/desktop.png', fullPage: true })
   expect(errors).toEqual([])
 })
 
-test('MIDI is opt-in, prefers CME, reports note data and never advances the score', async ({ page }) => {
+test('MIDI is opt-in, prefers CME, reports note data and does not advance before practice starts', async ({ page }) => {
   await mockMidi(page)
   await page.goto('./')
   await expect(page.locator('.position')).toHaveText('1 / 14 音')
@@ -135,6 +141,7 @@ test('unsupported MIDI gives an actionable error while the score still works', a
   await page.getByRole('button', { name: 'MIDI接続', exact: true }).click()
   await expect(page.locator('.connection-copy')).toContainText('Google Chromeで開いてください')
   await expect(page.locator('.position')).toHaveText('1 / 14 音')
+  await page.getByText('開発者用', { exact: true }).click()
   await page.getByRole('button', { name: '次の音' }).click()
   await expect(page.locator('.position')).toHaveText('2 / 14 音')
 })
