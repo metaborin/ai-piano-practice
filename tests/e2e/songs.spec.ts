@@ -75,9 +75,10 @@ for (const song of catalog) {
       })
       expect(cursor).not.toBe(previousCursor)
       previousCursor = cursor
-      await expect(page.locator('.practice-controls')).toHaveAttribute('data-correct-count', '0')
+      await expect(page.locator('.practice-controls')).toHaveAttribute('data-correct-count', '1')
     }
     await expect(page.locator('.demo-controls')).toHaveAttribute('data-demo-status', 'completed')
+    await expect(page.locator('.position')).toHaveText('2 / ' + song.count + ' 音')
     const sent = await page.evaluate(() => window.midiTest.outputMessages)
     const ons = sent.filter((event) => event.data[0] === 0x90)
     const offs = sent.filter((event) => event.data[0] === 0x80)

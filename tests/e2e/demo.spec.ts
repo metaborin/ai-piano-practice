@@ -32,13 +32,13 @@ test('plays the actual XML score in order with durations and cursor, ignores loo
     const position = await cursor.evaluate((element) => `${(element as HTMLImageElement).offsetLeft}:${(element as HTMLImageElement).offsetTop}`)
     expect(position).not.toBe(lastCursor)
     lastCursor = position
-    await expect(page.locator('.practice-controls')).toHaveAttribute('data-correct-count', '0')
-    await expect(page.locator('.practice-controls')).toHaveAttribute('data-practice-index', '0')
+    await expect(page.locator('.practice-controls')).toHaveAttribute('data-correct-count', '1')
+    await expect(page.locator('.practice-controls')).toHaveAttribute('data-practice-index', '1')
     if (index === 4) await page.screenshot({ path: 'test-results/phase2cb-playing.png', fullPage: true })
   }
   await expect(page.locator('.demo-controls')).toHaveAttribute('data-demo-status', 'completed')
   await expect(page.locator('.demo-message')).toHaveText('手本の再生が終わりました')
-  await expect(page.locator('.position')).toHaveText('14 / 14 音')
+  await expect(page.locator('.position')).toHaveText('2 / 14 音')
   await expect(page.getByTestId('latest-input')).toContainText('Note Off')
   const sent = await page.evaluate(() => window.midiTest.outputMessages)
   const ons = sent.filter(({ data }) => data[0] === 0x90)
@@ -52,7 +52,7 @@ test('plays the actual XML score in order with durations and cursor, ignores loo
     if (index < 13) expect(ons[index + 1].timestamp - ons[index].timestamp).toBeCloseTo(index === 6 ? 1200 : 600, 2)
   }
   await page.screenshot({ path: 'test-results/phase2cb-completed.png', fullPage: true })
-  await page.getByRole('button', { name: '練習開始' }).click()
+  await page.getByRole('button', { name: 'もう一度', exact: true }).click()
   await expect(page.locator('.position')).toHaveText('1 / 14 音')
   await page.evaluate(() => window.midiTest.send([0x90, 60, 80]))
   await expect(page.locator('.position')).toHaveText('2 / 14 音')

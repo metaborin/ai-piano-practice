@@ -36,7 +36,13 @@
 .connected .status-dot { background: #258759; }
 .waiting .status-dot { background: #b27816; }
 .error .status-dot { background: #bf4434; }
-.score-card { border: 1px solid #d9e1dc; border-radius: 14px; background: white; overflow: hidden; }
+.score-card { border: 1px solid #d9e1dc; border-radius: 14px; background: white; }
+.score-status { position: sticky; top: 0; z-index: 5; background: #fff; border-radius: 14px 14px 0 0; border-bottom: 1px solid #edf2ee; }
+.score-feedback { padding: 2px 16px 10px; text-align: center; }
+.score-feedback .practice-feedback { height: 30px; min-height: 0; line-height: 30px; margin: 0; font-size: clamp(14px, 2vw, 20px); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.score-feedback .feedback-notes { height: 20px; line-height: 20px; font-size: 14px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #a52424; }
+.demo-start { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; }
+.demo-start select { min-height: 48px; max-width: 100%; padding: 10px 16px; border: 1px solid #b8c8c0; border-radius: 6px; background: white; font: inherit; color: inherit; }
 .score-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 24px 4px; color: #466154; }
 .cursor-legend { display: flex; align-items: center; gap: 10px; }
 .cursor-legend > span { width: 12px; height: 22px; border-radius: 3px; background: #b6dfcd; }

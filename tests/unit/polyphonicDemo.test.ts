@@ -100,7 +100,7 @@ it('all chord loopback is excluded from practice before the very first send', as
     practice.handleMidiEvent({ midiNote: data[1], type: data[0] === 0x90 ? 'noteon' : 'noteoff', velocity: data[2], channel: 1, timestamp: performance.now() })
   })
   player.start(); vi.advanceTimersByTime(4680)
-  expect(practice.getSnapshot()).toMatchObject({ status: 'idle', correctNoteCount: 0, feedback: null })
+  expect(practice.getSnapshot()).toMatchObject({ status: 'practicing', correctNoteCount: 0, feedback: null })
 })
 it('a failure partway through chord transmission releases notes already sent and cancels future playback', async () => {
   const { player, port } = await setup()

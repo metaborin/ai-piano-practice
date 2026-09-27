@@ -1,6 +1,7 @@
 import type { MidiNoteEvent } from '../midi/midiTypes'
 import type { PracticeScore as ScoreModel, PracticeNote as ScoreNote } from '../score/ScoreModel'
 import { MomentMatcher } from './MomentMatcher'
+import type { MomentMatchFeedback } from './MomentMatcher'
 import type { PracticePlan } from './PracticePlan'
 import type { NoteMatch } from './NoteMatcher'
 
@@ -13,6 +14,7 @@ export type PracticeSnapshot = {
   readonly correctNoteCount: number
   readonly status: 'idle' | 'practicing' | 'completed' | 'demoPlaying'
   readonly feedback: NoteMatch | null
+  readonly matchFeedback: (MomentMatchFeedback & { readonly targetIndex: number }) | null
 }
 
 /** Browser-independent state machine. Receives each event synchronously, including releases. */
@@ -21,9 +23,10 @@ export class PracticeSession {
   private matcher = new MomentMatcher((feedback) => this.handleResult(feedback))
   private activeNotes = new Set<string>()
   private listeners = new Set<() => void>()
+  private resumeStatus: 'idle' | 'practicing' | 'completed' | null = null
   private snapshot: PracticeSnapshot = {
     currentNoteIndex: 0, totalNotes: 0, expectedMidiNote: null, expectedMidiNotes: [],
-    correctNoteCount: 0, status: 'idle', feedback: null,
+    correctNoteCount: 0, status: 'idle', feedback: null, matchFeedback: null,
   }
 
   constructor(notes: readonly ScoreNote[] = []) { this.setNotes(notes) }
@@ -47,8 +50,8 @@ export class PracticeSession {
     return { expectedMidiNotes, expectedMidiNote: expectedMidiNotes[0] ?? null }
   }
   private setTargets(targets: readonly { expectedMidiNotes: readonly number[] }[]) {
-    this.matcher.reset(); this.targets = targets
-    this.publish({ currentNoteIndex: 0, totalNotes: targets.length, ...this.expected(0), correctNoteCount: 0, status: 'idle', feedback: null })
+    this.matcher.reset(); this.targets = targets; this.resumeStatus = null
+    this.publish({ currentNoteIndex: 0, totalNotes: targets.length, ...this.expected(0), correctNoteCount: 0, status: 'idle', feedback: null, matchFeedback: null })
   }
   loadPlan = (plan: PracticePlan | null) => { this.setTargets(plan?.targets ?? []) }
 
@@ -58,26 +61,29 @@ export class PracticeSession {
     if (this.targets.length === 0 || this.snapshot.status === 'demoPlaying') return
     this.matcher.reset()
     // Preserve held keys, including keys pressed before start or during a restart.
-    this.publish({ currentNoteIndex: 0, ...this.expected(0), correctNoteCount: 0, status: 'practicing', feedback: null })
+    this.publish({ currentNoteIndex: 0, ...this.expected(0), correctNoteCount: 0, status: 'practicing', feedback: null, matchFeedback: null })
   }
 
   restart = () => { this.start() }
 
   beginDemo = () => {
+    if (this.snapshot.status === 'demoPlaying') return
+    this.resumeStatus = this.snapshot.status
     this.matcher.reset()
-    this.publish({ currentNoteIndex: 0, ...this.expected(0), correctNoteCount: 0, feedback: null, status: 'demoPlaying' })
+    this.publish({ feedback: null, matchFeedback: null, status: 'demoPlaying' })
   }
   endDemo = () => {
-    if (this.snapshot.status === 'demoPlaying') this.publish({ status: 'idle' })
+    if (this.snapshot.status === 'demoPlaying') this.publish({ status: this.resumeStatus ?? 'idle' })
+    this.resumeStatus = null
   }
 
   moveCursor = (direction: -1 | 1) => {
     if (this.snapshot.status !== 'idle' || this.targets.length === 0) return
     const index = Math.max(0, Math.min(this.targets.length - 1, this.snapshot.currentNoteIndex + direction))
-    this.publish({ currentNoteIndex: index, ...this.expected(index), feedback: null })
+    this.publish({ currentNoteIndex: index, ...this.expected(index), feedback: null, matchFeedback: null })
   }
 
-  clearActiveNotes = () => { this.activeNotes.clear(); this.matcher.reset() }
+  clearActiveNotes = () => { this.activeNotes.clear(); this.matcher.reset(); this.publish({ feedback: null, matchFeedback: null }) }
   dispose = () => { this.matcher.reset() }
 
   handleMidiEvent = (event: MidiNoteEvent) => {
@@ -92,19 +98,21 @@ export class PracticeSession {
 
     this.matcher.press(this.snapshot.expectedMidiNotes, event.midiNote, event.timestamp)
   }
-  private handleResult(feedback: NoteMatch) {
+  private handleResult(result: MomentMatchFeedback) {
     if (this.snapshot.status !== 'practicing') return
-    if (feedback === 'incorrect') {
-      this.publish({ feedback })
+    const matchFeedback = { ...result, targetIndex: this.snapshot.currentNoteIndex }
+    if (result.status !== 'correct') {
+      this.publish({ feedback: result.status === 'pending' ? null : 'incorrect', matchFeedback })
       return
     }
+    const feedback = 'correct'
     const correctNoteCount = this.snapshot.correctNoteCount + 1
     if (this.snapshot.currentNoteIndex === this.targets.length - 1) {
       // Keep the cursor on the final target note.
-      this.publish({ correctNoteCount, feedback, status: 'completed' })
+      this.publish({ correctNoteCount, feedback, matchFeedback, status: 'completed' })
       return
     }
     const index = this.snapshot.currentNoteIndex + 1
-    this.publish({ currentNoteIndex: index, ...this.expected(index), correctNoteCount, feedback })
+    this.publish({ currentNoteIndex: index, ...this.expected(index), correctNoteCount, feedback, matchFeedback })
   }
 }

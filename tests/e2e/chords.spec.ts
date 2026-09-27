@@ -118,7 +118,7 @@ test('tie continuation is skipped by practice/cursor and sustained by demo until
 
 test('arpeggiate score remains visible but never enters ordinary chord practice or demo', async ({ page }) => {
   await setup(page, 'b-chord', fixture('b-chord').replace('</note>', '<notations><arpeggiate/></notations></note>'))
-  await expect(page.locator('.score-card').getByRole('status')).toContainText('アルペジオ')
+  await expect(page.locator('.score-card .score-message')).toContainText('アルペジオ')
   await expect(page.getByRole('button', { name: '練習開始', exact: true })).toBeDisabled()
   await expect(page.getByRole('button', { name: '手本を聴く', exact: true })).toBeDisabled()
 })
@@ -127,7 +127,7 @@ test('a part without attacks disables start/demo and hides the cursor; changing 
   const xml = fixture('g-piano-practice').replace(/<note>.*?<\/note>/g, (note) => note.includes('<staff>2</staff>') ? '' : note)
   await setup(page, 'empty-left', xml)
   await page.getByRole('button', { name: '左手', exact: true }).click()
-  await expect(page.locator('.score-card').getByRole('status')).toContainText('新しく押す音がありません')
+  await expect(page.locator('.score-card .score-message')).toContainText('新しく押す音がありません')
   await expect(page.getByRole('button', { name: '練習開始', exact: true })).toBeDisabled()
   await expect(page.getByRole('button', { name: '手本を聴く', exact: true })).toBeDisabled()
   await expect(page.locator('.score-renderer img')).toBeHidden()

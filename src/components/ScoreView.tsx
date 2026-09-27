@@ -1,25 +1,29 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import type { OpenSheetMusicDisplay } from 'opensheetmusicdisplay'
 import type { ScoreModel, ScoreSource } from '../score/ScoreModel'
 import { readScoreModel } from '../score/readScoreModel'
 import { parseMusicXml } from '../score/parseMusicXml'
 import { toPracticeScore } from '../score/toPracticeScore'
 import { buildCursorMap } from '../score/CursorMap'
+import { ScoreNoteRenderMap } from '../score/ScoreNoteRenderMap'
 type Props = {
   requestId: number
   score: ScoreSource
   cursorIndex: number
   cursorMomentId?: string | null
+  missingNoteIds?: readonly string[]
   onReady: (requestId: number, model: ScoreModel) => void
   onError: (requestId: number, message: string) => void
 }
 
-export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, onReady, onError }: Props) {
+export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missingNoteIds, onReady, onError }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const displayRef = useRef<OpenSheetMusicDisplay | null>(null)
   const currentIndexRef = useRef(0)
   const mappingRef = useRef<ReadonlyMap<string, number>>(new Map())
   const cursorVisibleRef = useRef(cursorMomentId !== null)
+  const noteMapRef = useRef<ScoreNoteRenderMap | null>(null)
+  const missingRef = useRef(missingNoteIds)
 
   useEffect(() => {
     const container = containerRef.current
@@ -36,6 +40,8 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, onRea
     let loading = false
     let disposed = false
     let practiceCursor = false
+    let model: ScoreModel | null = null
+    let octaveDifference = 0
     const dispose = () => {
       host.remove()
       // OSMD.load can still be running. Dispose again after it settles, not mid-import.
@@ -54,6 +60,11 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, onRea
       if (!display || cancelled) return
       display.Zoom = container.clientWidth < 600 ? 1.1 : 1.35
       display.render()
+      if (practiceCursor && model) {
+        noteMapRef.current?.clear()
+        noteMapRef.current = new ScoreNoteRenderMap(model, display, octaveDifference)
+        noteMapRef.current.highlight(missingRef.current ?? [])
+      }
       display.cursor.reset()
       for (let index = 0; index < currentIndexRef.current; index++) display.cursor.next()
       if (practiceCursor && cursorVisibleRef.current) display.cursor.show()
@@ -63,13 +74,13 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, onRea
     }
     const load = async () => {
       try {
-        let model: ScoreModel
         try { model = parseMusicXml(score) }
         catch (error) {
           fail(error instanceof Error ? error.message : 'MusicXMLを検証できませんでした。')
           return
         }
         const { OpenSheetMusicDisplay, Pitch } = await import('opensheetmusicdisplay')
+        octaveDifference = Pitch.OctaveXmlDifference
         if (cancelled) return
         display = new OpenSheetMusicDisplay(host, {
           autoResize: false, backend: 'svg', drawTitle: false, drawSubtitle: false,
@@ -121,11 +132,12 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, onRea
       observer?.disconnect()
       cancelAnimationFrame(frame)
       displayRef.current = null
+      noteMapRef.current?.clear(); noteMapRef.current = null
       dispose()
     }
   }, [requestId, score, onReady, onError])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     cursorVisibleRef.current = cursorMomentId !== null
     const display = displayRef.current
     if (!display) return
@@ -141,6 +153,11 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, onRea
       onError(requestId, '楽譜の現在位置を表示できませんでした。別の曲を選んでください。')
     }
   }, [cursorIndex, cursorMomentId, requestId, onError])
+
+  useLayoutEffect(() => {
+    missingRef.current = missingNoteIds
+    noteMapRef.current?.highlight(missingNoteIds ?? [])
+  }, [missingNoteIds])
 
   return (
     <div className="score-view">

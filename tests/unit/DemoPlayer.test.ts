@@ -140,7 +140,7 @@ it('blocks double playback and C4 test overlap; replay after completion starts a
   player.stop()
 })
 
-it('resets practice before output, ignores loopback/keyboard input and permits practice after completion', async () => {
+it('suspends practice before output, ignores loopback and restores progress after completion', async () => {
   const { player, port, practice } = await setup()
   const input = (note: number, type: 'noteon' | 'noteoff' = 'noteon') => practice.handleMidiEvent({ type, midiNote: note, velocity: type === 'noteon' ? 80 : 0, channel: 1, timestamp: performance.now() })
   practice.start()
@@ -159,7 +159,7 @@ it('resets practice before output, ignores loopback/keyboard input and permits p
   practice.moveCursor(1)
   melody.forEach((note) => { input(note); input(note, 'noteoff') })
   vi.advanceTimersByTime(9480)
-  expect(practice.getSnapshot()).toMatchObject({ currentNoteIndex: 0, correctNoteCount: 0, status: 'idle', feedback: null })
+  expect(practice.getSnapshot()).toMatchObject({ currentNoteIndex: 1, correctNoteCount: 1, status: 'practicing', feedback: null })
   practice.start()
   input(60)
   expect(practice.getSnapshot()).toMatchObject({ currentNoteIndex: 1, correctNoteCount: 1, status: 'practicing' })

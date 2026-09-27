@@ -2,6 +2,8 @@ import type { PracticeScore as ScoreModel } from '../score/ScoreModel'
 import type { PracticePlan } from '../practice/PracticePlan'
 import { buildDemoPlan } from './buildDemoPlan'
 import { DEFAULT_TEMPO_BPM, DEMO_GATE_RATIO } from './tempo'
+import { resolveDemoStart } from './DemoStart'
+import type { DemoStart } from './DemoStart'
 
 export { DEFAULT_TEMPO_BPM, DEMO_GATE_RATIO } from './tempo'
 const MAX_LATENESS_MS = 150
@@ -54,9 +56,11 @@ export class DemoPlayer {
 
   private readonly output: DemoOutput
   private readonly beforeStart: () => void
-  constructor(output: DemoOutput, beforeStart: () => void = () => {}) {
+  private readonly publishPosition: (update: () => void) => void
+  constructor(output: DemoOutput, beforeStart: () => void = () => {}, publishPosition: (update: () => void) => void = (update) => update()) {
     this.output = output
     this.beforeStart = beforeStart
+    this.publishPosition = publishPosition
   }
   getSnapshot = () => this.snapshot
   subscribe = (listener: () => void) => {
@@ -82,15 +86,17 @@ export class DemoPlayer {
   resetDisplay = () => {
     if (this.snapshot.status !== 'playing') this.publish({ status: 'idle', currentNoteIndex: 0, message: '' })
   }
-  start = () => {
+  playFromMoment = (momentId: string) => this.start({ kind: 'moment', momentId })
+  start = (start: DemoStart = { kind: 'beginning' }) => {
     if (this.snapshot.status === 'playing') return
     let notes: DemoNote[]
+    let firstIndex = 0
     try {
-      if (this.plan) notes = buildDemoPlan(this.plan)
-      else if (this.score) notes = buildDemoNotes(this.score)
+      if (this.plan) { firstIndex = resolveDemoStart(this.plan, start).index; notes = buildDemoPlan(this.plan, start) }
+      else if (this.score && start.kind === 'beginning') notes = buildDemoNotes(this.score)
       else throw new Error('No score')
-    } catch {
-      this.publish({ status: 'error', message: '手本の楽譜を読み込めません。ページを再読み込みしてください。' })
+    } catch (error) {
+      this.publish({ status: 'error', message: error instanceof Error && error.message.startsWith('指定した位置') ? error.message : '手本の楽譜を読み込めません。ページを再読み込みしてください。' })
       return
     }
     if (!this.output.beginDemo()) {
@@ -98,8 +104,11 @@ export class DemoPlayer {
       return
     }
     // Synchronous: reset/disable grading before any MIDI output or possible loopback.
-    this.beforeStart()
-    this.publish({ status: 'playing', currentNoteIndex: 0, message: '手本を再生中です' })
+    // The adapter commits cursor position synchronously before the first MIDI send.
+    this.publishPosition(() => {
+      this.beforeStart()
+      this.publish({ status: 'playing', currentNoteIndex: firstIndex, message: '手本を再生中です' })
+    })
     const generation = ++this.generation
     this.unsubscribeOutput = this.output.subscribeDemoInterrupted(() => {
       if (generation === this.generation) this.interrupted()
@@ -115,7 +124,7 @@ export class DemoPlayer {
       if (now < due) { this.timer = setTimeout(() => play(index), due - now); return }
       if (now - due > MAX_LATENESS_MS || now >= startedAt + note.noteOffMs) {
         this.stop()
-        this.publish({ message: '再生が遅れたため停止しました。「手本を聴く」で最初から聴けます。' })
+        this.publish({ message: '再生が遅れたため停止しました。開始位置を確認して「手本を聴く」を押してください。' })
         return
       }
       // One callback and one timestamp for every Note On at this onset.
@@ -129,7 +138,7 @@ export class DemoPlayer {
           return
         }
       }
-      this.publish({ currentNoteIndex: note.index })
+      this.publishPosition(() => this.publish({ currentNoteIndex: note.index }))
       if (next < notes.length) {
         this.timer = setTimeout(() => play(next), Math.max(0, startedAt + notes[next].startMs - performance.now()))
       } else {
