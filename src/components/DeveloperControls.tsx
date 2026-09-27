@@ -1,9 +1,12 @@
 import type { PracticeSnapshot } from '../practice/PracticeSession'
 import { midiNoteName } from '../midi/parseMidiMessage'
 import type { ScoreModel } from '../score/ScoreModel'
+import { MODE_LABELS } from '../practice/PracticePlan'
+import type { PracticePlan } from '../practice/PracticePlan'
+import { CHORD_WINDOW_MS } from '../practice/MomentMatcher'
 
-type Props = { practice: PracticeSnapshot; model?: ScoreModel | null; blocked?: boolean; onPrevious: () => void; onNext: () => void }
-export function DeveloperControls({ practice, model, blocked = false, onPrevious, onNext }: Props) {
+type Props = { practice: PracticeSnapshot; model?: ScoreModel | null; plan?: PracticePlan | null; blocked?: boolean; onPrevious: () => void; onNext: () => void }
+export function DeveloperControls({ practice, model, plan, blocked = false, onPrevious, onNext }: Props) {
   const { currentNoteIndex, totalNotes, expectedMidiNote, status } = practice
   const disabled = blocked || totalNotes === 0 || status !== 'idle'
   return (
@@ -15,7 +18,8 @@ export function DeveloperControls({ practice, model, blocked = false, onPrevious
         <p>Moment：{model.moments.length} ／ Notes：{model.notes.length} ／ Rest：{model.rests.length}</p>
         <p>Chord：{model.moments.some((moment) => moment.notes.length > 1) ? 'あり' : 'なし'} ／ 総拍数：{model.totalBeats}</p>
         <p>テンポ情報：{model.tempoBpm === undefined ? 'なし' : model.tempoBpm + ' BPM'}（今回の手本は従来の100 BPM）</p>
-        <p>現在の練習対応：{model.practiceCompatibility === 'simpleMelody' ? '単旋律対応' : model.practiceCompatibility === 'polyphonicPending' ? 'Phase 2E-C2対応予定' : '未対応'}</p>
+        <p>現在の練習対応：{model.practiceCompatibility === 'simpleMelody' ? '単旋律対応' : model.practiceCompatibility === 'pitchPractice' ? '音程練習対応' : '未対応'}</p>
+        {plan && <p>練習モード：{model.staffCount === 1 ? '全体' : MODE_LABELS[plan.mode]} ／ 練習Step：{plan.targets.length} ／ 現在：{plan.targets.length ? currentNoteIndex + 1 : 0}<br />期待音：[{practice.expectedMidiNotes.join(', ')}] ／ Chord window：{CHORD_WINDOW_MS}ms</p>}
         {model.warnings.map((warning) => <p key={warning.code}>{warning.message}</p>)}
       </section>}
       <p>開発確認用の手動カーソルです。練習・手本の開始前に操作でき、練習開始で先頭へ戻ります。</p>

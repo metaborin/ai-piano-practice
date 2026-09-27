@@ -3,9 +3,9 @@ import type { ScoreModel } from '../score/ScoreModel'
 import { child, descendants, readMusicXmlDocument, value } from '../score/musicXmlDocument'
 import { parseMusicXml } from '../score/parseMusicXml'
 
-export const COMPATIBILITY_VERSION = 2
+export const COMPATIBILITY_VERSION = 3
 export function compatibilityFromModel(model: ScoreModel): Compatibility {
-  return { version: COMPATIBILITY_VERSION, status: model.practiceCompatibility === 'simpleMelody' ? 'supported' : 'unsupported',
+  return { version: COMPATIBILITY_VERSION, status: ['simpleMelody', 'pitchPractice'].includes(model.practiceCompatibility) && model.notes.length ? 'supported' : 'unsupported',
     parseCompatibility: 'supported', practiceCompatibility: model.practiceCompatibility, reasons: model.practiceReasons }
 }
 
@@ -37,6 +37,7 @@ export function recheckCompatibility(song: Song): Song {
 }
 
 export function compatibilityLabel(song: Song) {
+  if (song.compatibility?.practiceCompatibility === 'pitchPractice' && song.compatibility.status === 'supported') return '音程練習対応（選択時にも再確認）'
   if (song.compatibility?.parseCompatibility === 'supported' && song.compatibility.practiceCompatibility === 'polyphonicPending') return '解析可能・練習は次Phase（2E-C2対応予定）'
   if (song.compatibility?.status === 'unsupported') return '現在の練習機能では未対応'
   if (song.compatibility?.status === 'supported') return '練習可能（選択時にも再確認）'

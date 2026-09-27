@@ -42,6 +42,7 @@ export class MidiOutputManager {
   private demoActive = false
   private demoInterruptedListeners = new Set<() => void>()
   private activeNote = TEST_NOTE
+  private sounding = new Map<number, number>()
   private offDeadlines = new WeakMap<MIDIOutput, number>()
 
   getSnapshot = () => this.snapshot
@@ -126,6 +127,7 @@ export class MidiOutputManager {
     if (!output || this.snapshot.playing) return
     const now = performance.now()
     this.activeNote = TEST_NOTE
+    this.sounding.set(TEST_NOTE, now + TEST_DURATION_MS)
     try {
       output.send(NOTE_ON)
       // Schedule at the MIDI port, not a JS timer: background timer throttling must not hold the note.
@@ -156,18 +158,21 @@ export class MidiOutputManager {
       || !Number.isFinite(onTime) || !Number.isFinite(offTime) || onTime > now || offTime <= now) return false
     this.cancelDisplayTimer()
     this.activeNote = midiNote
+    for (const [pitch, end] of this.sounding) if (end <= now) this.sounding.delete(pitch)
+    this.sounding.set(midiNote, offTime)
     const noteOn = [0x90 | channelByte, midiNote, TEST_VELOCITY]
     const noteOff = [0x80 | channelByte, midiNote, 0]
     try {
       // onTime is now/past: only Note Off is ever placed in the future MIDI queue.
       output.send(noteOn, onTime)
       output.send(noteOff, offTime)
-      this.offDeadlines.set(output, offTime)
+      this.offDeadlines.set(output, Math.max(this.offDeadlines.get(output) ?? 0, offTime))
       this.publish({ latestMessage: { type: 'noteon', data: noteOn, timestamp: onTime } })
+      const finalOff = this.lastScheduledOff()
       this.displayTimer = setTimeout(() => {
         this.displayTimer = undefined
-        this.publish({ latestMessage: { type: 'noteoff', data: noteOff, timestamp: offTime } })
-      }, Math.max(0, offTime - performance.now()))
+        this.publish({ latestMessage: finalOff })
+      }, Math.max(0, finalOff.timestamp - performance.now()))
       return true
     } catch {
       this.stopAllNotes()
@@ -177,8 +182,14 @@ export class MidiOutputManager {
   }
   finishDemo = () => {
     this.demoActive = false
+    const latestMessage = this.lastScheduledOff()
+    this.sounding.clear()
     this.cancelDisplayTimer()
-    this.publish({ playing: false, latestMessage: { type: 'noteoff', data: [0x80 | channelByte, this.activeNote, 0], timestamp: performance.now() } })
+    this.publish({ playing: false, latestMessage })
+  }
+  private lastScheduledOff(): MidiOutputMessage {
+    const latest = [...this.sounding].sort((a, b) => b[1] - a[1])[0]
+    return { type: 'noteoff', data: [0x80 | channelByte, latest?.[0] ?? this.activeNote, 0], timestamp: latest?.[1] ?? performance.now() }
   }
 
   /** Each stop attempt is independent: CC123 is still attempted if clear or Note Off fails. */
@@ -190,9 +201,12 @@ export class MidiOutputManager {
     if (typeof clearable.clear === 'function') {
       try { clearable.clear(); cleared = true; this.offDeadlines.delete(output) } catch { succeeded = false }
     }
-    for (const action of [() => output.send([0x80 | channelByte, this.activeNote, 0]), () => output.send(ALL_NOTES_OFF)]) {
+    const pitches = [...this.sounding.keys()]
+    if (!pitches.length) pitches.push(this.activeNote)
+    for (const action of [...pitches.map((pitch) => () => output.send([0x80 | channelByte, pitch, 0])), () => output.send(ALL_NOTES_OFF)]) {
       try { action() } catch { succeeded = false }
     }
+    this.sounding.clear()
     return { succeeded, cleared }
   }
 
@@ -240,6 +254,7 @@ export class MidiOutputManager {
       if (this.snapshot.playing && output.state === 'connected') this.sendStop(output)
       void output.close().catch(() => {})
     }
+    this.sounding.clear()
     if (this.snapshot.playing) this.publish({ playing: false })
   }
   disconnect = () => {

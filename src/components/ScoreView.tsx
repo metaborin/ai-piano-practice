@@ -4,18 +4,22 @@ import type { ScoreModel, ScoreSource } from '../score/ScoreModel'
 import { readScoreModel } from '../score/readScoreModel'
 import { parseMusicXml } from '../score/parseMusicXml'
 import { toPracticeScore } from '../score/toPracticeScore'
+import { buildCursorMap } from '../score/CursorMap'
 type Props = {
   requestId: number
   score: ScoreSource
   cursorIndex: number
+  cursorMomentId?: string | null
   onReady: (requestId: number, model: ScoreModel) => void
   onError: (requestId: number, message: string) => void
 }
 
-export function ScoreView({ requestId, score, cursorIndex, onReady, onError }: Props) {
+export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, onReady, onError }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const displayRef = useRef<OpenSheetMusicDisplay | null>(null)
   const currentIndexRef = useRef(0)
+  const mappingRef = useRef<ReadonlyMap<string, number>>(new Map())
+  const cursorVisibleRef = useRef(cursorMomentId !== null)
 
   useEffect(() => {
     const container = containerRef.current
@@ -52,7 +56,7 @@ export function ScoreView({ requestId, score, cursorIndex, onReady, onError }: P
       display.render()
       display.cursor.reset()
       for (let index = 0; index < currentIndexRef.current; index++) display.cursor.next()
-      if (practiceCursor) display.cursor.show()
+      if (practiceCursor && cursorVisibleRef.current) display.cursor.show()
       else display.cursor.hide()
       display.cursor.cursorElement.alt = ''
       display.cursor.cursorElement.setAttribute('aria-hidden', 'true')
@@ -80,20 +84,22 @@ export function ScoreView({ requestId, score, cursorIndex, onReady, onError }: P
         if (cancelled) return
         currentIndexRef.current = 0
         const practiceScore = toPracticeScore(model)
-        practiceCursor = practiceScore !== null
+        practiceCursor = ['simpleMelody', 'pitchPractice'].includes(model.practiceCompatibility) && model.notes.length > 0
         render()
         try {
+          mappingRef.current = practiceCursor ? buildCursorMap(model, display.cursor, Pitch.OctaveXmlDifference) : new Map()
           if (practiceScore) {
             const rendered = readScoreModel(score, display.cursor, Pitch.OctaveXmlDifference)
             if (rendered.notes.length !== practiceScore.notes.length || rendered.notes.some((note, index) =>
               note.midiNote !== practiceScore.notes[index].midiNote || Math.abs(note.durationBeats - practiceScore.notes[index].durationBeats) > 1e-9)) throw new Error('OSMD cursor differs from parsed timeline')
           }
         }
-        catch {
-          fail('練習対象の音を解析できませんでした。1パートの単旋律を使用してください。')
+        catch (error) {
+          console.warn('Score cursor mapping failed', error)
+          fail('解析した音と楽譜カーソルを対応付けられませんでした。この曲の練習・手本は開始できません。')
           return
         }
-        if (practiceCursor) display.cursor.show()
+        if (practiceCursor && cursorVisibleRef.current) display.cursor.show()
         displayRef.current = practiceCursor ? display : null
         host.style.visibility = 'visible'
         onReady(requestId, model)
@@ -120,17 +126,21 @@ export function ScoreView({ requestId, score, cursorIndex, onReady, onError }: P
   }, [requestId, score, onReady, onError])
 
   useEffect(() => {
+    cursorVisibleRef.current = cursorMomentId !== null
     const display = displayRef.current
     if (!display) return
+    if (!cursorVisibleRef.current) { display.cursor.hide(); return }
     try {
-      while (currentIndexRef.current < cursorIndex) { display.cursor.next(); currentIndexRef.current++ }
-      while (currentIndexRef.current > cursorIndex) { display.cursor.previous(); currentIndexRef.current-- }
+      const targetIndex = cursorMomentId ? mappingRef.current.get(cursorMomentId) : 0
+      if (targetIndex === undefined) throw new Error('Missing cursor target')
+      while (currentIndexRef.current < targetIndex) { display.cursor.next(); currentIndexRef.current++ }
+      while (currentIndexRef.current > targetIndex) { display.cursor.previous(); currentIndexRef.current-- }
       display.cursor.show()
     } catch {
       displayRef.current = null
       onError(requestId, '楽譜の現在位置を表示できませんでした。別の曲を選んでください。')
     }
-  }, [cursorIndex, requestId, onError])
+  }, [cursorIndex, cursorMomentId, requestId, onError])
 
   return (
     <div className="score-view">

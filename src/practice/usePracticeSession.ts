@@ -9,7 +9,7 @@ export function usePracticeSession(events: MidiEventSource) {
   useEffect(() => {
     const unsubscribeNotes = events.subscribeNoteEvents(session.handleMidiEvent)
     const unsubscribeReset = events.subscribeInputReset(session.clearActiveNotes)
-    return () => { unsubscribeNotes(); unsubscribeReset() }
+    return () => { unsubscribeNotes(); unsubscribeReset(); session.dispose() }
   }, [events, session])
   return {
     session, practice, start: session.start, restart: session.restart,

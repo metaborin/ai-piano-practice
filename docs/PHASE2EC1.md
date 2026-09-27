@@ -4,7 +4,7 @@ Phase 2E-BはユーザーのChromebook実機確認まで完了済みです。今
 
 公開URL：[AIピアノ練習アプリ](https://metaborin.github.io/ai-piano-practice/)
 
-**実装・自動確認と、新しいChromebook実機受入は別です。実機受入は未実施です。実機確認が済むまではPhase 2E-C1全体を完了扱いにせず、C2へ進みません。**
+**追記：ユーザーからChromebook実機確認も問題なく完了したとの報告を受け、Phase 2E-C1は完了しました。以下はC1実装時点の記録です。次の実装・受入は [Phase 2E-C2](PHASE2EC2.md) に分けて記録します。**
 
 ## 作成・変更ファイル
 

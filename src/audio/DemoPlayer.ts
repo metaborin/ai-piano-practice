@@ -1,4 +1,6 @@
 import type { PracticeScore as ScoreModel } from '../score/ScoreModel'
+import type { PracticePlan } from '../practice/PracticePlan'
+import { buildDemoPlan } from './buildDemoPlan'
 
 export const DEFAULT_TEMPO_BPM = 100
 export const DEMO_GATE_RATIO = 0.9
@@ -45,6 +47,7 @@ export class DemoPlayer {
   private snapshot: DemoSnapshot = { status: 'idle', currentNoteIndex: 0, totalNotes: 0, message: '' }
   private listeners = new Set<() => void>()
   private score: ScoreModel | null = null
+  private plan: PracticePlan | null = null
   private timer: ReturnType<typeof setTimeout> | undefined
   private unsubscribeOutput: (() => void) | undefined
   private generation = 0
@@ -68,7 +71,13 @@ export class DemoPlayer {
     this.stop()
     this.cancelTimers()
     this.score = score
+    this.plan = null
     this.publish({ status: 'idle', currentNoteIndex: 0, totalNotes: score?.notes.length ?? 0, message: '' })
+  }
+  loadPlan = (plan: PracticePlan | null) => {
+    this.loadScore(null)
+    this.plan = plan
+    this.publish({ totalNotes: plan?.targets.length ?? 0 })
   }
   resetDisplay = () => {
     if (this.snapshot.status !== 'playing') this.publish({ status: 'idle', currentNoteIndex: 0, message: '' })
@@ -77,8 +86,9 @@ export class DemoPlayer {
     if (this.snapshot.status === 'playing') return
     let notes: DemoNote[]
     try {
-      if (!this.score) throw new Error('No score')
-      notes = buildDemoNotes(this.score)
+      if (this.plan) notes = buildDemoPlan(this.plan)
+      else if (this.score) notes = buildDemoNotes(this.score)
+      else throw new Error('No score')
     } catch {
       this.publish({ status: 'error', message: '手本の楽譜を読み込めません。ページを再読み込みしてください。' })
       return
@@ -95,6 +105,7 @@ export class DemoPlayer {
       if (generation === this.generation) this.interrupted()
     })
     const startedAt = performance.now()
+    const endMs = Math.max(...notes.map((note) => note.noteOffMs))
     const play = (index: number) => {
       if (generation !== this.generation || this.snapshot.status !== 'playing') return
       const note = notes[index]
@@ -107,27 +118,34 @@ export class DemoPlayer {
         this.publish({ message: '再生が遅れたため停止しました。「手本を聴く」で最初から聴けます。' })
         return
       }
-      if (!this.output.playDemoNote(note.midiNote, due, startedAt + note.noteOffMs)) {
-        this.stop()
-        this.publish({ status: 'error', message: '手本を送信できませんでした。MIDI出力の接続を確認してください。' })
-        return
+      // One callback and one timestamp for every Note On at this onset.
+      let next = index
+      while (next < notes.length && notes[next].startMs === note.startMs) {
+        if (generation !== this.generation) return
+        const voice = notes[next++]
+        if (!this.output.playDemoNote(voice.midiNote, due, startedAt + voice.noteOffMs)) {
+          this.stop()
+          this.publish({ status: 'error', message: '手本を送信できませんでした。MIDI出力の接続を確認してください。' })
+          return
+        }
       }
       this.publish({ currentNoteIndex: note.index })
-      if (index + 1 < notes.length) {
-        this.timer = setTimeout(() => play(index + 1), Math.max(0, startedAt + notes[index + 1].startMs - performance.now()))
+      if (next < notes.length) {
+        this.timer = setTimeout(() => play(next), Math.max(0, startedAt + notes[next].startMs - performance.now()))
       } else {
         const finish = () => {
           if (generation !== this.generation) return
-          const remaining = startedAt + note.noteOffMs - performance.now()
+          const remaining = startedAt + endMs - performance.now()
           if (remaining > 0) { this.timer = setTimeout(finish, remaining); return }
           this.cancelTimers()
           this.output.finishDemo()
           this.publish({ status: 'completed', message: '手本の再生が終わりました' })
         }
-        this.timer = setTimeout(finish, Math.max(0, startedAt + note.noteOffMs - performance.now()))
+        this.timer = setTimeout(finish, Math.max(0, startedAt + endMs - performance.now()))
       }
     }
-    play(0)
+    if (notes[0].startMs > 0) this.timer = setTimeout(() => play(0), notes[0].startMs)
+    else play(0)
   }
   private cancelTimers() {
     ++this.generation

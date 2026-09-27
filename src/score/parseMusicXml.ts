@@ -1,4 +1,5 @@
 import { Beat } from './Beat'
+import { soundSpans } from './soundSpans'
 import { child, children, descendants, readMusicXmlDocument, value } from './musicXmlDocument'
 import type { ScoreMeasure, ScoreModel, ScoreMoment, ScoreNote, ScoreRest, ScoreSource, ScoreTempo, ScoreTie, ScoreWarning } from './ScoreModel'
 
@@ -54,15 +55,16 @@ export function parseMusicXml(source: ScoreSource, document?: Document): ScoreMo
   const warn = (code: string, message: string) => { if (!warnings.some((warning) => warning.code === code)) warnings.push({ code, message }) }
   const pending = new Set<string>(), practiceUnsupported = new Set<string>(), voices = new Set<string>()
   for (const [name, message] of [['pedal', 'ペダルの演奏解釈'], ['arpeggiate', 'アルペジオの演奏順'], ['ornaments', '装飾記号の演奏解釈']] as const) {
-    // These annotations were ignored by the old monophonic player as well. Warn,
-    // but do not disable an otherwise supported existing melody because of them.
+    // Preserve annotations in the source. Pedal remains warning-only; gestures
+    // requiring different attacks must not be treated as ordinary pitch practice.
     if (descendants(doc, name).length) warn(name, message + 'は未対応です。記譜された音と時間だけを保持します。')
+    if (name !== 'pedal' && descendants(doc, name).length) practiceUnsupported.add(message)
   }
   if (descendants(doc, 'tremolo').length) { warn('tremolo', 'トレモロの発音展開は未対応です。'); practiceUnsupported.add('トレモロ') }
   if (['repeat', 'ending', 'segno', 'coda', 'measure-repeat'].some((name) => descendants(doc, name).length) || descendants(doc, 'sound').some((node) => ['dacapo', 'dalsegno', 'tocoda', 'fine', 'forward-repeat'].some((name) => node.hasAttribute(name)))) {
     warn('repeat', '反復・演奏順の展開は未対応です。記載順の時間軸を保持します。'); practiceUnsupported.add('反復・演奏順の指定')
   }
-  if (descendants(doc, 'time-modification').length) { warn('tuplet', '連符はduration/divisionsで時間を保持します。演奏評価は未対応です。'); pending.add('連符') }
+  if (descendants(doc, 'time-modification').length) { warn('tuplet', '連符はduration/divisionsで時間を保持します。今回の練習・手本は未対応です。'); practiceUnsupported.add('連符') }
   let divisions: Beat | null = null, measureStart = Beat.zero(), staffCount = 1
   for (const [measureIndex, measure] of measuresXml.entries()) {
     const measureNumber = measure.getAttribute('number') || String(measureIndex + 1)
@@ -169,8 +171,13 @@ export function parseMusicXml(source: ScoreSource, document?: Document): ScoreMo
     expected = Beat.from(moment.onset).add(Beat.from(moment.notes[0].duration))
   }
   if (expected.compare(measureStart) !== 0) pending.add('休止時間')
-  if (pending.has('タイ')) warn('tie', 'tie/tiedを保持しています。タイ連結・再打鍵判定は次Phase以降で扱います。')
+  if (moments.some((moment) => {
+    const voiceStaff = new Map<string, Set<number>>()
+    for (const note of moment.notes) { const staves = voiceStaff.get(note.voice) ?? new Set<number>(); staves.add(note.staff); voiceStaff.set(note.voice, staves) }
+    return [...voiceStaff.values()].some((staves) => staves.size > 1)
+  })) practiceUnsupported.add('同時刻の同一Voiceが複数Staffをまたぐ記譜')
+  try { soundSpans(notes) } catch (error) { const message = error instanceof Error ? error.message : '発音の対応'; practiceUnsupported.add(message); warn('performance', message + 'は未対応です。') }
   const initialTempo = tempos.filter((tempo) => Beat.from(tempo.onset).n === 0n).at(-1)?.bpm
   return { ...source, partId: part.getAttribute('id') || 'P1', notes, rests, moments, measures, totalDuration: measureStart.toJSON(), totalBeats: measureStart.beats, staffCount, voices: [...voices], tempoBpm: initialTempo, tempos, warnings,
-    practiceCompatibility: practiceUnsupported.size ? 'unsupported' : pending.size ? 'polyphonicPending' : 'simpleMelody', practiceReasons: [...practiceUnsupported, ...pending] }
+    practiceCompatibility: practiceUnsupported.size ? 'unsupported' : pending.size ? 'pitchPractice' : 'simpleMelody', practiceReasons: [...practiceUnsupported] }
 }

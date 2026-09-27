@@ -54,7 +54,7 @@ it('text songs with original-score metadata enter the existing selection pipelin
     originalScore: { type: 'pdf', storageId: 'separate-attachment', fileName: 'original.pdf' },
   }
   const practice = new PracticeSession()
-  const selection = new SongSelection(null, { reset: () => practice.loadScore(null), apply: practice.loadScore })
+  const selection = new SongSelection(null, { reset: () => practice.loadScore(null), apply: practice.loadPlan })
   await selection.select(song)
   const state = selection.getSnapshot()
   expect(state.source).toEqual({ id: song.id, title: song.title, partLabel: song.partLabel, musicXml: xml })

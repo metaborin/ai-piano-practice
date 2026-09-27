@@ -44,7 +44,7 @@ export type ScoreTempo = {
   readonly onset: BeatFraction; readonly onsetBeats: number; readonly bpm: number
   readonly source: 'sound' | 'metronome'; readonly measureIndex: number
 }
-export type PracticeCompatibility = 'simpleMelody' | 'polyphonicPending' | 'unsupported'
+export type PracticeCompatibility = 'simpleMelody' | 'pitchPractice' | 'polyphonicPending' | 'unsupported'
 export type ScoreWarning = { readonly code: string; readonly message: string }
 /** Normalized timeline. No MusicXML DOM or OSMD objects escape the parser. */
 export type ScoreModel = ScoreSource & {

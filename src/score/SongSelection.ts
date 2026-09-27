@@ -1,5 +1,6 @@
-import type { PracticeScore, ScoreModel, ScoreSource } from './ScoreModel'
-import { toPracticeScore } from './toPracticeScore'
+import type { ScoreModel, ScoreSource } from './ScoreModel'
+import { createPracticePlan } from '../practice/PracticePlan'
+import type { PracticeMode, PracticePlan } from '../practice/PracticePlan'
 import { loadSongMusicXml } from '../songs/loadSongMusicXml'
 import type { Song } from '../songs/Song'
 
@@ -11,10 +12,12 @@ export type SongSnapshot = {
   readonly error: string | null
   readonly model: ScoreModel | null
   readonly canPractice: boolean
+  readonly mode: PracticeMode
+  readonly plan: PracticePlan | null
 }
 type Dependencies = {
   reset: () => void
-  apply: (model: PracticeScore) => void
+  apply: (plan: PracticePlan) => void
   obtain?: (song: Song) => Promise<string>
 }
 
@@ -26,7 +29,7 @@ export class SongSelection {
   private readonly dependencies: Dependencies
   constructor(initial: Song | null, dependencies: Dependencies) {
     this.dependencies = dependencies
-    this.snapshot = { requestId: 0, song: initial, status: 'idle', source: null, error: null, model: null, canPractice: false }
+    this.snapshot = { requestId: 0, song: initial, status: 'idle', source: null, error: null, model: null, canPractice: false, mode: 'both', plan: null }
   }
   getSnapshot = () => this.snapshot
   subscribe = (listener: () => void) => {
@@ -41,7 +44,7 @@ export class SongSelection {
     const requestId = ++this.generation
     // Synchronous, before the first await: grading stops before MIDI output stops.
     this.dependencies.reset()
-    this.publish({ requestId, song, status: 'loading', source: null, error: null, model: null, canPractice: false })
+    this.publish({ requestId, song, status: 'loading', source: null, error: null, model: null, canPractice: false, mode: 'both', plan: null })
     try {
       const xml = await (this.dependencies.obtain ?? loadSongMusicXml)(song)
       this.acceptMusicXml(requestId, xml)
@@ -62,14 +65,22 @@ export class SongSelection {
       this.fail(requestId, '練習対象の音を読み込めませんでした。別の曲を選んでください。')
       return
     }
-    const practiceScore = toPracticeScore(model)
-    if (practiceScore) this.dependencies.apply(practiceScore)
-    this.publish({ status: 'ready', model, canPractice: practiceScore !== null })
+    const plan = createPracticePlan(model, this.snapshot.mode)
+    if (plan) this.dependencies.apply(plan)
+    this.publish({ status: 'ready', model, plan, canPractice: !!plan?.targets.length })
+  }
+  setMode = (mode: PracticeMode) => {
+    const model = this.snapshot.model
+    if (this.snapshot.status !== 'ready' || !model || this.snapshot.mode === mode) return
+    this.dependencies.reset()
+    const plan = createPracticePlan(model, mode)
+    if (plan) this.dependencies.apply(plan)
+    this.publish({ mode, plan, canPractice: !!plan?.targets.length })
   }
   fail = (requestId: number, error: string) => {
     if (requestId !== this.generation) return
     this.dependencies.reset()
-    this.publish({ status: 'error', source: null, error, model: null, canPractice: false })
+    this.publish({ status: 'error', source: null, error, model: null, plan: null, canPractice: false })
   }
   cancel = () => {
     ++this.generation

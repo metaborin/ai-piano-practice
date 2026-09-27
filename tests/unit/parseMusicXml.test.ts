@@ -37,7 +37,7 @@ describe('MusicXML normalized timeline', () => {
     expect(score.moments).toHaveLength(1)
     expect(score.notes.map((note) => [note.midiNote, note.staff, note.voice])).toEqual([[72, 1, '1'], [76, 1, '1'], [48, 2, '2'], [55, 2, '2']])
     expect(score.totalBeats).toBe(1)
-    expect(score.practiceCompatibility).toBe('polyphonicPending')
+    expect(score.practiceCompatibility).toBe('pitchPractice')
   })
   it('D: quarter-note voice and half-note voice have correct independent starts and lengths', () => {
     const score = parseFixture('d-two-voices')
@@ -114,7 +114,7 @@ describe('MusicXML normalized timeline', () => {
   it.each(['pedal', 'arpeggiate', 'ornaments', 'repeat', 'tremolo'])('warns about %s while retaining the legacy monophonic policy', (tag) => {
     const score = parseXml(scoreXml(noteXml('C', 1, `<notations><${tag}/></notations>`)))
     expect(score.warnings.length).toBeGreaterThan(0)
-    expect(score.practiceCompatibility).toBe(['repeat', 'tremolo'].includes(tag) ? 'unsupported' : 'simpleMelody')
+    expect(score.practiceCompatibility).toBe(['repeat', 'tremolo', 'arpeggiate', 'ornaments'].includes(tag) ? 'unsupported' : 'simpleMelody')
     expect(score.notes[0].midiNote).toBe(60)
   })
   it.each([

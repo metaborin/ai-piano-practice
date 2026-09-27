@@ -43,13 +43,12 @@ for (const score of catalog) test(score.file + ': import, normalized analysis an
     await page.evaluate(() => { window.midiTest.send([0x90, 60, 80]); window.midiTest.send([0x80, 60, 0]) })
     await expect(page.locator('.position')).toHaveText('2 / 3 音')
   } else {
-    await expect(page.locator('.score-card').getByRole('status')).toContainText('次Phase（2E-C2）')
-    await expect(page.locator('.position')).toHaveText('— / — 音')
-    for (const name of ['練習開始', 'もう一度', '手本を聴く', '前の音', '次の音']) await expect(page.getByRole('button', { name, exact: true })).toBeDisabled()
+    await expect(page.locator('.position')).toHaveText(`1 / ${score.moments} ステップ`)
+    for (const name of ['練習開始', '手本を聴く']) await expect(page.getByRole('button', { name, exact: true })).toBeEnabled()
     await page.evaluate(() => { for (const note of [60, 64, 67, 72, 48, 55]) { window.midiTest.send([0x90, note, 80]); window.midiTest.send([0x80, note, 0]) } })
     await expect(page.locator('.practice-controls')).toHaveAttribute('data-correct-count', '0')
     expect(await page.evaluate(() => window.midiTest.outputMessages.length)).toBe(0)
-    await expect(page.locator('.score-renderer img')).toBeHidden()
+    await expect(page.locator('.score-renderer img')).toBeVisible()
   }
   if (score.file === 'c-grand-staff') {
     await expect(page.locator('.score-renderer svg .staffline')).toHaveCount(2)
@@ -68,6 +67,7 @@ test('existing Phase 2E-B records are reanalysed without migration, rewriting XM
   const oldRecords = [
     { id: 'imported:old-melody', title: '以前の単旋律', composer: '以前の作者', musicXml: { type: 'text', value: fixture('a-simple') }, compatibility: { status: 'supported', version: 1, reasons: [] } },
     { id: 'imported:old-grand', title: '以前の大譜表', composer: '別の作者', musicXml: { type: 'text', value: fixture('c-grand-staff') }, compatibility: { status: 'unsupported', version: 1, reasons: ['和音', '複数Staff'] } },
+    { id: 'imported:old-c1', title: 'C1で保存した両手譜', musicXml: { type: 'text', value: fixture('g-piano-practice') }, compatibility: { status: 'unsupported', version: 2, parseCompatibility: 'supported', practiceCompatibility: 'polyphonicPending', reasons: ['和音', '複数Staff'] } },
   ].map((song) => ({ ...song, source: 'imported', partLabel: '追加曲', originalFileName: song.id + '.xml', fileFormat: 'musicxml', createdAt: 100, originalScore: { type: 'pdf', storageId: 'future-reference-only' } }))
   await setup(page)
   await page.evaluate((records) => new Promise<void>((resolve, reject) => {
@@ -80,9 +80,13 @@ test('existing Phase 2E-B records are reanalysed without migration, rewriting XM
     }
   }), oldRecords)
   await page.reload()
-  await expect(page.locator('.personal-song-list > li')).toHaveCount(2)
+  await expect(page.locator('.personal-song-list > li')).toHaveCount(3)
+  const c1 = page.locator('[data-song-id="imported:old-c1"]')
+  await expect(c1).toContainText('音程練習対応')
+  await c1.getByRole('button', { name: '選択', exact: true }).click()
+  await expect(page.locator('.position')).toHaveText('1 / 6 ステップ')
   const complex = page.locator('[data-song-id="imported:old-grand"]')
-  await expect(complex).toContainText('解析可能・練習は次Phase')
+  await expect(complex).toContainText('音程練習対応')
   await complex.getByRole('button', { name: '選択', exact: true }).click()
   await expect(page.locator('.score-renderer svg .staffline')).toHaveCount(2)
   await page.locator('[data-song-id="imported:old-melody"]').getByRole('button', { name: '選択', exact: true }).click()
@@ -106,12 +110,12 @@ test('switching a playing melody to a complex score stops sound, timers and old 
   await page.clock.install()
   await page.getByRole('button', { name: '手本を聴く', exact: true }).click()
   await page.locator('.personal-song-list > li').getByRole('button', { name: '選択', exact: true }).click()
-  await expect(page.locator('.score-card').getByRole('status')).toContainText('次Phase')
+  await expect(page.locator('.position')).toHaveText('1 / 1 ステップ')
   const sent = await page.evaluate(() => window.midiTest.outputMessages)
   expect(sent.slice(-2).map((message) => message.data)).toEqual([[0x80, 60, 0], [0xb0, 123, 0]])
   await page.clock.runFor(20000)
   expect(await page.evaluate(() => window.midiTest.outputMessages)).toEqual(sent)
-  await expect(page.getByRole('button', { name: '手本を聴く', exact: true })).toBeDisabled()
+  await expect(page.getByRole('button', { name: '手本を聴く', exact: true })).toBeEnabled()
   expect(await page.evaluate(() => window.midiTest.requests)).toBe(1)
   expect(await page.evaluate(() => window.midiTest.inputListenerCount())).toBe(1)
 })

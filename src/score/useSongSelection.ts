@@ -7,14 +7,14 @@ import { SongSelection } from './SongSelection'
 export function useSongSelection(session: PracticeSession, player: DemoPlayer, output: MidiOutputManager) {
   const [selection] = useState(() => new SongSelection(null, {
     reset: () => {
-      session.loadScore(null)
-      player.loadScore(null)
+      session.loadPlan(null)
+      player.loadPlan(null)
       // Also release an active C4 test, retaining device selection and MIDIAccess.
       if (output.getSnapshot().playing) output.stopAllNotes()
     },
     apply: (model) => {
-      player.loadScore(model)
-      session.loadScore(model)
+      player.loadPlan(model)
+      session.loadPlan(model)
     },
   }))
   const songState = useSyncExternalStore(selection.subscribe, selection.getSnapshot, selection.getSnapshot)

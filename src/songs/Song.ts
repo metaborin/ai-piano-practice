@@ -6,7 +6,7 @@ export type Compatibility = {
   readonly reasons: readonly string[]
   /** Optional for records saved by Phase 2E-B. Recomputed from the original XML. */
   readonly parseCompatibility?: 'supported' | 'unsupported' | 'unknown'
-  readonly practiceCompatibility?: 'simpleMelody' | 'polyphonicPending' | 'unsupported'
+  readonly practiceCompatibility?: 'simpleMelody' | 'pitchPractice' | 'polyphonicPending' | 'unsupported'
 }
 
 export type MusicXmlLocation =
