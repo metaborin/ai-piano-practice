@@ -28,6 +28,7 @@ export type Song = {
   readonly source: SongSource
   readonly partLabel: string
   readonly musicXml: MusicXmlLocation
+  /** Quarter-note BPM fallback; the selected MusicXML's tempo takes priority. */
   readonly tempoBpm?: number
   readonly difficulty?: number
   readonly createdAt?: number

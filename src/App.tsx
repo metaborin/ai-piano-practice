@@ -36,6 +36,7 @@ export default function App() {
   const noteCount = practice.totalNotes
   const practiceBlocked = !scoreReady || demo.status === 'playing' || output.playing
   const cursorMomentId = songState.plan?.targets[cursorIndex]?.scoreMomentId ?? null
+  const currentMeasure = songState.plan?.targets[cursorIndex]?.measureNumber
   const positionUnit = songState.model?.practiceCompatibility === 'simpleMelody' ? '音' : 'ステップ'
   const startPractice = () => { if (!practiceBlocked) { player.resetDisplay(); start() } }
   const restartPractice = () => { if (!practiceBlocked) { player.resetDisplay(); restart() } }
@@ -44,7 +45,7 @@ export default function App() {
     <main className="app">
       <header className="app-header">
         <div>
-          <p className="eyebrow">ピアノ練習 · Phase 2E-C2</p>
+          <p className="eyebrow">ピアノ練習 · Phase 2E-D1</p>
           <h1>{title}</h1>
           <p className="subtitle">{songState.song?.partLabel ?? '曲を選んで練習しましょう'}</p>
         </div>
@@ -58,7 +59,10 @@ export default function App() {
       <section className="score-card" aria-label={songState.song ? title + 'の楽譜' : '楽譜'} aria-busy={!scoreReady && songState.status === 'loading'}>
         <div className="score-heading">
           {songState.model && !songState.canPractice ? <span>楽譜表示</span> : <span className="cursor-legend"><span aria-hidden="true" />緑の帯が現在位置</span>}
-          <span className="position" aria-live="polite">{scoreReady && noteCount > 0 ? `${cursorIndex + 1} / ${noteCount} ${positionUnit}` : '— / — 音'}</span>
+          <div className="score-position" aria-live="polite">
+            {scoreReady && currentMeasure !== undefined && <span className="current-measure">{currentMeasure}小節目</span>}
+            <span className="position">{scoreReady && noteCount > 0 ? `${cursorIndex + 1} / ${noteCount} ${positionUnit}` : '— / — 音'}</span>
+          </div>
         </div>
         {songState.status === 'loading' && <p className="score-message" role="status">楽譜を読み込み中…</p>}
         {songState.error && <p className="error-message" role="alert">{songState.error}</p>}
@@ -86,10 +90,10 @@ export default function App() {
           {midi.requesting ? '接続しています…' : midi.status === 'connected' ? 'MIDI接続済み' : 'MIDI接続'}
         </button>
       </section>
-      <DeveloperControls practice={practice} model={songState.model} plan={songState.plan} blocked={!scoreReady || showDemoCursor} onPrevious={() => moveCursor(-1)} onNext={() => moveCursor(1)} />
+      <DeveloperControls practice={practice} model={songState.model} plan={songState.plan} song={songState.song} error={songState.error} cursorIndex={cursorIndex} blocked={!scoreReady || showDemoCursor} onPrevious={() => moveCursor(-1)} onNext={() => moveCursor(1)} />
       <MidiDebugPanel latest={midi.latestEvent} lastNoteOn={midi.lastNoteOn} lastNoteOff={midi.lastNoteOff} />
       <MidiOutputPanel output={output} inputStatus={midi.status} onSelect={selectOutput} onPlay={playTestNote} onStop={stopAllNotes} onRetry={retryOutput} />
-      <footer>Phase 2E-C2 · 曲を選んで、順番に弾いてみよう</footer>
+      <footer>Phase 2E-D1 · 曲を選んで、順番に弾いてみよう</footer>
     </main>
   )
 }

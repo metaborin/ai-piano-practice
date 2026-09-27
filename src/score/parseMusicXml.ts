@@ -79,8 +79,12 @@ export function parseMusicXml(source: ScoreSource, document?: Document): ScoreMo
       const sound = node.localName === 'sound' ? node : child(node, 'sound')
       const metronome = descendants(node, 'metronome')[0]
       let bpm: number | undefined, from: 'sound' | 'metronome' = 'sound'
-      if (sound?.hasAttribute('tempo')) bpm = Number(sound.getAttribute('tempo'))
-      else if (metronome) {
+      if (sound?.hasAttribute('tempo')) {
+        const numeric = Number(sound.getAttribute('tempo'))
+        if (Number.isFinite(numeric) && numeric > 0) bpm = numeric
+        else warn('tempo', 'soundの数値テンポが不正です。有効なメトロノーム指定がなければ代替テンポを使用します。')
+      }
+      if (bpm === undefined && metronome) {
         const units: Record<string, number> = { maxima: 32, long: 16, breve: 8, whole: 4, half: 2, quarter: 1, eighth: 0.5, '16th': 0.25, '32nd': 0.125, '64th': 0.0625 }
         const unit = units[value(metronome, 'beat-unit')]
         const dots = children(metronome, 'beat-unit-dot').length

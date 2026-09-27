@@ -93,7 +93,7 @@ describe('MusicXML normalized timeline', () => {
     expect(score.measures[0]).toMatchObject({ number: 'pickup-A', implicit: true, durationBeats: 1 })
     expect(score.notes[0].measureNumber).toBe('pickup-A')
   })
-  it('records sound tempo and metronome beat-unit/dots/offset changes without altering legacy playback speed', () => {
+  it('records sound tempo and metronome beat-unit/dots/offset changes', () => {
     const xml = scoreXml('<direction><sound tempo="90"/></direction>' + noteXml('C', 1) + '<direction><direction-type><metronome><beat-unit>half</beat-unit><beat-unit-dot/><per-minute>60</per-minute></metronome></direction-type><offset>1</offset></direction>' + noteXml('D', 2))
     const score = parseXml(xml)
     expect(score.tempoBpm).toBe(90)

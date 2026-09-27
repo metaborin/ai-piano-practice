@@ -9,8 +9,10 @@ export type PracticeTarget = {
 export type PracticePlan = {
   readonly score: ScoreModel; readonly mode: PracticeMode
   readonly targets: readonly PracticeTarget[]; readonly sourceNotes: readonly ScoreNote[]
+  /** Playback fallback only. XML tempo remains authoritative. */
+  readonly songTempoBpm?: number
 }
-export function createPracticePlan(score: ScoreModel, mode: PracticeMode = 'both'): PracticePlan | null {
+export function createPracticePlan(score: ScoreModel, mode: PracticeMode = 'both', songTempoBpm?: number): PracticePlan | null {
   if (!['simpleMelody', 'pitchPractice'].includes(score.practiceCompatibility)) return null
   const selected = (note: ScoreNote) => mode === 'both' || note.staff === (mode === 'right' ? 1 : 2)
   const targets = score.moments.flatMap((moment) => {
@@ -18,5 +20,5 @@ export function createPracticePlan(score: ScoreModel, mode: PracticeMode = 'both
     const expectedMidiNotes = [...new Set(sourceNotes.filter((note) => !note.tieStop).map((note) => note.midiNote))].sort((a, b) => a - b)
     return expectedMidiNotes.length ? [{ id: mode + ':' + moment.id, scoreMomentId: moment.id, onset: moment.onset, onsetBeats: moment.onsetBeats, measureNumber: moment.measureNumber, expectedMidiNotes, sourceNotes }] : []
   })
-  return { score, mode, targets, sourceNotes: score.notes.filter(selected) }
+  return { score, mode, targets, sourceNotes: score.notes.filter(selected), songTempoBpm }
 }

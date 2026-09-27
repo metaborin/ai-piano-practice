@@ -5,6 +5,7 @@ import { readSongFile } from '../songs/readSongFile'
 import type { ReadSongFileResult } from '../songs/readSongFile'
 import type { ScoreModel, ScoreSource } from '../score/ScoreModel'
 import { ScoreView } from './ScoreView'
+import { ValidationReport } from './ValidationReport'
 
 type Draft = ReadSongFileResult & { requestId: number; score: ScoreSource }
 type Props = { disabled: boolean; onAdd: (song: ImportedSong) => Promise<void> }
@@ -35,7 +36,7 @@ export function SongImport({ disabled, onAdd }: Props) {
       const result = await readSongFile(file)
       if (requestId !== generation.current) return
       setTitle(result.title); setComposer(result.composer)
-      setDraft({ ...result, requestId, score: { id: 'import-preview', title: result.title, partLabel: '追加曲', musicXml: result.musicXml } })
+      setDraft({ ...result, requestId, score: { id: 'import-preview', title: result.title, partLabel: result.partLabel, musicXml: result.musicXml } })
       if (!result.model) setCompatibility(result.compatibility)
     } catch (error) {
       if (requestId === generation.current) setError(error instanceof Error ? error.message : 'ファイルを読み込めませんでした。')
@@ -52,7 +53,7 @@ export function SongImport({ disabled, onAdd }: Props) {
     savingRef.current = true; setSaving(true); setError(null)
     try {
       await onAdd({ id: 'imported:' + crypto.randomUUID(), title: title.trim(), composer: composer.trim() || undefined,
-        source: 'imported', partLabel: '追加曲', musicXml: { type: 'text', value: draft.musicXml },
+        source: 'imported', partLabel: draft.partLabel, tempoBpm: draft.tempoBpm, musicXml: { type: 'text', value: draft.musicXml },
         originalFileName: draft.originalFileName, fileFormat: draft.fileFormat, createdAt: Date.now(), compatibility })
       ++generation.current
       setDraft(null); setCompatibility(null); setNotice('曲を追加しました。「自分の曲」から選んでください。')
@@ -74,6 +75,7 @@ export function SongImport({ disabled, onAdd }: Props) {
       <h3>曲を追加</h3>
       <p>ファイル：{draft.originalFileName}</p>
       <p>形式：{draft.fileFormat === 'mxl' ? 'MXL' : 'MusicXML'}</p>
+      <p>パート：{draft.partLabel}</p>
       <label>曲名<input value={title} onChange={(event) => setTitle(event.target.value)} disabled={saving} required maxLength={300} /></label>
       <label>作曲者<input value={composer} onChange={(event) => setComposer(event.target.value)} disabled={saving} maxLength={300} /></label>
       <div role="status" className="compatibility-message">
@@ -83,6 +85,7 @@ export function SongImport({ disabled, onAdd }: Props) {
           ? 'この曲は解析・表示できます。練習・手本演奏は次Phase（2E-C2）で対応します。理由：' + compatibility.reasons.join('、')
           : '曲は保存できますが、現在の練習機能では未対応です。練習・手本演奏は利用できません。理由：' + compatibility.reasons.join('、')}
       </div>
+      {compatibility && <details><summary>楽譜解析結果を確認</summary><ValidationReport model={draft.model} tempoBpm={draft.tempoBpm} compatibility={compatibility} /></details>}
       <div className="library-actions"><button type="button" onClick={cancel} disabled={saving}>キャンセル</button><button className="primary-button" type="submit" disabled={!compatibility || !title.trim() || saving}>{saving ? '保存中…' : '追加する'}</button></div>
       {!compatibility && <div className="import-validation" aria-hidden="true"><ScoreView key={draft.requestId} requestId={draft.requestId} score={draft.score} cursorIndex={0} onReady={ready} onError={fail} /></div>}
     </form>}

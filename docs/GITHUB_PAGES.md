@@ -4,7 +4,7 @@
 
 公開URL: **https://metaborin.github.io/ai-piano-practice/**
 
-Phase 2E-C2の和音・右手・左手・両手の音程練習と手本演奏、曲追加・IndexedDB保存・削除と、既存の楽譜・MIDI入力・音順練習・MIDI出力・手本演奏・曲選択をChromeOSのChromeからHTTPSで利用するための公開設定です。Chromebookでの利用にNode.jsやLinux開発環境は必要ありません。追加曲は端末のブラウザにだけ保存します。
+Phase 2E-D1のXMLテンポ再生・小節表示・検証レポート、和音・右手・左手・両手の音程練習と手本演奏、曲追加・IndexedDB保存・削除と、既存の楽譜・MIDI入力・音順練習・MIDI出力・手本演奏・曲選択をChromeOSのChromeからHTTPSで利用するための公開設定です。Chromebookでの利用にNode.jsやLinux開発環境は必要ありません。追加曲は端末のブラウザにだけ保存します。
 
 ## 変更内容
 
@@ -74,7 +74,7 @@ npx playwright install chromium
 npm run test:pages
 ```
 
-このコマンドはbuild後、4174番ポートで `dist/` を起動し、曲追加・実IndexedDB・MXL・曲選択・既存機能・手本演奏・サブパスのテストを実行します。3つの内蔵XMLがassets配下から取得されることも確認します。MIDI入出力を模擬し、実際の演奏機器は操作しません。最新の件数・結果は [Phase 2E-C2報告](PHASE2EC2.md) を参照してください。
+このコマンドはbuild後、4174番ポートで `dist/` を起動し、曲追加・実IndexedDB・MXL・曲選択・既存機能・手本演奏・サブパスのテストを実行します。3つの内蔵XMLがassets配下から取得されることも確認します。MIDI入出力を模擬し、実際の演奏機器は操作しません。最新の件数・結果は [Phase 2E-D1報告](PHASE2ED1.md) を参照してください。
 
 公開済みサイトを PowerShell から同じテストで確認する場合:
 
@@ -122,7 +122,7 @@ Remove-Item Env:PLAYWRIGHT_BASE_URL
 - [ ] 間違い・Note Off・押しっぱなしの重複入力では進まない。
 - [ ] 14音目で「できました！」になり、「もう一度」で1音目へ戻る。
 - [ ] 抜き差し後に接続状態が更新され、再び受信できる。
-- [ ] 上部にPhase 2E-C2と曲ライブラリ、「練習する曲」の内蔵3曲、「自分の曲」、「＋ 曲を追加」が表示される。
+- [ ] 上部にPhase 2E-D1と曲ライブラリ、「練習する曲」の内蔵3曲、「自分の曲」、「＋ 曲を追加」が表示される。
 - [ ] MusicXML/MXLの登録確認・保存・再読み込み後の復元・削除ができる。追加・選択していない曲の削除では練習状態が変わらない。
 - [ ] 和音・2Staff・複数Voice・休符・タイを含む対応範囲の曲は、元XMLを解析・表示し、音程練習対応と表示する。2Staffでは右手・左手・両手を選んで練習・手本を開始できる。
 - [ ] 旧版の追加曲が保持され、開発者用のScore解析でStaff・Voice・Moment・Notes・Restを確認できる。
@@ -132,6 +132,6 @@ Remove-Item Env:PLAYWRIGHT_BASE_URL
 - [ ] 出力機器の選択、C4の発音・Note Off、All Notes Off、出力デバッグが正常。
 - [ ] 手本の音順・音価・カーソル同期・途中停止・終了が正常で、手本中に練習判定が進まない。
 
-ユーザーからPhase 2E-C1の実機確認まで完了との報告を受けています。今回の実機結果は [Phase 2E-C2の受入チェックリスト](PHASE2EC2.md) に記録してください。ブラウザー自動テストは実機確認の代わりにはなりません。
+ユーザーからPhase 2E-C2の実機確認まで完了との報告を受けています。今回の実機結果は [Phase 2E-D1の実曲確認手順](PHASE2ED1.md) に記録してください。ブラウザー自動テストは実機確認の代わりにはなりません。
 
 参考: [Vite の GitHub Pages 設定](https://vite.dev/guide/static-deploy#github-pages)。OSMD のチャンクサイズ警告は既存のもので、ビルドは成功します。

@@ -16,15 +16,17 @@ export function inspectMusicXml(xml: string, fileName = '') {
   const work = child(root, 'work')
   const title = (work ? value(work, 'work-title') : '') || value(root, 'movement-title') || fileName.replace(/\.[^.]+$/, '') || '無題'
   const composer = descendants(doc, 'creator').filter((node) => node.getAttribute('type') === 'composer').map((node) => node.textContent?.trim()).filter(Boolean).join(' / ')
+  const parts = descendants(root, 'score-part')
+  const partLabel = parts.length === 1 ? value(parts[0], 'part-name') || '追加曲' : '追加曲'
   let model: ScoreModel | null = null
   let compatibility: Compatibility
   try {
-    model = parseMusicXml({ id: 'inspection', title, partLabel: '追加曲', musicXml: xml }, doc)
+    model = parseMusicXml({ id: 'inspection', title, partLabel, musicXml: xml }, doc)
     compatibility = compatibilityFromModel(model)
   } catch (error) {
     compatibility = { version: COMPATIBILITY_VERSION, status: 'unsupported', parseCompatibility: 'unsupported', practiceCompatibility: 'unsupported', reasons: [error instanceof Error ? error.message : 'MusicXMLを解析できませんでした。'] }
   }
-  return { title, composer, model, compatibility, reasons: model ? [] : compatibility.reasons, pitchedNoteCount: model?.notes.length ?? descendants(doc, 'pitch').length }
+  return { title, composer, partLabel, tempoBpm: model?.tempoBpm, model, compatibility, reasons: model ? [] : compatibility.reasons, pitchedNoteCount: model?.notes.length ?? descendants(doc, 'pitch').length }
 }
 
 /** Never migrate or delete persisted records: reanalyse XML into current in-memory metadata. */

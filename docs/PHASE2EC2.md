@@ -4,7 +4,7 @@
 
 公開先：[AIピアノ練習アプリ](https://metaborin.github.io/ai-piano-practice/)
 
-**今回の実装・自動テストと、新しいChromebook + CME U2MIDI Pro + PX-100での実機受入は別です。実機受入はユーザー確認待ちです。実機確認が済むまではC2全体を完了扱いにせず、Phase 3へ進みません。**
+**2026-09-27追記：ユーザーよりChromebook + CME U2MIDI Pro + PX-100での実機確認に問題がなく、Phase 2E-C2完了との報告を受けました。以下はC2実装時点の記録です。現行のテンポ仕様と今回の確認範囲は[Phase 2E-D1報告](PHASE2ED1.md)を参照してください。**
 
 ## 作成・変更ファイル
 

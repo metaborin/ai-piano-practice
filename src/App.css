@@ -41,6 +41,10 @@
 .cursor-legend { display: flex; align-items: center; gap: 10px; }
 .cursor-legend > span { width: 12px; height: 22px; border-radius: 3px; background: #b6dfcd; }
 .position { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.score-position { display: grid; gap: 3px; text-align: right; min-width: 0; }
+.current-measure { font-size: 0.85em; overflow-wrap: anywhere; }
+.validation-report { overflow-wrap: anywhere; }
+.validation-note { color: #536b60; font-size: 0.9em; }
 .score-view { padding: 0 16px 12px; overflow-x: auto; }
 .score-renderer { min-height: 260px; position: relative; isolation: isolate; }
 .practice-controls { padding: 20px 0 22px; text-align: center; }

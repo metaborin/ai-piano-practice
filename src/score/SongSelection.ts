@@ -65,7 +65,7 @@ export class SongSelection {
       this.fail(requestId, '練習対象の音を読み込めませんでした。別の曲を選んでください。')
       return
     }
-    const plan = createPracticePlan(model, this.snapshot.mode)
+    const plan = createPracticePlan(model, this.snapshot.mode, this.snapshot.song?.tempoBpm)
     if (plan) this.dependencies.apply(plan)
     this.publish({ status: 'ready', model, plan, canPractice: !!plan?.targets.length })
   }
@@ -73,7 +73,7 @@ export class SongSelection {
     const model = this.snapshot.model
     if (this.snapshot.status !== 'ready' || !model || this.snapshot.mode === mode) return
     this.dependencies.reset()
-    const plan = createPracticePlan(model, mode)
+    const plan = createPracticePlan(model, mode, this.snapshot.song?.tempoBpm)
     if (plan) this.dependencies.apply(plan)
     this.publish({ mode, plan, canPractice: !!plan?.targets.length })
   }

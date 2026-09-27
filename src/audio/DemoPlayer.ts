@@ -1,9 +1,9 @@
 import type { PracticeScore as ScoreModel } from '../score/ScoreModel'
 import type { PracticePlan } from '../practice/PracticePlan'
 import { buildDemoPlan } from './buildDemoPlan'
+import { DEFAULT_TEMPO_BPM, DEMO_GATE_RATIO } from './tempo'
 
-export const DEFAULT_TEMPO_BPM = 100
-export const DEMO_GATE_RATIO = 0.9
+export { DEFAULT_TEMPO_BPM, DEMO_GATE_RATIO } from './tempo'
 const MAX_LATENESS_MS = 150
 
 export type DemoNote = {
