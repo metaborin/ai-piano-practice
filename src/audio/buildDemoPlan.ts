@@ -24,6 +24,7 @@ export function buildDemoPlan(plan: PracticePlan, start: DemoStart = { kind: 'be
   // A partial demo reconstructs still-sounding notes (including a tie entering the start).
   // Nothing before the selected origin is queued, and original target indices are retained.
   return notes.filter((note) => note.noteOffMs > offset).map((note) => ({ ...note,
+    ...(note.startMs < offset && origin.cursorMomentId ? { cursorMomentId: origin.cursorMomentId } : {}),
     index: note.startMs < offset ? origin.index : note.index,
     startMs: Math.max(0, note.startMs - offset),
     durationMs: note.startMs + note.durationMs - Math.max(offset, note.startMs),

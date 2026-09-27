@@ -2,7 +2,7 @@ import type { Cursor } from 'opensheetmusicdisplay'
 import { Beat } from './Beat'
 import type { ScoreModel } from './ScoreModel'
 
-/** Match normalized attacks to OSMD API positions, never to SVG notehead/DOM ordering. */
+/** Match normalized moments to OSMD positions, including tie-only demo start positions. */
 export function buildCursorMap(model: ScoreModel, cursor: Cursor, octaveXmlDifference: number): ReadonlyMap<string, number> {
   const byTime = new Map<string, { index: number; pitches: Set<number> }>()
   cursor.reset()
@@ -27,9 +27,10 @@ export function buildCursorMap(model: ScoreModel, cursor: Cursor, octaveXmlDiffe
     const mapping = new Map<string, number>()
     for (const moment of model.moments) {
       const attacks = moment.notes.filter((note) => !note.tieStop)
-      if (!attacks.length) continue
+      const displayed = attacks.length ? attacks : moment.notes
+      if (!displayed.length) continue
       const position = byTime.get(Beat.from(moment.onset).key)
-      if (!position || attacks.some((note) => !position.pitches.has(note.midiNote))) throw new Error(`ScoreMoment ${moment.id} does not match the OSMD cursor`)
+      if (!position || displayed.some((note) => !position.pitches.has(note.midiNote))) throw new Error(`ScoreMoment ${moment.id} does not match the OSMD cursor`)
       mapping.set(moment.id, position.index)
     }
     return mapping

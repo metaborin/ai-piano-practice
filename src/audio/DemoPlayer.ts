@@ -14,6 +14,7 @@ export type DemoNote = {
   startMs: number
   durationMs: number
   noteOffMs: number
+  cursorMomentId?: string
 }
 /** Only the supplied score is read. No separate melody or duration list. */
 export function buildDemoNotes(score: ScoreModel, tempoBpm = DEFAULT_TEMPO_BPM): DemoNote[] {
@@ -42,11 +43,12 @@ export type DemoSnapshot = {
   currentNoteIndex: number
   totalNotes: number
   message: string
+  cursorMomentId: string | null
 }
 
 /** Browser/React/OSMD-independent sequencer. MIDI and view share a monotonic timeline. */
 export class DemoPlayer {
-  private snapshot: DemoSnapshot = { status: 'idle', currentNoteIndex: 0, totalNotes: 0, message: '' }
+  private snapshot: DemoSnapshot = { status: 'idle', currentNoteIndex: 0, totalNotes: 0, message: '', cursorMomentId: null }
   private listeners = new Set<() => void>()
   private score: ScoreModel | null = null
   private plan: PracticePlan | null = null
@@ -76,7 +78,7 @@ export class DemoPlayer {
     this.cancelTimers()
     this.score = score
     this.plan = null
-    this.publish({ status: 'idle', currentNoteIndex: 0, totalNotes: score?.notes.length ?? 0, message: '' })
+    this.publish({ status: 'idle', currentNoteIndex: 0, totalNotes: score?.notes.length ?? 0, message: '', cursorMomentId: null })
   }
   loadPlan = (plan: PracticePlan | null) => {
     this.loadScore(null)
@@ -84,15 +86,21 @@ export class DemoPlayer {
     this.publish({ totalNotes: plan?.targets.length ?? 0 })
   }
   resetDisplay = () => {
-    if (this.snapshot.status !== 'playing') this.publish({ status: 'idle', currentNoteIndex: 0, message: '' })
+    if (this.snapshot.status !== 'playing') this.publish({ status: 'idle', currentNoteIndex: 0, message: '', cursorMomentId: null })
   }
   playFromMoment = (momentId: string) => this.start({ kind: 'moment', momentId })
   start = (start: DemoStart = { kind: 'beginning' }) => {
     if (this.snapshot.status === 'playing') return
     let notes: DemoNote[]
     let firstIndex = 0
+    let firstMoment: string | null = null
     try {
-      if (this.plan) { firstIndex = resolveDemoStart(this.plan, start).index; notes = buildDemoPlan(this.plan, start) }
+      if (this.plan) {
+        const origin = resolveDemoStart(this.plan, start)
+        firstIndex = origin.index
+        firstMoment = origin.cursorMomentId ?? this.plan.targets[firstIndex].scoreMomentId
+        notes = buildDemoPlan(this.plan, start)
+      }
       else if (this.score && start.kind === 'beginning') notes = buildDemoNotes(this.score)
       else throw new Error('No score')
     } catch (error) {
@@ -107,7 +115,7 @@ export class DemoPlayer {
     // The adapter commits cursor position synchronously before the first MIDI send.
     this.publishPosition(() => {
       this.beforeStart()
-      this.publish({ status: 'playing', currentNoteIndex: firstIndex, message: '手本を再生中です' })
+      this.publish({ status: 'playing', currentNoteIndex: firstIndex, cursorMomentId: firstMoment, message: '手本を再生中です' })
     })
     const generation = ++this.generation
     this.unsubscribeOutput = this.output.subscribeDemoInterrupted(() => {
@@ -138,7 +146,7 @@ export class DemoPlayer {
           return
         }
       }
-      this.publishPosition(() => this.publish({ currentNoteIndex: note.index }))
+      this.publishPosition(() => this.publish({ currentNoteIndex: note.index, cursorMomentId: note.cursorMomentId ?? this.plan?.targets[note.index]?.scoreMomentId ?? null }))
       if (next < notes.length) {
         this.timer = setTimeout(() => play(next), Math.max(0, startedAt + notes[next].startMs - performance.now()))
       } else {

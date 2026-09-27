@@ -3,6 +3,8 @@ import { createPracticePlan } from '../practice/PracticePlan'
 import type { PracticeMode, PracticePlan } from '../practice/PracticePlan'
 import { loadSongMusicXml } from '../songs/loadSongMusicXml'
 import type { Song } from '../songs/Song'
+import { resolvePracticeStart } from '../practice/PracticeStartResolver'
+import type { PracticeStart, PracticeStartPosition } from '../practice/PracticeStartResolver'
 
 export type SongSnapshot = {
   readonly requestId: number
@@ -14,10 +16,13 @@ export type SongSnapshot = {
   readonly canPractice: boolean
   readonly mode: PracticeMode
   readonly plan: PracticePlan | null
+  readonly practiceStart: PracticeStart
+  readonly startPosition: PracticeStartPosition | null
 }
 type Dependencies = {
   reset: () => void
   apply: (plan: PracticePlan) => void
+  position?: (index: number | null) => void
   obtain?: (song: Song) => Promise<string>
 }
 
@@ -29,7 +34,7 @@ export class SongSelection {
   private readonly dependencies: Dependencies
   constructor(initial: Song | null, dependencies: Dependencies) {
     this.dependencies = dependencies
-    this.snapshot = { requestId: 0, song: initial, status: 'idle', source: null, error: null, model: null, canPractice: false, mode: 'both', plan: null }
+    this.snapshot = { requestId: 0, song: initial, status: 'idle', source: null, error: null, model: null, canPractice: false, mode: 'both', plan: null, practiceStart: { kind: 'beginning' }, startPosition: null }
   }
   getSnapshot = () => this.snapshot
   subscribe = (listener: () => void) => {
@@ -44,7 +49,7 @@ export class SongSelection {
     const requestId = ++this.generation
     // Synchronous, before the first await: grading stops before MIDI output stops.
     this.dependencies.reset()
-    this.publish({ requestId, song, status: 'loading', source: null, error: null, model: null, canPractice: false, mode: 'both', plan: null })
+    this.publish({ requestId, song, status: 'loading', source: null, error: null, model: null, canPractice: false, mode: 'both', plan: null, practiceStart: { kind: 'beginning' }, startPosition: null })
     try {
       const xml = await (this.dependencies.obtain ?? loadSongMusicXml)(song)
       this.acceptMusicXml(requestId, xml)
@@ -66,21 +71,34 @@ export class SongSelection {
       return
     }
     const plan = createPracticePlan(model, this.snapshot.mode, this.snapshot.song?.tempoBpm)
-    if (plan) this.dependencies.apply(plan)
-    this.publish({ status: 'ready', model, plan, canPractice: !!plan?.targets.length })
+    const startPosition = this.applyPlan(plan)
+    this.publish({ status: 'ready', model, plan, startPosition, canPractice: !!plan?.targets.length })
   }
   setMode = (mode: PracticeMode) => {
     const model = this.snapshot.model
     if (this.snapshot.status !== 'ready' || !model || this.snapshot.mode === mode) return
     this.dependencies.reset()
     const plan = createPracticePlan(model, mode, this.snapshot.song?.tempoBpm)
-    if (plan) this.dependencies.apply(plan)
-    this.publish({ mode, plan, canPractice: !!plan?.targets.length })
+    const startPosition = this.applyPlan(plan)
+    this.publish({ mode, plan, startPosition, canPractice: !!plan?.targets.length })
+  }
+  private applyPlan(plan: PracticePlan | null, requested = this.snapshot.practiceStart) {
+    if (!plan) return null
+    const position = resolvePracticeStart(plan, requested)
+    this.dependencies.apply(plan)
+    this.dependencies.position?.(position.resolvedTargetIndex)
+    return position
+  }
+  setPracticeStart = (practiceStart: PracticeStart) => {
+    if (this.snapshot.status !== 'ready' || !this.snapshot.plan) return
+    this.dependencies.reset()
+    const startPosition = this.applyPlan(this.snapshot.plan, practiceStart)
+    this.publish({ practiceStart, startPosition })
   }
   fail = (requestId: number, error: string) => {
     if (requestId !== this.generation) return
     this.dependencies.reset()
-    this.publish({ status: 'error', source: null, error, model: null, plan: null, canPractice: false })
+    this.publish({ status: 'error', source: null, error, model: null, plan: null, canPractice: false, startPosition: null })
   }
   cancel = () => {
     ++this.generation

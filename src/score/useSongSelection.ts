@@ -16,6 +16,7 @@ export function useSongSelection(session: PracticeSession, player: DemoPlayer, o
       player.loadPlan(model)
       session.loadPlan(model)
     },
+    position: session.setStartTarget,
   }))
   const songState = useSyncExternalStore(selection.subscribe, selection.getSnapshot, selection.getSnapshot)
   useEffect(() => selection.cancel, [selection])

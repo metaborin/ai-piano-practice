@@ -12,6 +12,7 @@ export type PracticeSnapshot = {
   readonly expectedMidiNote: number | null
   readonly expectedMidiNotes: readonly number[]
   readonly correctNoteCount: number
+  readonly startTargetIndex: number | null
   readonly status: 'idle' | 'practicing' | 'completed' | 'demoPlaying'
   readonly feedback: NoteMatch | null
   readonly matchFeedback: (MomentMatchFeedback & { readonly targetIndex: number }) | null
@@ -22,11 +23,13 @@ export class PracticeSession {
   private targets: readonly { expectedMidiNotes: readonly number[] }[] = []
   private matcher = new MomentMatcher((feedback) => this.handleResult(feedback))
   private activeNotes = new Set<string>()
+  // Physical keys held across a reset must be released before counting a fresh press.
+  private blockedUntilRelease = new Set<string>()
   private listeners = new Set<() => void>()
   private resumeStatus: 'idle' | 'practicing' | 'completed' | null = null
   private snapshot: PracticeSnapshot = {
     currentNoteIndex: 0, totalNotes: 0, expectedMidiNote: null, expectedMidiNotes: [],
-    correctNoteCount: 0, status: 'idle', feedback: null, matchFeedback: null,
+    correctNoteCount: 0, startTargetIndex: 0, status: 'idle', feedback: null, matchFeedback: null,
   }
 
   constructor(notes: readonly ScoreNote[] = []) { this.setNotes(notes) }
@@ -50,18 +53,31 @@ export class PracticeSession {
     return { expectedMidiNotes, expectedMidiNote: expectedMidiNotes[0] ?? null }
   }
   private setTargets(targets: readonly { expectedMidiNotes: readonly number[] }[]) {
-    this.matcher.reset(); this.targets = targets; this.resumeStatus = null
-    this.publish({ currentNoteIndex: 0, totalNotes: targets.length, ...this.expected(0), correctNoteCount: 0, status: 'idle', feedback: null, matchFeedback: null })
+    this.resetInput(); this.targets = targets; this.resumeStatus = null
+    this.publish({ currentNoteIndex: 0, startTargetIndex: 0, totalNotes: targets.length, ...this.expected(0), correctNoteCount: 0, status: 'idle', feedback: null, matchFeedback: null })
+  }
+  private resetInput() {
+    this.matcher.reset()
+    this.activeNotes.forEach(key => this.blockedUntilRelease.add(key))
+    this.activeNotes.clear()
+  }
+  /** The resolver/coordinator owns score positions; this machine accepts only a validated index. */
+  setStartTarget = (index: number | null) => {
+    if (this.snapshot.status === 'demoPlaying') return
+    if (index !== null && (!Number.isInteger(index) || index < 0 || index >= this.targets.length)) throw new Error('Invalid practice start target')
+    this.resetInput(); this.resumeStatus = null
+    this.publish({ startTargetIndex: index, currentNoteIndex: index ?? 0, ...this.expected(index ?? -1),
+      correctNoteCount: 0, status: 'idle', feedback: null, matchFeedback: null })
   }
   loadPlan = (plan: PracticePlan | null) => { this.setTargets(plan?.targets ?? []) }
 
   loadScore = (score: ScoreModel | null) => { this.setNotes(score?.notes ?? []) }
 
   start = () => {
-    if (this.targets.length === 0 || this.snapshot.status === 'demoPlaying') return
-    this.matcher.reset()
-    // Preserve held keys, including keys pressed before start or during a restart.
-    this.publish({ currentNoteIndex: 0, ...this.expected(0), correctNoteCount: 0, status: 'practicing', feedback: null, matchFeedback: null })
+    const index = this.snapshot.startTargetIndex
+    if (this.targets.length === 0 || index === null || this.snapshot.status === 'demoPlaying') return
+    this.resetInput()
+    this.publish({ currentNoteIndex: index, ...this.expected(index), correctNoteCount: 0, status: 'practicing', feedback: null, matchFeedback: null })
   }
 
   restart = () => { this.start() }
@@ -83,16 +99,17 @@ export class PracticeSession {
     this.publish({ currentNoteIndex: index, ...this.expected(index), feedback: null, matchFeedback: null })
   }
 
-  clearActiveNotes = () => { this.activeNotes.clear(); this.matcher.reset(); this.publish({ feedback: null, matchFeedback: null }) }
+  clearActiveNotes = () => { this.activeNotes.clear(); this.blockedUntilRelease.clear(); this.matcher.reset(); this.publish({ feedback: null, matchFeedback: null }) }
   dispose = () => { this.matcher.reset() }
 
   handleMidiEvent = (event: MidiNoteEvent) => {
     const key = `${event.channel}:${event.midiNote}`
     if (event.type === 'noteoff' || event.velocity === 0) {
       this.activeNotes.delete(key)
+      this.blockedUntilRelease.delete(key)
       return
     }
-    if (this.activeNotes.has(key)) return
+    if (this.activeNotes.has(key) || this.blockedUntilRelease.has(key)) return
     this.activeNotes.add(key)
     if (this.snapshot.status !== 'practicing' || this.snapshot.expectedMidiNote === null) return
 

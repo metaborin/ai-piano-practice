@@ -1,0 +1,4093 @@
+{
+  "baseline": "736784e4bbc1b66a1e550e88082192b7d8abb2f7",
+  "measures": 30,
+  "notes": 224,
+  "rests": 77,
+  "moments": 109,
+  "details": [
+    {
+      "measure": {
+        "index": 13,
+        "number": "14",
+        "implicit": false,
+        "onset": {
+          "numerator": "52",
+          "denominator": "1"
+        },
+        "onsetBeats": 52,
+        "duration": {
+          "numerator": "4",
+          "denominator": "1"
+        },
+        "durationBeats": 4
+      },
+      "moments": [
+        {
+          "id": "moment:52/1",
+          "onset": {
+            "numerator": "52",
+            "denominator": "1"
+          },
+          "onsetBeats": 52,
+          "measureIndex": 13,
+          "measureNumber": "14",
+          "notes": [
+            {
+              "id": "P1:m13:n0",
+              "onset": {
+                "numerator": "52",
+                "denominator": "1"
+              },
+              "onsetBeats": 52,
+              "duration": {
+                "numerator": "4",
+                "denominator": "1"
+              },
+              "durationBeats": 4,
+              "measureIndex": 13,
+              "measureNumber": "14",
+              "staff": 1,
+              "voice": "1",
+              "midiNote": 62,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": true,
+              "ties": [
+                {
+                  "source": "tie",
+                  "type": "stop"
+                },
+                {
+                  "source": "tied",
+                  "type": "stop"
+                }
+              ]
+            },
+            {
+              "id": "P1:m13:n1",
+              "onset": {
+                "numerator": "52",
+                "denominator": "1"
+              },
+              "onsetBeats": 52,
+              "duration": {
+                "numerator": "4",
+                "denominator": "1"
+              },
+              "durationBeats": 4,
+              "measureIndex": 13,
+              "measureNumber": "14",
+              "staff": 1,
+              "voice": "1",
+              "midiNote": 65,
+              "chord": true,
+              "tieStart": false,
+              "tieStop": true,
+              "ties": [
+                {
+                  "source": "tie",
+                  "type": "stop"
+                },
+                {
+                  "source": "tied",
+                  "type": "stop"
+                }
+              ]
+            },
+            {
+              "id": "P1:m13:n2",
+              "onset": {
+                "numerator": "52",
+                "denominator": "1"
+              },
+              "onsetBeats": 52,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 13,
+              "measureNumber": "14",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 50,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            }
+          ]
+        },
+        {
+          "id": "moment:53/1",
+          "onset": {
+            "numerator": "53",
+            "denominator": "1"
+          },
+          "onsetBeats": 53,
+          "measureIndex": 13,
+          "measureNumber": "14",
+          "notes": [
+            {
+              "id": "P1:m13:n3",
+              "onset": {
+                "numerator": "53",
+                "denominator": "1"
+              },
+              "onsetBeats": 53,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 13,
+              "measureNumber": "14",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 53,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            },
+            {
+              "id": "P1:m13:n4",
+              "onset": {
+                "numerator": "53",
+                "denominator": "1"
+              },
+              "onsetBeats": 53,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 13,
+              "measureNumber": "14",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 57,
+              "chord": true,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            }
+          ]
+        },
+        {
+          "id": "moment:54/1",
+          "onset": {
+            "numerator": "54",
+            "denominator": "1"
+          },
+          "onsetBeats": 54,
+          "measureIndex": 13,
+          "measureNumber": "14",
+          "notes": [
+            {
+              "id": "P1:m13:n5",
+              "onset": {
+                "numerator": "54",
+                "denominator": "1"
+              },
+              "onsetBeats": 54,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 13,
+              "measureNumber": "14",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 50,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            }
+          ]
+        },
+        {
+          "id": "moment:55/1",
+          "onset": {
+            "numerator": "55",
+            "denominator": "1"
+          },
+          "onsetBeats": 55,
+          "measureIndex": 13,
+          "measureNumber": "14",
+          "notes": [
+            {
+              "id": "P1:m13:n6",
+              "onset": {
+                "numerator": "55",
+                "denominator": "1"
+              },
+              "onsetBeats": 55,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 13,
+              "measureNumber": "14",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 53,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            },
+            {
+              "id": "P1:m13:n7",
+              "onset": {
+                "numerator": "55",
+                "denominator": "1"
+              },
+              "onsetBeats": 55,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 13,
+              "measureNumber": "14",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 57,
+              "chord": true,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            }
+          ]
+        }
+      ],
+      "modes": [
+        {
+          "mode": "right",
+          "total": 48,
+          "originalResolved": {
+            "index": 25,
+            "onsetBeats": 56
+          },
+          "target": {
+            "id": "right:moment:56/1",
+            "scoreMomentId": "moment:56/1",
+            "onset": {
+              "numerator": "56",
+              "denominator": "1"
+            },
+            "onsetBeats": 56,
+            "measureNumber": "15",
+            "expectedMidiNotes": [
+              60,
+              64
+            ],
+            "sourceNotes": [
+              {
+                "id": "P1:m14:n0",
+                "onset": {
+                  "numerator": "56",
+                  "denominator": "1"
+                },
+                "onsetBeats": 56,
+                "duration": {
+                  "numerator": "4",
+                  "denominator": "1"
+                },
+                "durationBeats": 4,
+                "measureIndex": 14,
+                "measureNumber": "15",
+                "staff": 1,
+                "voice": "1",
+                "midiNote": 60,
+                "chord": false,
+                "tieStart": true,
+                "tieStop": false,
+                "ties": [
+                  {
+                    "source": "tie",
+                    "type": "start"
+                  },
+                  {
+                    "source": "tied",
+                    "type": "start"
+                  }
+                ]
+              },
+              {
+                "id": "P1:m14:n1",
+                "onset": {
+                  "numerator": "56",
+                  "denominator": "1"
+                },
+                "onsetBeats": 56,
+                "duration": {
+                  "numerator": "4",
+                  "denominator": "1"
+                },
+                "durationBeats": 4,
+                "measureIndex": 14,
+                "measureNumber": "15",
+                "staff": 1,
+                "voice": "1",
+                "midiNote": 64,
+                "chord": true,
+                "tieStart": true,
+                "tieStop": false,
+                "ties": [
+                  {
+                    "source": "tie",
+                    "type": "start"
+                  },
+                  {
+                    "source": "tied",
+                    "type": "start"
+                  }
+                ]
+              }
+            ]
+          },
+          "beforeStart": 25,
+          "afterStart": 0,
+          "firstDemoNotes": [
+            {
+              "index": 25,
+              "midiNote": 60,
+              "startMs": 0,
+              "durationMs": 2068.9655172413804,
+              "noteOffMs": 1965.517241379308
+            },
+            {
+              "index": 25,
+              "midiNote": 64,
+              "startMs": 0,
+              "durationMs": 2068.9655172413804,
+              "noteOffMs": 1965.517241379308
+            }
+          ],
+          "inMeasureTargets": []
+        },
+        {
+          "mode": "left",
+          "total": 76,
+          "originalResolved": {
+            "index": 28,
+            "onsetBeats": 52
+          },
+          "target": {
+            "id": "left:moment:52/1",
+            "scoreMomentId": "moment:52/1",
+            "onset": {
+              "numerator": "52",
+              "denominator": "1"
+            },
+            "onsetBeats": 52,
+            "measureNumber": "14",
+            "expectedMidiNotes": [
+              50
+            ],
+            "sourceNotes": [
+              {
+                "id": "P1:m13:n2",
+                "onset": {
+                  "numerator": "52",
+                  "denominator": "1"
+                },
+                "onsetBeats": 52,
+                "duration": {
+                  "numerator": "1",
+                  "denominator": "1"
+                },
+                "durationBeats": 1,
+                "measureIndex": 13,
+                "measureNumber": "14",
+                "staff": 2,
+                "voice": "2",
+                "midiNote": 50,
+                "chord": false,
+                "tieStart": false,
+                "tieStop": false,
+                "ties": []
+              }
+            ]
+          },
+          "beforeStart": 28,
+          "afterStart": 0,
+          "firstDemoNotes": [
+            {
+              "index": 28,
+              "midiNote": 50,
+              "startMs": 0,
+              "durationMs": 258.6206896551721,
+              "noteOffMs": 232.7586206896558
+            }
+          ],
+          "inMeasureTargets": [
+            {
+              "index": 28,
+              "id": "left:moment:52/1",
+              "scoreMomentId": "moment:52/1",
+              "onset": {
+                "numerator": "52",
+                "denominator": "1"
+              },
+              "onsetBeats": 52,
+              "measureNumber": "14",
+              "expectedMidiNotes": [
+                50
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m13:n2",
+                  "onset": {
+                    "numerator": "52",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 52,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 13,
+                  "measureNumber": "14",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 50,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 29,
+              "id": "left:moment:53/1",
+              "scoreMomentId": "moment:53/1",
+              "onset": {
+                "numerator": "53",
+                "denominator": "1"
+              },
+              "onsetBeats": 53,
+              "measureNumber": "14",
+              "expectedMidiNotes": [
+                53,
+                57
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m13:n3",
+                  "onset": {
+                    "numerator": "53",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 53,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 13,
+                  "measureNumber": "14",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 53,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                },
+                {
+                  "id": "P1:m13:n4",
+                  "onset": {
+                    "numerator": "53",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 53,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 13,
+                  "measureNumber": "14",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 57,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 30,
+              "id": "left:moment:54/1",
+              "scoreMomentId": "moment:54/1",
+              "onset": {
+                "numerator": "54",
+                "denominator": "1"
+              },
+              "onsetBeats": 54,
+              "measureNumber": "14",
+              "expectedMidiNotes": [
+                50
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m13:n5",
+                  "onset": {
+                    "numerator": "54",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 54,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 13,
+                  "measureNumber": "14",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 50,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 31,
+              "id": "left:moment:55/1",
+              "scoreMomentId": "moment:55/1",
+              "onset": {
+                "numerator": "55",
+                "denominator": "1"
+              },
+              "onsetBeats": 55,
+              "measureNumber": "14",
+              "expectedMidiNotes": [
+                53,
+                57
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m13:n6",
+                  "onset": {
+                    "numerator": "55",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 55,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 13,
+                  "measureNumber": "14",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 53,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                },
+                {
+                  "id": "P1:m13:n7",
+                  "onset": {
+                    "numerator": "55",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 55,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 13,
+                  "measureNumber": "14",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 57,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "both",
+          "total": 109,
+          "originalResolved": {
+            "index": 47,
+            "onsetBeats": 52
+          },
+          "target": {
+            "id": "both:moment:52/1",
+            "scoreMomentId": "moment:52/1",
+            "onset": {
+              "numerator": "52",
+              "denominator": "1"
+            },
+            "onsetBeats": 52,
+            "measureNumber": "14",
+            "expectedMidiNotes": [
+              50
+            ],
+            "sourceNotes": [
+              {
+                "id": "P1:m13:n0",
+                "onset": {
+                  "numerator": "52",
+                  "denominator": "1"
+                },
+                "onsetBeats": 52,
+                "duration": {
+                  "numerator": "4",
+                  "denominator": "1"
+                },
+                "durationBeats": 4,
+                "measureIndex": 13,
+                "measureNumber": "14",
+                "staff": 1,
+                "voice": "1",
+                "midiNote": 62,
+                "chord": false,
+                "tieStart": false,
+                "tieStop": true,
+                "ties": [
+                  {
+                    "source": "tie",
+                    "type": "stop"
+                  },
+                  {
+                    "source": "tied",
+                    "type": "stop"
+                  }
+                ]
+              },
+              {
+                "id": "P1:m13:n1",
+                "onset": {
+                  "numerator": "52",
+                  "denominator": "1"
+                },
+                "onsetBeats": 52,
+                "duration": {
+                  "numerator": "4",
+                  "denominator": "1"
+                },
+                "durationBeats": 4,
+                "measureIndex": 13,
+                "measureNumber": "14",
+                "staff": 1,
+                "voice": "1",
+                "midiNote": 65,
+                "chord": true,
+                "tieStart": false,
+                "tieStop": true,
+                "ties": [
+                  {
+                    "source": "tie",
+                    "type": "stop"
+                  },
+                  {
+                    "source": "tied",
+                    "type": "stop"
+                  }
+                ]
+              },
+              {
+                "id": "P1:m13:n2",
+                "onset": {
+                  "numerator": "52",
+                  "denominator": "1"
+                },
+                "onsetBeats": 52,
+                "duration": {
+                  "numerator": "1",
+                  "denominator": "1"
+                },
+                "durationBeats": 1,
+                "measureIndex": 13,
+                "measureNumber": "14",
+                "staff": 2,
+                "voice": "2",
+                "midiNote": 50,
+                "chord": false,
+                "tieStart": false,
+                "tieStop": false,
+                "ties": []
+              }
+            ]
+          },
+          "beforeStart": 47,
+          "afterStart": 0,
+          "firstDemoNotes": [
+            {
+              "index": 47,
+              "midiNote": 62,
+              "startMs": 0,
+              "durationMs": 1034.4827586206902,
+              "noteOffMs": 931.0344827586214
+            },
+            {
+              "index": 47,
+              "midiNote": 65,
+              "startMs": 0,
+              "durationMs": 1034.4827586206902,
+              "noteOffMs": 931.0344827586214
+            },
+            {
+              "index": 47,
+              "midiNote": 50,
+              "startMs": 0,
+              "durationMs": 258.6206896551721,
+              "noteOffMs": 232.7586206896558
+            }
+          ],
+          "inMeasureTargets": [
+            {
+              "index": 47,
+              "id": "both:moment:52/1",
+              "scoreMomentId": "moment:52/1",
+              "onset": {
+                "numerator": "52",
+                "denominator": "1"
+              },
+              "onsetBeats": 52,
+              "measureNumber": "14",
+              "expectedMidiNotes": [
+                50
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m13:n0",
+                  "onset": {
+                    "numerator": "52",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 52,
+                  "duration": {
+                    "numerator": "4",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 4,
+                  "measureIndex": 13,
+                  "measureNumber": "14",
+                  "staff": 1,
+                  "voice": "1",
+                  "midiNote": 62,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": true,
+                  "ties": [
+                    {
+                      "source": "tie",
+                      "type": "stop"
+                    },
+                    {
+                      "source": "tied",
+                      "type": "stop"
+                    }
+                  ]
+                },
+                {
+                  "id": "P1:m13:n1",
+                  "onset": {
+                    "numerator": "52",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 52,
+                  "duration": {
+                    "numerator": "4",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 4,
+                  "measureIndex": 13,
+                  "measureNumber": "14",
+                  "staff": 1,
+                  "voice": "1",
+                  "midiNote": 65,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": true,
+                  "ties": [
+                    {
+                      "source": "tie",
+                      "type": "stop"
+                    },
+                    {
+                      "source": "tied",
+                      "type": "stop"
+                    }
+                  ]
+                },
+                {
+                  "id": "P1:m13:n2",
+                  "onset": {
+                    "numerator": "52",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 52,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 13,
+                  "measureNumber": "14",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 50,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 48,
+              "id": "both:moment:53/1",
+              "scoreMomentId": "moment:53/1",
+              "onset": {
+                "numerator": "53",
+                "denominator": "1"
+              },
+              "onsetBeats": 53,
+              "measureNumber": "14",
+              "expectedMidiNotes": [
+                53,
+                57
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m13:n3",
+                  "onset": {
+                    "numerator": "53",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 53,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 13,
+                  "measureNumber": "14",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 53,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                },
+                {
+                  "id": "P1:m13:n4",
+                  "onset": {
+                    "numerator": "53",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 53,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 13,
+                  "measureNumber": "14",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 57,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 49,
+              "id": "both:moment:54/1",
+              "scoreMomentId": "moment:54/1",
+              "onset": {
+                "numerator": "54",
+                "denominator": "1"
+              },
+              "onsetBeats": 54,
+              "measureNumber": "14",
+              "expectedMidiNotes": [
+                50
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m13:n5",
+                  "onset": {
+                    "numerator": "54",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 54,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 13,
+                  "measureNumber": "14",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 50,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 50,
+              "id": "both:moment:55/1",
+              "scoreMomentId": "moment:55/1",
+              "onset": {
+                "numerator": "55",
+                "denominator": "1"
+              },
+              "onsetBeats": 55,
+              "measureNumber": "14",
+              "expectedMidiNotes": [
+                53,
+                57
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m13:n6",
+                  "onset": {
+                    "numerator": "55",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 55,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 13,
+                  "measureNumber": "14",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 53,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                },
+                {
+                  "id": "P1:m13:n7",
+                  "onset": {
+                    "numerator": "55",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 55,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 13,
+                  "measureNumber": "14",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 57,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "measure": {
+        "index": 15,
+        "number": "16",
+        "implicit": false,
+        "onset": {
+          "numerator": "60",
+          "denominator": "1"
+        },
+        "onsetBeats": 60,
+        "duration": {
+          "numerator": "4",
+          "denominator": "1"
+        },
+        "durationBeats": 4
+      },
+      "moments": [
+        {
+          "id": "moment:60/1",
+          "onset": {
+            "numerator": "60",
+            "denominator": "1"
+          },
+          "onsetBeats": 60,
+          "measureIndex": 15,
+          "measureNumber": "16",
+          "notes": [
+            {
+              "id": "P1:m15:n0",
+              "onset": {
+                "numerator": "60",
+                "denominator": "1"
+              },
+              "onsetBeats": 60,
+              "duration": {
+                "numerator": "4",
+                "denominator": "1"
+              },
+              "durationBeats": 4,
+              "measureIndex": 15,
+              "measureNumber": "16",
+              "staff": 1,
+              "voice": "1",
+              "midiNote": 60,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": true,
+              "ties": [
+                {
+                  "source": "tie",
+                  "type": "stop"
+                },
+                {
+                  "source": "tied",
+                  "type": "stop"
+                }
+              ]
+            },
+            {
+              "id": "P1:m15:n1",
+              "onset": {
+                "numerator": "60",
+                "denominator": "1"
+              },
+              "onsetBeats": 60,
+              "duration": {
+                "numerator": "4",
+                "denominator": "1"
+              },
+              "durationBeats": 4,
+              "measureIndex": 15,
+              "measureNumber": "16",
+              "staff": 1,
+              "voice": "1",
+              "midiNote": 64,
+              "chord": true,
+              "tieStart": false,
+              "tieStop": true,
+              "ties": [
+                {
+                  "source": "tie",
+                  "type": "stop"
+                },
+                {
+                  "source": "tied",
+                  "type": "stop"
+                }
+              ]
+            },
+            {
+              "id": "P1:m15:n2",
+              "onset": {
+                "numerator": "60",
+                "denominator": "1"
+              },
+              "onsetBeats": 60,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 15,
+              "measureNumber": "16",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 45,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            }
+          ]
+        },
+        {
+          "id": "moment:61/1",
+          "onset": {
+            "numerator": "61",
+            "denominator": "1"
+          },
+          "onsetBeats": 61,
+          "measureIndex": 15,
+          "measureNumber": "16",
+          "notes": [
+            {
+              "id": "P1:m15:n3",
+              "onset": {
+                "numerator": "61",
+                "denominator": "1"
+              },
+              "onsetBeats": 61,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 15,
+              "measureNumber": "16",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 52,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            },
+            {
+              "id": "P1:m15:n4",
+              "onset": {
+                "numerator": "61",
+                "denominator": "1"
+              },
+              "onsetBeats": 61,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 15,
+              "measureNumber": "16",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 57,
+              "chord": true,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            }
+          ]
+        },
+        {
+          "id": "moment:62/1",
+          "onset": {
+            "numerator": "62",
+            "denominator": "1"
+          },
+          "onsetBeats": 62,
+          "measureIndex": 15,
+          "measureNumber": "16",
+          "notes": [
+            {
+              "id": "P1:m15:n5",
+              "onset": {
+                "numerator": "62",
+                "denominator": "1"
+              },
+              "onsetBeats": 62,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 15,
+              "measureNumber": "16",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 45,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            }
+          ]
+        },
+        {
+          "id": "moment:63/1",
+          "onset": {
+            "numerator": "63",
+            "denominator": "1"
+          },
+          "onsetBeats": 63,
+          "measureIndex": 15,
+          "measureNumber": "16",
+          "notes": [
+            {
+              "id": "P1:m15:n6",
+              "onset": {
+                "numerator": "63",
+                "denominator": "1"
+              },
+              "onsetBeats": 63,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 15,
+              "measureNumber": "16",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 52,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            },
+            {
+              "id": "P1:m15:n7",
+              "onset": {
+                "numerator": "63",
+                "denominator": "1"
+              },
+              "onsetBeats": 63,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 15,
+              "measureNumber": "16",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 57,
+              "chord": true,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            }
+          ]
+        }
+      ],
+      "modes": [
+        {
+          "mode": "right",
+          "total": 48,
+          "originalResolved": {
+            "index": 26,
+            "onsetBeats": 64
+          },
+          "target": {
+            "id": "right:moment:64/1",
+            "scoreMomentId": "moment:64/1",
+            "onset": {
+              "numerator": "64",
+              "denominator": "1"
+            },
+            "onsetBeats": 64,
+            "measureNumber": "17",
+            "expectedMidiNotes": [
+              62,
+              65
+            ],
+            "sourceNotes": [
+              {
+                "id": "P1:m16:n0",
+                "onset": {
+                  "numerator": "64",
+                  "denominator": "1"
+                },
+                "onsetBeats": 64,
+                "duration": {
+                  "numerator": "4",
+                  "denominator": "1"
+                },
+                "durationBeats": 4,
+                "measureIndex": 16,
+                "measureNumber": "17",
+                "staff": 1,
+                "voice": "1",
+                "midiNote": 62,
+                "chord": false,
+                "tieStart": true,
+                "tieStop": false,
+                "ties": [
+                  {
+                    "source": "tie",
+                    "type": "start"
+                  },
+                  {
+                    "source": "tied",
+                    "type": "start"
+                  }
+                ]
+              },
+              {
+                "id": "P1:m16:n1",
+                "onset": {
+                  "numerator": "64",
+                  "denominator": "1"
+                },
+                "onsetBeats": 64,
+                "duration": {
+                  "numerator": "4",
+                  "denominator": "1"
+                },
+                "durationBeats": 4,
+                "measureIndex": 16,
+                "measureNumber": "17",
+                "staff": 1,
+                "voice": "1",
+                "midiNote": 65,
+                "chord": true,
+                "tieStart": true,
+                "tieStop": false,
+                "ties": [
+                  {
+                    "source": "tie",
+                    "type": "start"
+                  },
+                  {
+                    "source": "tied",
+                    "type": "start"
+                  }
+                ]
+              }
+            ]
+          },
+          "beforeStart": 26,
+          "afterStart": 0,
+          "firstDemoNotes": [
+            {
+              "index": 26,
+              "midiNote": 62,
+              "startMs": 0,
+              "durationMs": 2068.965517241377,
+              "noteOffMs": 1965.517241379308
+            },
+            {
+              "index": 26,
+              "midiNote": 65,
+              "startMs": 0,
+              "durationMs": 2068.965517241377,
+              "noteOffMs": 1965.517241379308
+            }
+          ],
+          "inMeasureTargets": []
+        },
+        {
+          "mode": "left",
+          "total": 76,
+          "originalResolved": {
+            "index": 36,
+            "onsetBeats": 60
+          },
+          "target": {
+            "id": "left:moment:60/1",
+            "scoreMomentId": "moment:60/1",
+            "onset": {
+              "numerator": "60",
+              "denominator": "1"
+            },
+            "onsetBeats": 60,
+            "measureNumber": "16",
+            "expectedMidiNotes": [
+              45
+            ],
+            "sourceNotes": [
+              {
+                "id": "P1:m15:n2",
+                "onset": {
+                  "numerator": "60",
+                  "denominator": "1"
+                },
+                "onsetBeats": 60,
+                "duration": {
+                  "numerator": "1",
+                  "denominator": "1"
+                },
+                "durationBeats": 1,
+                "measureIndex": 15,
+                "measureNumber": "16",
+                "staff": 2,
+                "voice": "2",
+                "midiNote": 45,
+                "chord": false,
+                "tieStart": false,
+                "tieStop": false,
+                "ties": []
+              }
+            ]
+          },
+          "beforeStart": 36,
+          "afterStart": 0,
+          "firstDemoNotes": [
+            {
+              "index": 36,
+              "midiNote": 45,
+              "startMs": 0,
+              "durationMs": 258.6206896551739,
+              "noteOffMs": 232.7586206896558
+            }
+          ],
+          "inMeasureTargets": [
+            {
+              "index": 36,
+              "id": "left:moment:60/1",
+              "scoreMomentId": "moment:60/1",
+              "onset": {
+                "numerator": "60",
+                "denominator": "1"
+              },
+              "onsetBeats": 60,
+              "measureNumber": "16",
+              "expectedMidiNotes": [
+                45
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m15:n2",
+                  "onset": {
+                    "numerator": "60",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 60,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 15,
+                  "measureNumber": "16",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 45,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 37,
+              "id": "left:moment:61/1",
+              "scoreMomentId": "moment:61/1",
+              "onset": {
+                "numerator": "61",
+                "denominator": "1"
+              },
+              "onsetBeats": 61,
+              "measureNumber": "16",
+              "expectedMidiNotes": [
+                52,
+                57
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m15:n3",
+                  "onset": {
+                    "numerator": "61",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 61,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 15,
+                  "measureNumber": "16",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 52,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                },
+                {
+                  "id": "P1:m15:n4",
+                  "onset": {
+                    "numerator": "61",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 61,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 15,
+                  "measureNumber": "16",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 57,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 38,
+              "id": "left:moment:62/1",
+              "scoreMomentId": "moment:62/1",
+              "onset": {
+                "numerator": "62",
+                "denominator": "1"
+              },
+              "onsetBeats": 62,
+              "measureNumber": "16",
+              "expectedMidiNotes": [
+                45
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m15:n5",
+                  "onset": {
+                    "numerator": "62",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 62,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 15,
+                  "measureNumber": "16",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 45,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 39,
+              "id": "left:moment:63/1",
+              "scoreMomentId": "moment:63/1",
+              "onset": {
+                "numerator": "63",
+                "denominator": "1"
+              },
+              "onsetBeats": 63,
+              "measureNumber": "16",
+              "expectedMidiNotes": [
+                52,
+                57
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m15:n6",
+                  "onset": {
+                    "numerator": "63",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 63,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 15,
+                  "measureNumber": "16",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 52,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                },
+                {
+                  "id": "P1:m15:n7",
+                  "onset": {
+                    "numerator": "63",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 63,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 15,
+                  "measureNumber": "16",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 57,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "both",
+          "total": 109,
+          "originalResolved": {
+            "index": 55,
+            "onsetBeats": 60
+          },
+          "target": {
+            "id": "both:moment:60/1",
+            "scoreMomentId": "moment:60/1",
+            "onset": {
+              "numerator": "60",
+              "denominator": "1"
+            },
+            "onsetBeats": 60,
+            "measureNumber": "16",
+            "expectedMidiNotes": [
+              45
+            ],
+            "sourceNotes": [
+              {
+                "id": "P1:m15:n0",
+                "onset": {
+                  "numerator": "60",
+                  "denominator": "1"
+                },
+                "onsetBeats": 60,
+                "duration": {
+                  "numerator": "4",
+                  "denominator": "1"
+                },
+                "durationBeats": 4,
+                "measureIndex": 15,
+                "measureNumber": "16",
+                "staff": 1,
+                "voice": "1",
+                "midiNote": 60,
+                "chord": false,
+                "tieStart": false,
+                "tieStop": true,
+                "ties": [
+                  {
+                    "source": "tie",
+                    "type": "stop"
+                  },
+                  {
+                    "source": "tied",
+                    "type": "stop"
+                  }
+                ]
+              },
+              {
+                "id": "P1:m15:n1",
+                "onset": {
+                  "numerator": "60",
+                  "denominator": "1"
+                },
+                "onsetBeats": 60,
+                "duration": {
+                  "numerator": "4",
+                  "denominator": "1"
+                },
+                "durationBeats": 4,
+                "measureIndex": 15,
+                "measureNumber": "16",
+                "staff": 1,
+                "voice": "1",
+                "midiNote": 64,
+                "chord": true,
+                "tieStart": false,
+                "tieStop": true,
+                "ties": [
+                  {
+                    "source": "tie",
+                    "type": "stop"
+                  },
+                  {
+                    "source": "tied",
+                    "type": "stop"
+                  }
+                ]
+              },
+              {
+                "id": "P1:m15:n2",
+                "onset": {
+                  "numerator": "60",
+                  "denominator": "1"
+                },
+                "onsetBeats": 60,
+                "duration": {
+                  "numerator": "1",
+                  "denominator": "1"
+                },
+                "durationBeats": 1,
+                "measureIndex": 15,
+                "measureNumber": "16",
+                "staff": 2,
+                "voice": "2",
+                "midiNote": 45,
+                "chord": false,
+                "tieStart": false,
+                "tieStop": false,
+                "ties": []
+              }
+            ]
+          },
+          "beforeStart": 55,
+          "afterStart": 0,
+          "firstDemoNotes": [
+            {
+              "index": 55,
+              "midiNote": 60,
+              "startMs": 0,
+              "durationMs": 1034.482758620692,
+              "noteOffMs": 931.0344827586196
+            },
+            {
+              "index": 55,
+              "midiNote": 64,
+              "startMs": 0,
+              "durationMs": 1034.482758620692,
+              "noteOffMs": 931.0344827586196
+            },
+            {
+              "index": 55,
+              "midiNote": 45,
+              "startMs": 0,
+              "durationMs": 258.6206896551739,
+              "noteOffMs": 232.7586206896558
+            }
+          ],
+          "inMeasureTargets": [
+            {
+              "index": 55,
+              "id": "both:moment:60/1",
+              "scoreMomentId": "moment:60/1",
+              "onset": {
+                "numerator": "60",
+                "denominator": "1"
+              },
+              "onsetBeats": 60,
+              "measureNumber": "16",
+              "expectedMidiNotes": [
+                45
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m15:n0",
+                  "onset": {
+                    "numerator": "60",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 60,
+                  "duration": {
+                    "numerator": "4",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 4,
+                  "measureIndex": 15,
+                  "measureNumber": "16",
+                  "staff": 1,
+                  "voice": "1",
+                  "midiNote": 60,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": true,
+                  "ties": [
+                    {
+                      "source": "tie",
+                      "type": "stop"
+                    },
+                    {
+                      "source": "tied",
+                      "type": "stop"
+                    }
+                  ]
+                },
+                {
+                  "id": "P1:m15:n1",
+                  "onset": {
+                    "numerator": "60",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 60,
+                  "duration": {
+                    "numerator": "4",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 4,
+                  "measureIndex": 15,
+                  "measureNumber": "16",
+                  "staff": 1,
+                  "voice": "1",
+                  "midiNote": 64,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": true,
+                  "ties": [
+                    {
+                      "source": "tie",
+                      "type": "stop"
+                    },
+                    {
+                      "source": "tied",
+                      "type": "stop"
+                    }
+                  ]
+                },
+                {
+                  "id": "P1:m15:n2",
+                  "onset": {
+                    "numerator": "60",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 60,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 15,
+                  "measureNumber": "16",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 45,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 56,
+              "id": "both:moment:61/1",
+              "scoreMomentId": "moment:61/1",
+              "onset": {
+                "numerator": "61",
+                "denominator": "1"
+              },
+              "onsetBeats": 61,
+              "measureNumber": "16",
+              "expectedMidiNotes": [
+                52,
+                57
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m15:n3",
+                  "onset": {
+                    "numerator": "61",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 61,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 15,
+                  "measureNumber": "16",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 52,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                },
+                {
+                  "id": "P1:m15:n4",
+                  "onset": {
+                    "numerator": "61",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 61,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 15,
+                  "measureNumber": "16",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 57,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 57,
+              "id": "both:moment:62/1",
+              "scoreMomentId": "moment:62/1",
+              "onset": {
+                "numerator": "62",
+                "denominator": "1"
+              },
+              "onsetBeats": 62,
+              "measureNumber": "16",
+              "expectedMidiNotes": [
+                45
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m15:n5",
+                  "onset": {
+                    "numerator": "62",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 62,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 15,
+                  "measureNumber": "16",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 45,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 58,
+              "id": "both:moment:63/1",
+              "scoreMomentId": "moment:63/1",
+              "onset": {
+                "numerator": "63",
+                "denominator": "1"
+              },
+              "onsetBeats": 63,
+              "measureNumber": "16",
+              "expectedMidiNotes": [
+                52,
+                57
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m15:n6",
+                  "onset": {
+                    "numerator": "63",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 63,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 15,
+                  "measureNumber": "16",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 52,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                },
+                {
+                  "id": "P1:m15:n7",
+                  "onset": {
+                    "numerator": "63",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 63,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 15,
+                  "measureNumber": "16",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 57,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "measure": {
+        "index": 17,
+        "number": "18",
+        "implicit": false,
+        "onset": {
+          "numerator": "68",
+          "denominator": "1"
+        },
+        "onsetBeats": 68,
+        "duration": {
+          "numerator": "4",
+          "denominator": "1"
+        },
+        "durationBeats": 4
+      },
+      "moments": [
+        {
+          "id": "moment:68/1",
+          "onset": {
+            "numerator": "68",
+            "denominator": "1"
+          },
+          "onsetBeats": 68,
+          "measureIndex": 17,
+          "measureNumber": "18",
+          "notes": [
+            {
+              "id": "P1:m17:n0",
+              "onset": {
+                "numerator": "68",
+                "denominator": "1"
+              },
+              "onsetBeats": 68,
+              "duration": {
+                "numerator": "4",
+                "denominator": "1"
+              },
+              "durationBeats": 4,
+              "measureIndex": 17,
+              "measureNumber": "18",
+              "staff": 1,
+              "voice": "1",
+              "midiNote": 62,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": true,
+              "ties": [
+                {
+                  "source": "tie",
+                  "type": "stop"
+                },
+                {
+                  "source": "tied",
+                  "type": "stop"
+                }
+              ]
+            },
+            {
+              "id": "P1:m17:n1",
+              "onset": {
+                "numerator": "68",
+                "denominator": "1"
+              },
+              "onsetBeats": 68,
+              "duration": {
+                "numerator": "4",
+                "denominator": "1"
+              },
+              "durationBeats": 4,
+              "measureIndex": 17,
+              "measureNumber": "18",
+              "staff": 1,
+              "voice": "1",
+              "midiNote": 65,
+              "chord": true,
+              "tieStart": false,
+              "tieStop": true,
+              "ties": [
+                {
+                  "source": "tie",
+                  "type": "stop"
+                },
+                {
+                  "source": "tied",
+                  "type": "stop"
+                }
+              ]
+            },
+            {
+              "id": "P1:m17:n2",
+              "onset": {
+                "numerator": "68",
+                "denominator": "1"
+              },
+              "onsetBeats": 68,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 17,
+              "measureNumber": "18",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 50,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            }
+          ]
+        },
+        {
+          "id": "moment:69/1",
+          "onset": {
+            "numerator": "69",
+            "denominator": "1"
+          },
+          "onsetBeats": 69,
+          "measureIndex": 17,
+          "measureNumber": "18",
+          "notes": [
+            {
+              "id": "P1:m17:n3",
+              "onset": {
+                "numerator": "69",
+                "denominator": "1"
+              },
+              "onsetBeats": 69,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 17,
+              "measureNumber": "18",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 53,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            },
+            {
+              "id": "P1:m17:n4",
+              "onset": {
+                "numerator": "69",
+                "denominator": "1"
+              },
+              "onsetBeats": 69,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 17,
+              "measureNumber": "18",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 57,
+              "chord": true,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            }
+          ]
+        },
+        {
+          "id": "moment:70/1",
+          "onset": {
+            "numerator": "70",
+            "denominator": "1"
+          },
+          "onsetBeats": 70,
+          "measureIndex": 17,
+          "measureNumber": "18",
+          "notes": [
+            {
+              "id": "P1:m17:n5",
+              "onset": {
+                "numerator": "70",
+                "denominator": "1"
+              },
+              "onsetBeats": 70,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 17,
+              "measureNumber": "18",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 50,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            }
+          ]
+        },
+        {
+          "id": "moment:71/1",
+          "onset": {
+            "numerator": "71",
+            "denominator": "1"
+          },
+          "onsetBeats": 71,
+          "measureIndex": 17,
+          "measureNumber": "18",
+          "notes": [
+            {
+              "id": "P1:m17:n6",
+              "onset": {
+                "numerator": "71",
+                "denominator": "1"
+              },
+              "onsetBeats": 71,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 17,
+              "measureNumber": "18",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 53,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            },
+            {
+              "id": "P1:m17:n7",
+              "onset": {
+                "numerator": "71",
+                "denominator": "1"
+              },
+              "onsetBeats": 71,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 17,
+              "measureNumber": "18",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 57,
+              "chord": true,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            }
+          ]
+        }
+      ],
+      "modes": [
+        {
+          "mode": "right",
+          "total": 48,
+          "originalResolved": {
+            "index": 27,
+            "onsetBeats": 72
+          },
+          "target": {
+            "id": "right:moment:72/1",
+            "scoreMomentId": "moment:72/1",
+            "onset": {
+              "numerator": "72",
+              "denominator": "1"
+            },
+            "onsetBeats": 72,
+            "measureNumber": "19",
+            "expectedMidiNotes": [
+              60,
+              64
+            ],
+            "sourceNotes": [
+              {
+                "id": "P1:m18:n0",
+                "onset": {
+                  "numerator": "72",
+                  "denominator": "1"
+                },
+                "onsetBeats": 72,
+                "duration": {
+                  "numerator": "4",
+                  "denominator": "1"
+                },
+                "durationBeats": 4,
+                "measureIndex": 18,
+                "measureNumber": "19",
+                "staff": 1,
+                "voice": "1",
+                "midiNote": 60,
+                "chord": false,
+                "tieStart": true,
+                "tieStop": false,
+                "ties": [
+                  {
+                    "source": "tie",
+                    "type": "start"
+                  },
+                  {
+                    "source": "tied",
+                    "type": "start"
+                  }
+                ]
+              },
+              {
+                "id": "P1:m18:n1",
+                "onset": {
+                  "numerator": "72",
+                  "denominator": "1"
+                },
+                "onsetBeats": 72,
+                "duration": {
+                  "numerator": "4",
+                  "denominator": "1"
+                },
+                "durationBeats": 4,
+                "measureIndex": 18,
+                "measureNumber": "19",
+                "staff": 1,
+                "voice": "1",
+                "midiNote": 64,
+                "chord": true,
+                "tieStart": true,
+                "tieStop": false,
+                "ties": [
+                  {
+                    "source": "tie",
+                    "type": "start"
+                  },
+                  {
+                    "source": "tied",
+                    "type": "start"
+                  }
+                ]
+              }
+            ]
+          },
+          "beforeStart": 27,
+          "afterStart": 0,
+          "firstDemoNotes": [
+            {
+              "index": 27,
+              "midiNote": 60,
+              "startMs": 0,
+              "durationMs": 2068.9655172413804,
+              "noteOffMs": 1965.5172413793116
+            },
+            {
+              "index": 27,
+              "midiNote": 64,
+              "startMs": 0,
+              "durationMs": 2068.9655172413804,
+              "noteOffMs": 1965.5172413793116
+            }
+          ],
+          "inMeasureTargets": []
+        },
+        {
+          "mode": "left",
+          "total": 76,
+          "originalResolved": {
+            "index": 44,
+            "onsetBeats": 68
+          },
+          "target": {
+            "id": "left:moment:68/1",
+            "scoreMomentId": "moment:68/1",
+            "onset": {
+              "numerator": "68",
+              "denominator": "1"
+            },
+            "onsetBeats": 68,
+            "measureNumber": "18",
+            "expectedMidiNotes": [
+              50
+            ],
+            "sourceNotes": [
+              {
+                "id": "P1:m17:n2",
+                "onset": {
+                  "numerator": "68",
+                  "denominator": "1"
+                },
+                "onsetBeats": 68,
+                "duration": {
+                  "numerator": "1",
+                  "denominator": "1"
+                },
+                "durationBeats": 1,
+                "measureIndex": 17,
+                "measureNumber": "18",
+                "staff": 2,
+                "voice": "2",
+                "midiNote": 50,
+                "chord": false,
+                "tieStart": false,
+                "tieStop": false,
+                "ties": []
+              }
+            ]
+          },
+          "beforeStart": 44,
+          "afterStart": 0,
+          "firstDemoNotes": [
+            {
+              "index": 44,
+              "midiNote": 50,
+              "startMs": 0,
+              "durationMs": 258.6206896551703,
+              "noteOffMs": 232.7586206896558
+            }
+          ],
+          "inMeasureTargets": [
+            {
+              "index": 44,
+              "id": "left:moment:68/1",
+              "scoreMomentId": "moment:68/1",
+              "onset": {
+                "numerator": "68",
+                "denominator": "1"
+              },
+              "onsetBeats": 68,
+              "measureNumber": "18",
+              "expectedMidiNotes": [
+                50
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m17:n2",
+                  "onset": {
+                    "numerator": "68",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 68,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 17,
+                  "measureNumber": "18",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 50,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 45,
+              "id": "left:moment:69/1",
+              "scoreMomentId": "moment:69/1",
+              "onset": {
+                "numerator": "69",
+                "denominator": "1"
+              },
+              "onsetBeats": 69,
+              "measureNumber": "18",
+              "expectedMidiNotes": [
+                53,
+                57
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m17:n3",
+                  "onset": {
+                    "numerator": "69",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 69,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 17,
+                  "measureNumber": "18",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 53,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                },
+                {
+                  "id": "P1:m17:n4",
+                  "onset": {
+                    "numerator": "69",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 69,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 17,
+                  "measureNumber": "18",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 57,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 46,
+              "id": "left:moment:70/1",
+              "scoreMomentId": "moment:70/1",
+              "onset": {
+                "numerator": "70",
+                "denominator": "1"
+              },
+              "onsetBeats": 70,
+              "measureNumber": "18",
+              "expectedMidiNotes": [
+                50
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m17:n5",
+                  "onset": {
+                    "numerator": "70",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 70,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 17,
+                  "measureNumber": "18",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 50,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 47,
+              "id": "left:moment:71/1",
+              "scoreMomentId": "moment:71/1",
+              "onset": {
+                "numerator": "71",
+                "denominator": "1"
+              },
+              "onsetBeats": 71,
+              "measureNumber": "18",
+              "expectedMidiNotes": [
+                53,
+                57
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m17:n6",
+                  "onset": {
+                    "numerator": "71",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 71,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 17,
+                  "measureNumber": "18",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 53,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                },
+                {
+                  "id": "P1:m17:n7",
+                  "onset": {
+                    "numerator": "71",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 71,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 17,
+                  "measureNumber": "18",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 57,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "both",
+          "total": 109,
+          "originalResolved": {
+            "index": 63,
+            "onsetBeats": 68
+          },
+          "target": {
+            "id": "both:moment:68/1",
+            "scoreMomentId": "moment:68/1",
+            "onset": {
+              "numerator": "68",
+              "denominator": "1"
+            },
+            "onsetBeats": 68,
+            "measureNumber": "18",
+            "expectedMidiNotes": [
+              50
+            ],
+            "sourceNotes": [
+              {
+                "id": "P1:m17:n0",
+                "onset": {
+                  "numerator": "68",
+                  "denominator": "1"
+                },
+                "onsetBeats": 68,
+                "duration": {
+                  "numerator": "4",
+                  "denominator": "1"
+                },
+                "durationBeats": 4,
+                "measureIndex": 17,
+                "measureNumber": "18",
+                "staff": 1,
+                "voice": "1",
+                "midiNote": 62,
+                "chord": false,
+                "tieStart": false,
+                "tieStop": true,
+                "ties": [
+                  {
+                    "source": "tie",
+                    "type": "stop"
+                  },
+                  {
+                    "source": "tied",
+                    "type": "stop"
+                  }
+                ]
+              },
+              {
+                "id": "P1:m17:n1",
+                "onset": {
+                  "numerator": "68",
+                  "denominator": "1"
+                },
+                "onsetBeats": 68,
+                "duration": {
+                  "numerator": "4",
+                  "denominator": "1"
+                },
+                "durationBeats": 4,
+                "measureIndex": 17,
+                "measureNumber": "18",
+                "staff": 1,
+                "voice": "1",
+                "midiNote": 65,
+                "chord": true,
+                "tieStart": false,
+                "tieStop": true,
+                "ties": [
+                  {
+                    "source": "tie",
+                    "type": "stop"
+                  },
+                  {
+                    "source": "tied",
+                    "type": "stop"
+                  }
+                ]
+              },
+              {
+                "id": "P1:m17:n2",
+                "onset": {
+                  "numerator": "68",
+                  "denominator": "1"
+                },
+                "onsetBeats": 68,
+                "duration": {
+                  "numerator": "1",
+                  "denominator": "1"
+                },
+                "durationBeats": 1,
+                "measureIndex": 17,
+                "measureNumber": "18",
+                "staff": 2,
+                "voice": "2",
+                "midiNote": 50,
+                "chord": false,
+                "tieStart": false,
+                "tieStop": false,
+                "ties": []
+              }
+            ]
+          },
+          "beforeStart": 63,
+          "afterStart": 0,
+          "firstDemoNotes": [
+            {
+              "index": 63,
+              "midiNote": 62,
+              "startMs": 0,
+              "durationMs": 1034.4827586206884,
+              "noteOffMs": 931.0344827586196
+            },
+            {
+              "index": 63,
+              "midiNote": 65,
+              "startMs": 0,
+              "durationMs": 1034.4827586206884,
+              "noteOffMs": 931.0344827586196
+            },
+            {
+              "index": 63,
+              "midiNote": 50,
+              "startMs": 0,
+              "durationMs": 258.6206896551703,
+              "noteOffMs": 232.7586206896558
+            }
+          ],
+          "inMeasureTargets": [
+            {
+              "index": 63,
+              "id": "both:moment:68/1",
+              "scoreMomentId": "moment:68/1",
+              "onset": {
+                "numerator": "68",
+                "denominator": "1"
+              },
+              "onsetBeats": 68,
+              "measureNumber": "18",
+              "expectedMidiNotes": [
+                50
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m17:n0",
+                  "onset": {
+                    "numerator": "68",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 68,
+                  "duration": {
+                    "numerator": "4",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 4,
+                  "measureIndex": 17,
+                  "measureNumber": "18",
+                  "staff": 1,
+                  "voice": "1",
+                  "midiNote": 62,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": true,
+                  "ties": [
+                    {
+                      "source": "tie",
+                      "type": "stop"
+                    },
+                    {
+                      "source": "tied",
+                      "type": "stop"
+                    }
+                  ]
+                },
+                {
+                  "id": "P1:m17:n1",
+                  "onset": {
+                    "numerator": "68",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 68,
+                  "duration": {
+                    "numerator": "4",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 4,
+                  "measureIndex": 17,
+                  "measureNumber": "18",
+                  "staff": 1,
+                  "voice": "1",
+                  "midiNote": 65,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": true,
+                  "ties": [
+                    {
+                      "source": "tie",
+                      "type": "stop"
+                    },
+                    {
+                      "source": "tied",
+                      "type": "stop"
+                    }
+                  ]
+                },
+                {
+                  "id": "P1:m17:n2",
+                  "onset": {
+                    "numerator": "68",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 68,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 17,
+                  "measureNumber": "18",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 50,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 64,
+              "id": "both:moment:69/1",
+              "scoreMomentId": "moment:69/1",
+              "onset": {
+                "numerator": "69",
+                "denominator": "1"
+              },
+              "onsetBeats": 69,
+              "measureNumber": "18",
+              "expectedMidiNotes": [
+                53,
+                57
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m17:n3",
+                  "onset": {
+                    "numerator": "69",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 69,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 17,
+                  "measureNumber": "18",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 53,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                },
+                {
+                  "id": "P1:m17:n4",
+                  "onset": {
+                    "numerator": "69",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 69,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 17,
+                  "measureNumber": "18",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 57,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 65,
+              "id": "both:moment:70/1",
+              "scoreMomentId": "moment:70/1",
+              "onset": {
+                "numerator": "70",
+                "denominator": "1"
+              },
+              "onsetBeats": 70,
+              "measureNumber": "18",
+              "expectedMidiNotes": [
+                50
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m17:n5",
+                  "onset": {
+                    "numerator": "70",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 70,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 17,
+                  "measureNumber": "18",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 50,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 66,
+              "id": "both:moment:71/1",
+              "scoreMomentId": "moment:71/1",
+              "onset": {
+                "numerator": "71",
+                "denominator": "1"
+              },
+              "onsetBeats": 71,
+              "measureNumber": "18",
+              "expectedMidiNotes": [
+                53,
+                57
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m17:n6",
+                  "onset": {
+                    "numerator": "71",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 71,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 17,
+                  "measureNumber": "18",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 53,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                },
+                {
+                  "id": "P1:m17:n7",
+                  "onset": {
+                    "numerator": "71",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 71,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 17,
+                  "measureNumber": "18",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 57,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "measure": {
+        "index": 19,
+        "number": "20",
+        "implicit": false,
+        "onset": {
+          "numerator": "76",
+          "denominator": "1"
+        },
+        "onsetBeats": 76,
+        "duration": {
+          "numerator": "4",
+          "denominator": "1"
+        },
+        "durationBeats": 4
+      },
+      "moments": [
+        {
+          "id": "moment:76/1",
+          "onset": {
+            "numerator": "76",
+            "denominator": "1"
+          },
+          "onsetBeats": 76,
+          "measureIndex": 19,
+          "measureNumber": "20",
+          "notes": [
+            {
+              "id": "P1:m19:n0",
+              "onset": {
+                "numerator": "76",
+                "denominator": "1"
+              },
+              "onsetBeats": 76,
+              "duration": {
+                "numerator": "4",
+                "denominator": "1"
+              },
+              "durationBeats": 4,
+              "measureIndex": 19,
+              "measureNumber": "20",
+              "staff": 1,
+              "voice": "1",
+              "midiNote": 60,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": true,
+              "ties": [
+                {
+                  "source": "tie",
+                  "type": "stop"
+                },
+                {
+                  "source": "tied",
+                  "type": "stop"
+                }
+              ]
+            },
+            {
+              "id": "P1:m19:n1",
+              "onset": {
+                "numerator": "76",
+                "denominator": "1"
+              },
+              "onsetBeats": 76,
+              "duration": {
+                "numerator": "4",
+                "denominator": "1"
+              },
+              "durationBeats": 4,
+              "measureIndex": 19,
+              "measureNumber": "20",
+              "staff": 1,
+              "voice": "1",
+              "midiNote": 64,
+              "chord": true,
+              "tieStart": false,
+              "tieStop": true,
+              "ties": [
+                {
+                  "source": "tie",
+                  "type": "stop"
+                },
+                {
+                  "source": "tied",
+                  "type": "stop"
+                }
+              ]
+            },
+            {
+              "id": "P1:m19:n2",
+              "onset": {
+                "numerator": "76",
+                "denominator": "1"
+              },
+              "onsetBeats": 76,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 19,
+              "measureNumber": "20",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 45,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            }
+          ]
+        },
+        {
+          "id": "moment:77/1",
+          "onset": {
+            "numerator": "77",
+            "denominator": "1"
+          },
+          "onsetBeats": 77,
+          "measureIndex": 19,
+          "measureNumber": "20",
+          "notes": [
+            {
+              "id": "P1:m19:n3",
+              "onset": {
+                "numerator": "77",
+                "denominator": "1"
+              },
+              "onsetBeats": 77,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 19,
+              "measureNumber": "20",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 52,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            },
+            {
+              "id": "P1:m19:n4",
+              "onset": {
+                "numerator": "77",
+                "denominator": "1"
+              },
+              "onsetBeats": 77,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 19,
+              "measureNumber": "20",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 57,
+              "chord": true,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            }
+          ]
+        },
+        {
+          "id": "moment:78/1",
+          "onset": {
+            "numerator": "78",
+            "denominator": "1"
+          },
+          "onsetBeats": 78,
+          "measureIndex": 19,
+          "measureNumber": "20",
+          "notes": [
+            {
+              "id": "P1:m19:n5",
+              "onset": {
+                "numerator": "78",
+                "denominator": "1"
+              },
+              "onsetBeats": 78,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 19,
+              "measureNumber": "20",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 45,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            }
+          ]
+        },
+        {
+          "id": "moment:79/1",
+          "onset": {
+            "numerator": "79",
+            "denominator": "1"
+          },
+          "onsetBeats": 79,
+          "measureIndex": 19,
+          "measureNumber": "20",
+          "notes": [
+            {
+              "id": "P1:m19:n6",
+              "onset": {
+                "numerator": "79",
+                "denominator": "1"
+              },
+              "onsetBeats": 79,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 19,
+              "measureNumber": "20",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 52,
+              "chord": false,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            },
+            {
+              "id": "P1:m19:n7",
+              "onset": {
+                "numerator": "79",
+                "denominator": "1"
+              },
+              "onsetBeats": 79,
+              "duration": {
+                "numerator": "1",
+                "denominator": "1"
+              },
+              "durationBeats": 1,
+              "measureIndex": 19,
+              "measureNumber": "20",
+              "staff": 2,
+              "voice": "2",
+              "midiNote": 57,
+              "chord": true,
+              "tieStart": false,
+              "tieStop": false,
+              "ties": []
+            }
+          ]
+        }
+      ],
+      "modes": [
+        {
+          "mode": "right",
+          "total": 48,
+          "originalResolved": {
+            "index": 28,
+            "onsetBeats": 80
+          },
+          "target": {
+            "id": "right:moment:80/1",
+            "scoreMomentId": "moment:80/1",
+            "onset": {
+              "numerator": "80",
+              "denominator": "1"
+            },
+            "onsetBeats": 80,
+            "measureNumber": "21",
+            "expectedMidiNotes": [
+              55,
+              59,
+              62
+            ],
+            "sourceNotes": [
+              {
+                "id": "P1:m20:n0",
+                "onset": {
+                  "numerator": "80",
+                  "denominator": "1"
+                },
+                "onsetBeats": 80,
+                "duration": {
+                  "numerator": "2",
+                  "denominator": "1"
+                },
+                "durationBeats": 2,
+                "measureIndex": 20,
+                "measureNumber": "21",
+                "staff": 1,
+                "voice": "1",
+                "midiNote": 55,
+                "chord": false,
+                "tieStart": false,
+                "tieStop": false,
+                "ties": []
+              },
+              {
+                "id": "P1:m20:n1",
+                "onset": {
+                  "numerator": "80",
+                  "denominator": "1"
+                },
+                "onsetBeats": 80,
+                "duration": {
+                  "numerator": "2",
+                  "denominator": "1"
+                },
+                "durationBeats": 2,
+                "measureIndex": 20,
+                "measureNumber": "21",
+                "staff": 1,
+                "voice": "1",
+                "midiNote": 59,
+                "chord": true,
+                "tieStart": false,
+                "tieStop": false,
+                "ties": []
+              },
+              {
+                "id": "P1:m20:n2",
+                "onset": {
+                  "numerator": "80",
+                  "denominator": "1"
+                },
+                "onsetBeats": 80,
+                "duration": {
+                  "numerator": "2",
+                  "denominator": "1"
+                },
+                "durationBeats": 2,
+                "measureIndex": 20,
+                "measureNumber": "21",
+                "staff": 1,
+                "voice": "1",
+                "midiNote": 62,
+                "chord": true,
+                "tieStart": false,
+                "tieStop": false,
+                "ties": []
+              }
+            ]
+          },
+          "beforeStart": 28,
+          "afterStart": 0,
+          "firstDemoNotes": [
+            {
+              "index": 28,
+              "midiNote": 55,
+              "startMs": 0,
+              "durationMs": 517.2413793103442,
+              "noteOffMs": 465.5172413793116
+            },
+            {
+              "index": 28,
+              "midiNote": 59,
+              "startMs": 0,
+              "durationMs": 517.2413793103442,
+              "noteOffMs": 465.5172413793116
+            },
+            {
+              "index": 28,
+              "midiNote": 62,
+              "startMs": 0,
+              "durationMs": 517.2413793103442,
+              "noteOffMs": 465.5172413793116
+            }
+          ],
+          "inMeasureTargets": []
+        },
+        {
+          "mode": "left",
+          "total": 76,
+          "originalResolved": {
+            "index": 52,
+            "onsetBeats": 76
+          },
+          "target": {
+            "id": "left:moment:76/1",
+            "scoreMomentId": "moment:76/1",
+            "onset": {
+              "numerator": "76",
+              "denominator": "1"
+            },
+            "onsetBeats": 76,
+            "measureNumber": "20",
+            "expectedMidiNotes": [
+              45
+            ],
+            "sourceNotes": [
+              {
+                "id": "P1:m19:n2",
+                "onset": {
+                  "numerator": "76",
+                  "denominator": "1"
+                },
+                "onsetBeats": 76,
+                "duration": {
+                  "numerator": "1",
+                  "denominator": "1"
+                },
+                "durationBeats": 1,
+                "measureIndex": 19,
+                "measureNumber": "20",
+                "staff": 2,
+                "voice": "2",
+                "midiNote": 45,
+                "chord": false,
+                "tieStart": false,
+                "tieStop": false,
+                "ties": []
+              }
+            ]
+          },
+          "beforeStart": 52,
+          "afterStart": 0,
+          "firstDemoNotes": [
+            {
+              "index": 52,
+              "midiNote": 45,
+              "startMs": 0,
+              "durationMs": 258.6206896551703,
+              "noteOffMs": 232.75862068965216
+            }
+          ],
+          "inMeasureTargets": [
+            {
+              "index": 52,
+              "id": "left:moment:76/1",
+              "scoreMomentId": "moment:76/1",
+              "onset": {
+                "numerator": "76",
+                "denominator": "1"
+              },
+              "onsetBeats": 76,
+              "measureNumber": "20",
+              "expectedMidiNotes": [
+                45
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m19:n2",
+                  "onset": {
+                    "numerator": "76",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 76,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 19,
+                  "measureNumber": "20",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 45,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 53,
+              "id": "left:moment:77/1",
+              "scoreMomentId": "moment:77/1",
+              "onset": {
+                "numerator": "77",
+                "denominator": "1"
+              },
+              "onsetBeats": 77,
+              "measureNumber": "20",
+              "expectedMidiNotes": [
+                52,
+                57
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m19:n3",
+                  "onset": {
+                    "numerator": "77",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 77,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 19,
+                  "measureNumber": "20",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 52,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                },
+                {
+                  "id": "P1:m19:n4",
+                  "onset": {
+                    "numerator": "77",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 77,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 19,
+                  "measureNumber": "20",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 57,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 54,
+              "id": "left:moment:78/1",
+              "scoreMomentId": "moment:78/1",
+              "onset": {
+                "numerator": "78",
+                "denominator": "1"
+              },
+              "onsetBeats": 78,
+              "measureNumber": "20",
+              "expectedMidiNotes": [
+                45
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m19:n5",
+                  "onset": {
+                    "numerator": "78",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 78,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 19,
+                  "measureNumber": "20",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 45,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 55,
+              "id": "left:moment:79/1",
+              "scoreMomentId": "moment:79/1",
+              "onset": {
+                "numerator": "79",
+                "denominator": "1"
+              },
+              "onsetBeats": 79,
+              "measureNumber": "20",
+              "expectedMidiNotes": [
+                52,
+                57
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m19:n6",
+                  "onset": {
+                    "numerator": "79",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 79,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 19,
+                  "measureNumber": "20",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 52,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                },
+                {
+                  "id": "P1:m19:n7",
+                  "onset": {
+                    "numerator": "79",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 79,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 19,
+                  "measureNumber": "20",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 57,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "both",
+          "total": 109,
+          "originalResolved": {
+            "index": 71,
+            "onsetBeats": 76
+          },
+          "target": {
+            "id": "both:moment:76/1",
+            "scoreMomentId": "moment:76/1",
+            "onset": {
+              "numerator": "76",
+              "denominator": "1"
+            },
+            "onsetBeats": 76,
+            "measureNumber": "20",
+            "expectedMidiNotes": [
+              45
+            ],
+            "sourceNotes": [
+              {
+                "id": "P1:m19:n0",
+                "onset": {
+                  "numerator": "76",
+                  "denominator": "1"
+                },
+                "onsetBeats": 76,
+                "duration": {
+                  "numerator": "4",
+                  "denominator": "1"
+                },
+                "durationBeats": 4,
+                "measureIndex": 19,
+                "measureNumber": "20",
+                "staff": 1,
+                "voice": "1",
+                "midiNote": 60,
+                "chord": false,
+                "tieStart": false,
+                "tieStop": true,
+                "ties": [
+                  {
+                    "source": "tie",
+                    "type": "stop"
+                  },
+                  {
+                    "source": "tied",
+                    "type": "stop"
+                  }
+                ]
+              },
+              {
+                "id": "P1:m19:n1",
+                "onset": {
+                  "numerator": "76",
+                  "denominator": "1"
+                },
+                "onsetBeats": 76,
+                "duration": {
+                  "numerator": "4",
+                  "denominator": "1"
+                },
+                "durationBeats": 4,
+                "measureIndex": 19,
+                "measureNumber": "20",
+                "staff": 1,
+                "voice": "1",
+                "midiNote": 64,
+                "chord": true,
+                "tieStart": false,
+                "tieStop": true,
+                "ties": [
+                  {
+                    "source": "tie",
+                    "type": "stop"
+                  },
+                  {
+                    "source": "tied",
+                    "type": "stop"
+                  }
+                ]
+              },
+              {
+                "id": "P1:m19:n2",
+                "onset": {
+                  "numerator": "76",
+                  "denominator": "1"
+                },
+                "onsetBeats": 76,
+                "duration": {
+                  "numerator": "1",
+                  "denominator": "1"
+                },
+                "durationBeats": 1,
+                "measureIndex": 19,
+                "measureNumber": "20",
+                "staff": 2,
+                "voice": "2",
+                "midiNote": 45,
+                "chord": false,
+                "tieStart": false,
+                "tieStop": false,
+                "ties": []
+              }
+            ]
+          },
+          "beforeStart": 71,
+          "afterStart": 0,
+          "firstDemoNotes": [
+            {
+              "index": 71,
+              "midiNote": 60,
+              "startMs": 0,
+              "durationMs": 1034.4827586206884,
+              "noteOffMs": 931.0344827586196
+            },
+            {
+              "index": 71,
+              "midiNote": 64,
+              "startMs": 0,
+              "durationMs": 1034.4827586206884,
+              "noteOffMs": 931.0344827586196
+            },
+            {
+              "index": 71,
+              "midiNote": 45,
+              "startMs": 0,
+              "durationMs": 258.6206896551703,
+              "noteOffMs": 232.75862068965216
+            }
+          ],
+          "inMeasureTargets": [
+            {
+              "index": 71,
+              "id": "both:moment:76/1",
+              "scoreMomentId": "moment:76/1",
+              "onset": {
+                "numerator": "76",
+                "denominator": "1"
+              },
+              "onsetBeats": 76,
+              "measureNumber": "20",
+              "expectedMidiNotes": [
+                45
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m19:n0",
+                  "onset": {
+                    "numerator": "76",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 76,
+                  "duration": {
+                    "numerator": "4",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 4,
+                  "measureIndex": 19,
+                  "measureNumber": "20",
+                  "staff": 1,
+                  "voice": "1",
+                  "midiNote": 60,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": true,
+                  "ties": [
+                    {
+                      "source": "tie",
+                      "type": "stop"
+                    },
+                    {
+                      "source": "tied",
+                      "type": "stop"
+                    }
+                  ]
+                },
+                {
+                  "id": "P1:m19:n1",
+                  "onset": {
+                    "numerator": "76",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 76,
+                  "duration": {
+                    "numerator": "4",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 4,
+                  "measureIndex": 19,
+                  "measureNumber": "20",
+                  "staff": 1,
+                  "voice": "1",
+                  "midiNote": 64,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": true,
+                  "ties": [
+                    {
+                      "source": "tie",
+                      "type": "stop"
+                    },
+                    {
+                      "source": "tied",
+                      "type": "stop"
+                    }
+                  ]
+                },
+                {
+                  "id": "P1:m19:n2",
+                  "onset": {
+                    "numerator": "76",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 76,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 19,
+                  "measureNumber": "20",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 45,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 72,
+              "id": "both:moment:77/1",
+              "scoreMomentId": "moment:77/1",
+              "onset": {
+                "numerator": "77",
+                "denominator": "1"
+              },
+              "onsetBeats": 77,
+              "measureNumber": "20",
+              "expectedMidiNotes": [
+                52,
+                57
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m19:n3",
+                  "onset": {
+                    "numerator": "77",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 77,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 19,
+                  "measureNumber": "20",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 52,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                },
+                {
+                  "id": "P1:m19:n4",
+                  "onset": {
+                    "numerator": "77",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 77,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 19,
+                  "measureNumber": "20",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 57,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 73,
+              "id": "both:moment:78/1",
+              "scoreMomentId": "moment:78/1",
+              "onset": {
+                "numerator": "78",
+                "denominator": "1"
+              },
+              "onsetBeats": 78,
+              "measureNumber": "20",
+              "expectedMidiNotes": [
+                45
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m19:n5",
+                  "onset": {
+                    "numerator": "78",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 78,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 19,
+                  "measureNumber": "20",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 45,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            },
+            {
+              "index": 74,
+              "id": "both:moment:79/1",
+              "scoreMomentId": "moment:79/1",
+              "onset": {
+                "numerator": "79",
+                "denominator": "1"
+              },
+              "onsetBeats": 79,
+              "measureNumber": "20",
+              "expectedMidiNotes": [
+                52,
+                57
+              ],
+              "sourceNotes": [
+                {
+                  "id": "P1:m19:n6",
+                  "onset": {
+                    "numerator": "79",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 79,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 19,
+                  "measureNumber": "20",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 52,
+                  "chord": false,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                },
+                {
+                  "id": "P1:m19:n7",
+                  "onset": {
+                    "numerator": "79",
+                    "denominator": "1"
+                  },
+                  "onsetBeats": 79,
+                  "duration": {
+                    "numerator": "1",
+                    "denominator": "1"
+                  },
+                  "durationBeats": 1,
+                  "measureIndex": 19,
+                  "measureNumber": "20",
+                  "staff": 2,
+                  "voice": "2",
+                  "midiNote": 57,
+                  "chord": true,
+                  "tieStart": false,
+                  "tieStop": false,
+                  "ties": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

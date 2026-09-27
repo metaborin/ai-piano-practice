@@ -5,7 +5,7 @@ export function PracticeFeedback({ practice, midiConnected }: Props) {
   const { status, feedback, matchFeedback } = practice
   const message = status === 'demoPlaying' ? '手本を聴いてみよう'
     : status === 'completed' ? 'できました！'
-    : status === 'idle' ? '「練習開始」で、はじめの音から弾こう'
+    : status === 'idle' ? '「練習開始」で、選んだ位置から弾こう'
     : !midiConnected ? 'MIDIを接続すると、続きから弾けます'
     : feedback === 'correct' ? 'できた！'
     : feedback === 'incorrect' ? 'もう一度♪'

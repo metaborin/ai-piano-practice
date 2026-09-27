@@ -10,6 +10,7 @@ import { MidiDebugPanel } from './components/MidiDebugPanel'
 import { MidiStatus } from './components/MidiStatus'
 import { MidiOutputPanel } from './components/MidiOutputPanel'
 import { PracticeControls } from './components/PracticeControls'
+import { PracticeStartControls } from './components/PracticeStartControls'
 import { ScoreView } from './components/ScoreView'
 import { SongLibrary } from './components/SongLibrary'
 import { useMidi } from './midi/useMidi'
@@ -42,9 +43,9 @@ export default function App() {
   const showDemoCursor = demo.status === 'playing'
   const cursorIndex = showDemoCursor ? demo.currentNoteIndex : practice.currentNoteIndex
   const noteCount = practice.totalNotes
-  const practiceBlocked = !scoreReady || demo.status === 'playing' || output.playing
-  const cursorMomentId = songState.plan?.targets[cursorIndex]?.scoreMomentId ?? null
-  const currentMeasure = songState.plan?.targets[cursorIndex]?.measureNumber
+  const practiceBlocked = !scoreReady || practice.startTargetIndex === null || demo.status === 'playing' || output.playing
+  const cursorMomentId = showDemoCursor ? demo.cursorMomentId : practice.startTargetIndex === null ? null : songState.plan?.targets[cursorIndex]?.scoreMomentId ?? null
+  const currentMeasure = showDemoCursor ? songState.model?.moments.find(moment => moment.id === cursorMomentId)?.measureNumber : songState.plan?.targets[cursorIndex]?.measureNumber
   const positionUnit = songState.model?.practiceCompatibility === 'simpleMelody' ? '音' : 'ステップ'
   const startPractice = () => { if (!practiceBlocked) { returnToCursor(); player.resetDisplay(); start() } }
   const restartPractice = () => { if (!practiceBlocked) { returnToCursor(); player.resetDisplay(); restart() } }
@@ -52,6 +53,7 @@ export default function App() {
   const playDemo = (choice: DemoChoice) => {
     if (!scoreReady) return
     if (choice === 'current') {
+      if (session.getSnapshot().startTargetIndex === null) return
       const target = songState.plan?.targets[session.getSnapshot().currentNoteIndex]
       if (target) player.playFromMoment(target.scoreMomentId)
     } else player.start(choice === 'beginning' ? { kind: 'beginning' } : { kind: 'measure', measureIndex: Number(choice.slice(8)) })
@@ -61,7 +63,7 @@ export default function App() {
     <main className="app">
       <header className="app-header">
         <div>
-          <p className="eyebrow">ピアノ練習 · Phase 2E-D2</p>
+          <p className="eyebrow">ピアノ練習 · Phase 2E-D3.1</p>
           <h1>{title}</h1>
           <p className="subtitle">{songState.song?.partLabel ?? '曲を選んで練習しましょう'}</p>
         </div>
@@ -72,15 +74,18 @@ export default function App() {
         <h2>練習するパート</h2>
         <div className="mode-buttons">{(['right', 'left', 'both'] as PracticeMode[]).map((mode) => <button key={mode} aria-pressed={songState.mode === mode} onClick={() => { returnToCursor(); selection.setMode(mode) }}>{MODE_LABELS[mode]}</button>)}</div>
       </section>}
+      <PracticeStartControls plan={songState.plan} requested={songState.practiceStart}
+        onChange={start => { returnToCursor(); selection.setPracticeStart(start) }} />
       <section className="score-card" aria-label={songState.song ? title + 'の楽譜' : '楽譜'} aria-busy={!scoreReady && songState.status === 'loading'}>
         <div className="score-status"><div className="score-heading">
           {songState.model && !songState.canPractice ? <span>楽譜表示</span> : <span className="cursor-legend"><span aria-hidden="true" />緑の帯が現在位置</span>}
-          <button className="return-to-cursor" disabled={!scoreReady} onClick={returnToCursor}>現在位置へ戻る</button>
+          <button className="return-to-cursor" disabled={!scoreReady || !cursorMomentId} onClick={returnToCursor}>現在位置へ戻る</button>
           <div className="score-position" aria-live="polite">
-            {scoreReady && currentMeasure !== undefined && <span className="current-measure">{currentMeasure}小節目</span>}
-            <span className="position">{scoreReady && noteCount > 0 ? `${cursorIndex + 1} / ${noteCount} ${positionUnit}` : '— / — 音'}</span>
+            {scoreReady && cursorMomentId && currentMeasure !== undefined && <span className="current-measure">{currentMeasure}小節目</span>}
+            <span className="position">{scoreReady && cursorMomentId && noteCount > 0 ? `${cursorIndex + 1} / ${noteCount} ${positionUnit}` : '— / — 音'}</span>
           </div>
         </div>
+        {songState.startPosition?.message && <p className="practice-start-message" role="status">{songState.startPosition.message}</p>}
         <PracticeFeedback practice={practice} midiConnected={midi.status === 'connected'} />
         </div>
         {songState.status === 'loading' && <p className="score-message" role="status">楽譜を読み込み中…</p>}
@@ -90,7 +95,7 @@ export default function App() {
           : 'この曲は表示できますが、現在の練習・手本演奏には未対応です。'}<br />{songState.model?.practiceReasons.join('、')}</p>}
         {songState.source && <ScoreView key={songState.requestId} requestId={songState.requestId} score={songState.source} cursorIndex={cursorIndex} cursorMomentId={cursorMomentId} missingNoteIds={missingNoteIds} followMode={showDemoCursor ? 'demo' : practice.status === 'idle' ? 'idle' : 'practice'} focusRequest={focusRequest} onReady={selection.ready} onError={selection.fail} />}
       </section>
-      <DemoControls key={`${songState.requestId}:${songState.mode}`} demo={demo} plan={songState.plan} outputReady={scoreReady && output.status === 'connected'} outputBusy={output.playing} onPlay={playDemo} onStop={player.stop} />
+      <DemoControls key={`${songState.requestId}:${songState.mode}`} demo={demo} plan={songState.plan} outputReady={scoreReady && output.status === 'connected'} outputBusy={output.playing} currentAvailable={practice.startTargetIndex !== null} onPlay={playDemo} onStop={player.stop} />
       <PracticeControls practice={practice} midiConnected={midi.status === 'connected'} blocked={practiceBlocked} onStart={startPractice} onRestart={restartPractice} />
       <section className="midi-connection" aria-label="MIDI接続設定">
         <div className="connection-copy">
@@ -112,7 +117,7 @@ export default function App() {
       <DeveloperControls practice={practice} model={songState.model} plan={songState.plan} song={songState.song} error={songState.error} cursorIndex={cursorIndex} blocked={!scoreReady || showDemoCursor} onPrevious={() => moveCursor(-1)} onNext={() => moveCursor(1)} />
       <MidiDebugPanel latest={midi.latestEvent} lastNoteOn={midi.lastNoteOn} lastNoteOff={midi.lastNoteOff} />
       <MidiOutputPanel output={output} inputStatus={midi.status} onSelect={selectOutput} onPlay={playTestNote} onStop={stopAllNotes} onRetry={retryOutput} />
-      <footer>Phase 2E-D2 · 曲を選んで、順番に弾いてみよう</footer>
+      <footer>Phase 2E-D3.1 · 曲を選んで、順番に弾いてみよう</footer>
     </main>
   )
 }
