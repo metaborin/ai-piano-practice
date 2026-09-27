@@ -42,10 +42,14 @@ export default function App() {
   const scoreReady = songState.status === 'ready' && songState.canPractice
   const showDemoCursor = demo.status === 'playing'
   const cursorIndex = showDemoCursor ? demo.currentNoteIndex : practice.currentNoteIndex
+  const cursorOccurrence = songState.plan?.sequence.occurrences[cursorIndex]
   const noteCount = practice.totalNotes
   const practiceBlocked = !scoreReady || practice.startTargetIndex === null || demo.status === 'playing' || output.playing
-  const cursorMomentId = showDemoCursor ? demo.cursorMomentId : practice.startTargetIndex === null ? null : songState.plan?.targets[cursorIndex]?.scoreMomentId ?? null
-  const currentMeasure = showDemoCursor ? songState.model?.moments.find(moment => moment.id === cursorMomentId)?.measureNumber : songState.plan?.targets[cursorIndex]?.measureNumber
+  const cursorMomentId = showDemoCursor ? demo.cursorMomentId : practice.startTargetIndex === null ? null : cursorOccurrence?.sourceMoment.id ?? null
+  const currentMoment = showDemoCursor ? songState.model?.moments.find(moment => moment.id === cursorMomentId) : cursorOccurrence?.sourceMoment
+  const currentMeasure = currentMoment?.measureNumber
+  const currentRepeat = currentMoment && songState.model?.navigation.repeats.find(region => currentMoment.measureIndex >= region.startMeasureIndex && currentMoment.measureIndex <= region.endMeasureIndex)
+  const repeatPass = currentRepeat ? cursorOccurrence?.repeatRegionId === currentRepeat.id ? cursorOccurrence.repeatPass : 1 : undefined
   const positionUnit = songState.model?.practiceCompatibility === 'simpleMelody' ? '音' : 'ステップ'
   const startPractice = () => { if (!practiceBlocked) { returnToCursor(); player.resetDisplay(); start() } }
   const restartPractice = () => { if (!practiceBlocked) { returnToCursor(); player.resetDisplay(); restart() } }
@@ -54,8 +58,8 @@ export default function App() {
     if (!scoreReady) return
     if (choice === 'current') {
       if (session.getSnapshot().startTargetIndex === null) return
-      const target = songState.plan?.targets[session.getSnapshot().currentNoteIndex]
-      if (target) player.playFromMoment(target.scoreMomentId)
+      const occurrence = songState.plan?.sequence.occurrences[session.getSnapshot().currentNoteIndex]
+      if (occurrence) player.playFromOccurrence(occurrence.id)
     } else player.start(choice === 'beginning' ? { kind: 'beginning' } : { kind: 'measure', measureIndex: Number(choice.slice(8)) })
   }
 
@@ -63,7 +67,7 @@ export default function App() {
     <main className="app">
       <header className="app-header">
         <div>
-          <p className="eyebrow">ピアノ練習 · Phase 2E-D3.1</p>
+          <p className="eyebrow">ピアノ練習 · Phase 2E-D3.2</p>
           <h1>{title}</h1>
           <p className="subtitle">{songState.song?.partLabel ?? '曲を選んで練習しましょう'}</p>
         </div>
@@ -72,7 +76,7 @@ export default function App() {
       <SongLibrary library={library} selectedId={songState.song?.id ?? ''} onSelect={selectSong} onRetry={retry} onAdd={addSong} onDelete={removeSong} />
       {songState.model?.staffCount === 2 && <section className="practice-mode" aria-label="練習するパート">
         <h2>練習するパート</h2>
-        <div className="mode-buttons">{(['right', 'left', 'both'] as PracticeMode[]).map((mode) => <button key={mode} aria-pressed={songState.mode === mode} onClick={() => { returnToCursor(); selection.setMode(mode) }}>{MODE_LABELS[mode]}</button>)}</div>
+        <div className="mode-buttons">{(['right', 'left', 'both'] as PracticeMode[]).map((mode) => <button key={mode} aria-pressed={songState.mode === mode} onClick={() => { returnToCursor(); selection.setMode(mode, practice.currentNoteIndex) }}>{MODE_LABELS[mode]}</button>)}</div>
       </section>}
       <PracticeStartControls plan={songState.plan} requested={songState.practiceStart}
         onChange={start => { returnToCursor(); selection.setPracticeStart(start) }} />
@@ -82,6 +86,7 @@ export default function App() {
           <button className="return-to-cursor" disabled={!scoreReady || !cursorMomentId} onClick={returnToCursor}>現在位置へ戻る</button>
           <div className="score-position" aria-live="polite">
             {scoreReady && cursorMomentId && currentMeasure !== undefined && <span className="current-measure">{currentMeasure}小節目</span>}
+            {scoreReady && cursorMomentId && repeatPass && <span className="repeat-position">反復 {repeatPass}回目</span>}
             <span className="position">{scoreReady && cursorMomentId && noteCount > 0 ? `${cursorIndex + 1} / ${noteCount} ${positionUnit}` : '— / — 音'}</span>
           </div>
         </div>
@@ -117,7 +122,7 @@ export default function App() {
       <DeveloperControls practice={practice} model={songState.model} plan={songState.plan} song={songState.song} error={songState.error} cursorIndex={cursorIndex} blocked={!scoreReady || showDemoCursor} onPrevious={() => moveCursor(-1)} onNext={() => moveCursor(1)} />
       <MidiDebugPanel latest={midi.latestEvent} lastNoteOn={midi.lastNoteOn} lastNoteOff={midi.lastNoteOff} />
       <MidiOutputPanel output={output} inputStatus={midi.status} onSelect={selectOutput} onPlay={playTestNote} onStop={stopAllNotes} onRetry={retryOutput} />
-      <footer>Phase 2E-D3.1 · 曲を選んで、順番に弾いてみよう</footer>
+      <footer>Phase 2E-D3.2 · 曲を選んで、順番に弾いてみよう</footer>
     </main>
   )
 }

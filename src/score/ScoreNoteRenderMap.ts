@@ -6,7 +6,7 @@ import type { PracticeSnapshot } from '../practice/PracticeSession'
 
 export function missingSourceNoteIds(plan: PracticePlan | null, feedback: PracticeSnapshot['matchFeedback']): readonly string[] {
   if (!plan || feedback?.status !== 'incorrect') return []
-  return plan.targets[feedback.targetIndex]?.sourceNotes.filter((note) => !note.tieStop && feedback.missingMidiNotes.includes(note.midiNote)).map((note) => note.id) ?? []
+  return plan.sequence.occurrences[feedback.targetIndex]?.sourceTarget.sourceNotes.filter((note) => !note.tieStop && feedback.missingMidiNotes.includes(note.midiNote)).map((note) => note.id) ?? []
 }
 
 /** Stable musical correspondence, followed by OSMD's own per-note SVG API.

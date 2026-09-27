@@ -3,6 +3,7 @@ import type { Compatibility } from '../songs/Song'
 import { compatibilityFromModel } from '../songs/inspectMusicXml'
 import { resolveTempo } from '../audio/tempo'
 import { createPracticePlan } from '../practice/PracticePlan'
+import { buildPlaybackSequence } from './ScoreNavigation'
 
 /** Derived only; never persisted over the original XML or cached Song metadata. */
 export function createValidationReport(model: ScoreModel | null, songTempoBpm?: number, compatibility?: Compatibility | null, error?: string | null) {
@@ -16,7 +17,9 @@ export function createValidationReport(model: ScoreModel | null, songTempoBpm?: 
     measures: model ? { first: model.measures[0]?.number, last: model.measures.at(-1)?.number, count: model.measures.length } : null,
     chordMoments: model?.moments.filter((moment) => moment.notes.length > 1).length ?? 0,
     tieNotes: model?.notes.filter((note) => note.tieStart || note.tieStop).length ?? 0,
-    steps: model && supported ? { right: createPracticePlan(model, 'right')?.targets.length ?? 0,
-      left: createPracticePlan(model, 'left')?.targets.length ?? 0, both: createPracticePlan(model)?.targets.length ?? 0 } : null,
+    navigation: model?.navigation ?? null,
+    expandedMeasures: model && supported ? buildPlaybackSequence(model).measures.map(occurrence => occurrence.source.number) : null,
+    steps: model && supported ? { right: createPracticePlan(model, 'right')?.sequence.occurrences.length ?? 0,
+      left: createPracticePlan(model, 'left')?.sequence.occurrences.length ?? 0, both: createPracticePlan(model)?.sequence.occurrences.length ?? 0 } : null,
   }
 }

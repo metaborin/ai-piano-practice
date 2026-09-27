@@ -1,4 +1,5 @@
 import { Beat } from './Beat'
+import { readScoreNavigation, buildPlaybackSequence } from './ScoreNavigation'
 import { soundSpans } from './soundSpans'
 import { child, children, descendants, readMusicXmlDocument, value } from './musicXmlDocument'
 import type { ScoreMeasure, ScoreModel, ScoreMoment, ScoreNote, ScoreRest, ScoreSource, ScoreTempo, ScoreTie, ScoreWarning } from './ScoreModel'
@@ -61,9 +62,9 @@ export function parseMusicXml(source: ScoreSource, document?: Document): ScoreMo
     if (name !== 'pedal' && descendants(doc, name).length) practiceUnsupported.add(message)
   }
   if (descendants(doc, 'tremolo').length) { warn('tremolo', 'トレモロの発音展開は未対応です。'); practiceUnsupported.add('トレモロ') }
-  if (['repeat', 'ending', 'segno', 'coda', 'measure-repeat'].some((name) => descendants(doc, name).length) || descendants(doc, 'sound').some((node) => ['dacapo', 'dalsegno', 'tocoda', 'fine', 'forward-repeat'].some((name) => node.hasAttribute(name)))) {
-    warn('repeat', '反復・演奏順の展開は未対応です。記載順の時間軸を保持します。'); practiceUnsupported.add('反復・演奏順の指定')
-  }
+  const navigation = readScoreNavigation(doc, measuresXml)
+  for (const reason of navigation.reasons) { warn('repeat', reason); practiceUnsupported.add(reason) }
+  if (navigation.repeats.length) pending.add('単純反復')
   if (descendants(doc, 'time-modification').length) { warn('tuplet', '連符はduration/divisionsで時間を保持します。今回の練習・手本は未対応です。'); practiceUnsupported.add('連符') }
   let divisions: Beat | null = null, measureStart = Beat.zero(), staffCount = 1
   for (const [measureIndex, measure] of measuresXml.entries()) {
@@ -182,6 +183,8 @@ export function parseMusicXml(source: ScoreSource, document?: Document): ScoreMo
   })) practiceUnsupported.add('同時刻の同一Voiceが複数Staffをまたぐ記譜')
   try { soundSpans(notes) } catch (error) { const message = error instanceof Error ? error.message : '発音の対応'; practiceUnsupported.add(message); warn('performance', message + 'は未対応です。') }
   const initialTempo = tempos.filter((tempo) => Beat.from(tempo.onset).n === 0n).at(-1)?.bpm
-  return { ...source, partId: part.getAttribute('id') || 'P1', notes, rests, moments, measures, totalDuration: measureStart.toJSON(), totalBeats: measureStart.beats, staffCount, voices: [...voices], tempoBpm: initialTempo, tempos, warnings,
+  if (!navigation.reasons.length) try { buildPlaybackSequence({ measures, moments, navigation }) }
+  catch (error) { practiceUnsupported.add(error instanceof Error ? error.message : '演奏順を展開できません。') }
+  return { ...source, partId: part.getAttribute('id') || 'P1', notes, rests, moments, measures, navigation, totalDuration: measureStart.toJSON(), totalBeats: measureStart.beats, staffCount, voices: [...voices], tempoBpm: initialTempo, tempos, warnings,
     practiceCompatibility: practiceUnsupported.size ? 'unsupported' : pending.size ? 'pitchPractice' : 'simpleMelody', practiceReasons: [...practiceUnsupported] }
 }

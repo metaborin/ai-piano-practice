@@ -1,5 +1,7 @@
 # Phase 2E-D3.1 — 任意小節からの練習開始
 
+2026-09-28追記：ユーザーからChromebook + PX-100 + U2MIDI ProでD3.1の実機確認完了を受領しました。以下は実装当時の記録です。次の単純反復対応は[Phase 2E-D3.2](PHASE2ED32.md)を参照してください。
+
 実装日：2026-09-27。ユーザーから、全30小節once版の先頭練習・手本・長曲追従・赤表示の実機動作を受領しました。今回の途中開始変更は自動検証とChromebook + PX-100での受入を分けます。反復展開、original版の練習対応、Phase 3は追加しません。
 
 公開先：[AIピアノ練習アプリ](https://metaborin.github.io/ai-piano-practice/)

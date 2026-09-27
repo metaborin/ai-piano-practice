@@ -21,6 +21,7 @@ export type PracticeSnapshot = {
 /** Browser-independent state machine. Receives each event synchronously, including releases. */
 export class PracticeSession {
   private targets: readonly { expectedMidiNotes: readonly number[] }[] = []
+  private repeatJumps = new Set<number>()
   private matcher = new MomentMatcher((feedback) => this.handleResult(feedback))
   private activeNotes = new Set<string>()
   // Physical keys held across a reset must be released before counting a fresh press.
@@ -53,7 +54,7 @@ export class PracticeSession {
     return { expectedMidiNotes, expectedMidiNote: expectedMidiNotes[0] ?? null }
   }
   private setTargets(targets: readonly { expectedMidiNotes: readonly number[] }[]) {
-    this.resetInput(); this.targets = targets; this.resumeStatus = null
+    this.resetInput(); this.targets = targets; this.resumeStatus = null; this.repeatJumps.clear()
     this.publish({ currentNoteIndex: 0, startTargetIndex: 0, totalNotes: targets.length, ...this.expected(0), correctNoteCount: 0, status: 'idle', feedback: null, matchFeedback: null })
   }
   private resetInput() {
@@ -69,7 +70,13 @@ export class PracticeSession {
     this.publish({ startTargetIndex: index, currentNoteIndex: index ?? 0, ...this.expected(index ?? -1),
       correctNoteCount: 0, status: 'idle', feedback: null, matchFeedback: null })
   }
-  loadPlan = (plan: PracticePlan | null) => { this.setTargets(plan?.targets ?? []) }
+  loadPlan = (plan: PracticePlan | null) => {
+    const occurrences = plan?.sequence.occurrences ?? []
+    this.setTargets(occurrences.map(occurrence => occurrence.sourceTarget))
+    occurrences.forEach((occurrence, index) => {
+      if (index > 0 && occurrence.sourceTargetIndex <= occurrences[index - 1].sourceTargetIndex) this.repeatJumps.add(index)
+    })
+  }
 
   loadScore = (score: ScoreModel | null) => { this.setNotes(score?.notes ?? []) }
 
@@ -130,6 +137,7 @@ export class PracticeSession {
       return
     }
     const index = this.snapshot.currentNoteIndex + 1
-    this.publish({ currentNoteIndex: index, ...this.expected(index), correctNoteCount, feedback, matchFeedback })
+    const jumped = this.repeatJumps.has(index)
+    this.publish({ currentNoteIndex: index, ...this.expected(index), correctNoteCount, feedback: jumped ? null : feedback, matchFeedback: jumped ? null : matchFeedback })
   }
 }

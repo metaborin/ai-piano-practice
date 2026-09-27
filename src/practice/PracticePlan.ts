@@ -1,4 +1,6 @@
 import type { BeatFraction, ScoreModel, ScoreNote } from '../score/ScoreModel'
+import { createPracticeSequence } from './PracticeSequence'
+import type { PracticeSequence } from './PracticeSequence'
 export type PracticeMode = 'right' | 'left' | 'both'
 export const MODE_LABELS: Record<PracticeMode, string> = { right: '右手', left: '左手', both: '両手' }
 export type PracticeTarget = {
@@ -9,6 +11,7 @@ export type PracticeTarget = {
 export type PracticePlan = {
   readonly score: ScoreModel; readonly mode: PracticeMode
   readonly targets: readonly PracticeTarget[]; readonly sourceNotes: readonly ScoreNote[]
+  readonly sequence: PracticeSequence
   /** Playback fallback only. XML tempo remains authoritative. */
   readonly songTempoBpm?: number
 }
@@ -20,5 +23,5 @@ export function createPracticePlan(score: ScoreModel, mode: PracticeMode = 'both
     const expectedMidiNotes = [...new Set(sourceNotes.filter((note) => !note.tieStop).map((note) => note.midiNote))].sort((a, b) => a - b)
     return expectedMidiNotes.length ? [{ id: mode + ':' + moment.id, scoreMomentId: moment.id, onset: moment.onset, onsetBeats: moment.onsetBeats, measureNumber: moment.measureNumber, expectedMidiNotes, sourceNotes }] : []
   })
-  return { score, mode, targets, sourceNotes: score.notes.filter(selected), songTempoBpm }
+  return { score, mode, targets, sequence: createPracticeSequence(score, targets), sourceNotes: score.notes.filter(selected), songTempoBpm }
 }

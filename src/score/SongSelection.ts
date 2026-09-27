@@ -5,6 +5,7 @@ import { loadSongMusicXml } from '../songs/loadSongMusicXml'
 import type { Song } from '../songs/Song'
 import { resolvePracticeStart } from '../practice/PracticeStartResolver'
 import type { PracticeStart, PracticeStartPosition } from '../practice/PracticeStartResolver'
+import type { RepeatPosition } from './ScoreNavigation'
 
 export type SongSnapshot = {
   readonly requestId: number
@@ -74,19 +75,20 @@ export class SongSelection {
     const startPosition = this.applyPlan(plan)
     this.publish({ status: 'ready', model, plan, startPosition, canPractice: !!plan?.targets.length })
   }
-  setMode = (mode: PracticeMode) => {
+  setMode = (mode: PracticeMode, currentOccurrenceIndex?: number) => {
     const model = this.snapshot.model
     if (this.snapshot.status !== 'ready' || !model || this.snapshot.mode === mode) return
+    const preferred = currentOccurrenceIndex === undefined ? undefined : this.snapshot.plan?.sequence.occurrences[currentOccurrenceIndex]
     this.dependencies.reset()
     const plan = createPracticePlan(model, mode, this.snapshot.song?.tempoBpm)
-    const startPosition = this.applyPlan(plan)
+    const startPosition = this.applyPlan(plan, this.snapshot.practiceStart, preferred)
     this.publish({ mode, plan, startPosition, canPractice: !!plan?.targets.length })
   }
-  private applyPlan(plan: PracticePlan | null, requested = this.snapshot.practiceStart) {
+  private applyPlan(plan: PracticePlan | null, requested = this.snapshot.practiceStart, preferred?: RepeatPosition) {
     if (!plan) return null
-    const position = resolvePracticeStart(plan, requested)
+    const position = resolvePracticeStart(plan, requested, preferred)
     this.dependencies.apply(plan)
-    this.dependencies.position?.(position.resolvedTargetIndex)
+    this.dependencies.position?.(position.resolvedOccurrenceIndex)
     return position
   }
   setPracticeStart = (practiceStart: PracticeStart) => {

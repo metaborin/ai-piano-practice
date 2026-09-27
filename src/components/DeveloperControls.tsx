@@ -18,7 +18,7 @@ export function DeveloperControls({ practice, model, plan, song, error, cursorIn
         <h3>Score解析</h3>
         {song && <p>曲：{song.title} ／ パート：{song.partLabel}<br />作曲者・由来：{song.composer || '未指定'} ／ source：{song.source}</p>}
         <ValidationReport model={model ?? null} tempoBpm={song?.tempoBpm} compatibility={model ? undefined : song?.compatibility} error={error} />
-        {plan && <p>練習モード：{model?.staffCount === 1 ? '全体' : MODE_LABELS[plan.mode]} ／ 練習Step：{plan.targets.length} ／ 現在：{plan.targets.length ? (cursorIndex ?? currentNoteIndex) + 1 : 0}<br />期待音：[{plan.targets[cursorIndex ?? currentNoteIndex]?.expectedMidiNotes.join(', ')}] ／ Chord window：{CHORD_WINDOW_MS}ms</p>}
+        {plan && <p>練習モード：{model?.staffCount === 1 ? '全体' : MODE_LABELS[plan.mode]} ／ 練習Step：{plan.sequence.occurrences.length} ／ 現在：{plan.sequence.occurrences.length ? (cursorIndex ?? currentNoteIndex) + 1 : 0}<br />期待音：[{plan.sequence.occurrences[cursorIndex ?? currentNoteIndex]?.sourceTarget.expectedMidiNotes.join(', ')}] ／ Chord window：{CHORD_WINDOW_MS}ms</p>}
       </section>}
       <p>開発確認用の手動カーソルです。練習・手本の開始前に操作でき、練習開始で先頭へ戻ります。</p>
       <p className="expected-note">練習の現在音：{expectedMidiNote === null ? '—' : `${midiNoteName(expectedMidiNote)} / MIDI Note ${expectedMidiNote}`}</p>

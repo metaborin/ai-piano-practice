@@ -83,12 +83,13 @@ export class DemoPlayer {
   loadPlan = (plan: PracticePlan | null) => {
     this.loadScore(null)
     this.plan = plan
-    this.publish({ totalNotes: plan?.targets.length ?? 0 })
+    this.publish({ totalNotes: plan?.sequence.occurrences.length ?? 0 })
   }
   resetDisplay = () => {
     if (this.snapshot.status !== 'playing') this.publish({ status: 'idle', currentNoteIndex: 0, message: '', cursorMomentId: null })
   }
   playFromMoment = (momentId: string) => this.start({ kind: 'moment', momentId })
+  playFromOccurrence = (occurrenceId: string) => this.start({ kind: 'occurrence', occurrenceId })
   start = (start: DemoStart = { kind: 'beginning' }) => {
     if (this.snapshot.status === 'playing') return
     let notes: DemoNote[]
@@ -98,7 +99,7 @@ export class DemoPlayer {
       if (this.plan) {
         const origin = resolveDemoStart(this.plan, start)
         firstIndex = origin.index
-        firstMoment = origin.cursorMomentId ?? this.plan.targets[firstIndex].scoreMomentId
+        firstMoment = origin.cursorMomentId ?? this.plan.sequence.occurrences[firstIndex].sourceMoment.id
         notes = buildDemoPlan(this.plan, start)
       }
       else if (this.score && start.kind === 'beginning') notes = buildDemoNotes(this.score)
@@ -146,7 +147,7 @@ export class DemoPlayer {
           return
         }
       }
-      this.publishPosition(() => this.publish({ currentNoteIndex: note.index, cursorMomentId: note.cursorMomentId ?? this.plan?.targets[note.index]?.scoreMomentId ?? null }))
+      this.publishPosition(() => this.publish({ currentNoteIndex: note.index, cursorMomentId: note.cursorMomentId ?? this.plan?.sequence.occurrences[note.index]?.sourceMoment.id ?? null }))
       if (next < notes.length) {
         this.timer = setTimeout(() => play(next), Math.max(0, startedAt + notes[next].startMs - performance.now()))
       } else {

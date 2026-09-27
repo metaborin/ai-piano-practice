@@ -3,7 +3,7 @@ import type { ScoreModel } from '../score/ScoreModel'
 import { child, descendants, readMusicXmlDocument, value } from '../score/musicXmlDocument'
 import { parseMusicXml } from '../score/parseMusicXml'
 
-export const COMPATIBILITY_VERSION = 3
+export const COMPATIBILITY_VERSION = 4
 export function compatibilityFromModel(model: ScoreModel): Compatibility {
   return { version: COMPATIBILITY_VERSION, status: ['simpleMelody', 'pitchPractice'].includes(model.practiceCompatibility) && model.notes.length ? 'supported' : 'unsupported',
     parseCompatibility: 'supported', practiceCompatibility: model.practiceCompatibility, reasons: model.practiceReasons }

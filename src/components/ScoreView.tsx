@@ -28,7 +28,7 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
   const cursorVisibleRef = useRef(cursorMomentId !== null)
   const noteMapRef = useRef<ScoreNoteRenderMap | null>(null)
   const missingRef = useRef(missingNoteIds)
-  const followRef = useRef<{ mode?: string; moment?: string | null; request: number; y?: number; active: boolean }>({ mode: 'idle', request: 0, active: false })
+  const followRef = useRef<{ mode?: string; moment?: string | null; occurrenceIndex?: number; request: number; y?: number; active: boolean }>({ mode: 'idle', request: 0, active: false })
 
   useEffect(() => {
     const container = containerRef.current
@@ -95,6 +95,8 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
           cursorsOptions: [{ type: 0, color: '#299b70', alpha: 0.32, follow: false }],
         })
         display.EngravingRules.StretchLastSystemLine = true
+        // The app owns occurrence navigation; OSMD's cursor maps written positions once.
+        display.EngravingRules.CursorIgnoreRepetitions = true
         loading = true
         try { await display.load(score.musicXml) }
         finally { loading = false }
@@ -158,11 +160,11 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
         const previous = followRef.current, view = viewRef.current, element = display.cursor.cursorElement
         const y = element.getBoundingClientRect().top - view.getBoundingClientRect().top + view.scrollTop
         const explicit = previous.request !== focusRequest || previous.mode !== followMode
-        const moved = previous.moment !== cursorMomentId
+        const moved = previous.moment !== cursorMomentId || previous.occurrenceIndex !== cursorIndex
         const changedSystem = previous.y === undefined || Math.abs(previous.y - y) > 1
         const shouldFollow = explicit || (moved && (followMode !== 'idle' || previous.moment != null))
         if (shouldFollow) followScoreCursor(view, element, explicit, explicit || followMode !== 'demo' || changedSystem)
-        followRef.current = { mode: followMode, moment: cursorMomentId, request: focusRequest, y, active: previous.active || shouldFollow }
+        followRef.current = { mode: followMode, moment: cursorMomentId, occurrenceIndex: cursorIndex, request: focusRequest, y, active: previous.active || shouldFollow }
       }
     } catch {
       displayRef.current = null

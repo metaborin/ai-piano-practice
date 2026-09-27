@@ -15,6 +15,7 @@ function largeModel(count: number) {
   const base = parseXml(scoreXml(noteXml()))
   const notes = Array.from({ length: count }, (_, index) => ({ ...base.notes[0], id: `note:${index}`, onsetBeats: index, onset: { numerator: String(index), denominator: '1' } }))
   return { ...base, notes, moments: notes.map((note) => ({ ...base.moments[0], id: `moment:${note.id}`, onset: note.onset, onsetBeats: note.onsetBeats, notes: [note] })),
+    measures: [{ ...base.measures[0], durationBeats: count, duration: { numerator: String(count), denominator: '1' } }],
     totalBeats: count, totalDuration: { numerator: String(count), denominator: '1' } }
 }
 it.each([

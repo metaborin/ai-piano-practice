@@ -1,3 +1,4 @@
+import type { ScoreNavigation } from './ScoreNavigation'
 /** Score content is independent of MIDI devices and UI state. */
 export type ScoreSource = { id: string; title: string; partLabel: string; musicXml: string }
 /** Transitional contract consumed only by the existing monophonic practice/player. */
@@ -53,6 +54,7 @@ export type ScoreModel = ScoreSource & {
   readonly rests: readonly ScoreRest[]
   readonly moments: readonly ScoreMoment[]
   readonly measures: readonly ScoreMeasure[]
+  readonly navigation: ScoreNavigation
   readonly totalDuration: BeatFraction
   readonly totalBeats: number
   readonly staffCount: number

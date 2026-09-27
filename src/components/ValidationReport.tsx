@@ -18,6 +18,9 @@ export function ValidationReport({ model, tempoBpm, compatibility, error }: Prop
       {tempo && <p>手本の開始テンポ：{tempo.bpm} BPM（{tempo.source === 'default' ? '既定値' : tempo.source}） ／ 1拍：{(60_000 / tempo.bpm).toFixed(2)}ms</p>}
       {report.tempo && report.tempo.length > 1 && <p>途中のテンポ指定：{report.tempo.slice(1).map((point) => `${point.beat}拍から${point.bpm} BPM`).join('、')}</p>}
       {report.steps && <p>練習Step：{model.staffCount === 2 ? `右手 ${report.steps.right} ／ 左手 ${report.steps.left} ／ 両手 ${report.steps.both}` : report.steps.both}</p>}
+      <p>Repeat：{report.navigation?.repeats.length ? 'あり' : 'なし'}</p>
+      {report.navigation?.repeats.map(region => <p key={region.id}>Repeat range：{model.measures[region.startMeasureIndex].number}〜{model.measures[region.endMeasureIndex].number} ／ Repeat total passes：{region.totalPasses}</p>)}
+      {!!report.navigation?.repeats.length && report.expandedMeasures && <p>Expanded measures（{report.expandedMeasures.length}小節）：{report.expandedMeasures.join(' → ')}</p>}
       {model.warnings.map((warning) => <p key={warning.code}>⚠ {warning.message}</p>)}
     </>}
     {report.reasons.map((reason) => <p key={reason}>⚠ {reason}</p>)}

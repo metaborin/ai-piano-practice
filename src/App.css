@@ -53,6 +53,7 @@
 .position { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .score-position { display: grid; gap: 3px; text-align: right; min-width: 0; }
 .current-measure { font-size: 0.85em; overflow-wrap: anywhere; }
+.repeat-position { color: #536b60; font-size: 0.8em; white-space: nowrap; }
 .validation-report { overflow-wrap: anywhere; }
 .validation-note { color: #536b60; font-size: 0.9em; }
 .score-view { padding: 0 16px 12px; overflow: auto; min-height: 0; scrollbar-gutter: stable; overflow-anchor: none; }
