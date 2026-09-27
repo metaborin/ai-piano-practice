@@ -43,15 +43,21 @@ test('next system follows smoothly, in-view steps stay still, manual scrolling s
   await setup(page)
   await page.getByRole('button', { name: '練習開始', exact: true }).click(); await visible(page)
   const before = await position(page)
-  await advance(page, 0, 1); await visible(page)
+  await advance(page, 0, 1)
+  await expect(page.locator('.position')).toHaveText('2 / 128 ステップ')
+  await visible(page)
   expect((await position(page)).scroll).toBe(before.scroll)
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await page.evaluate(() => {
     const view = document.querySelector('.score-view') as HTMLElement, scrollTo = view.scrollTo.bind(view)
     view.scrollTo = ((options: ScrollToOptions) => { view.dataset.lastBehavior = options.behavior; scrollTo(options) }) as typeof view.scrollTo
   })
-  await advance(page, 1, 7); await visible(page)
-  expect((await position(page)).scroll).toBeGreaterThan(before.scroll)
+  // Wait for React's MIDI update and the asynchronous smooth move separately.
+  // Several systems ensure an off-screen target even with different CI fonts.
+  await advance(page, 1, 15)
+  await expect(page.locator('.position')).toHaveText('17 / 128 ステップ')
+  await expect.poll(async () => (await position(page)).scroll).toBeGreaterThan(before.scroll)
+  await visible(page)
   await expect(page.locator('.score-view')).toHaveAttribute('data-last-behavior', 'smooth')
   await page.evaluate(() => document.querySelector('.score-view')!.scrollTo({ top: 3500, behavior: 'instant' }))
   const manual = await position(page); expect(manual.visible).toBe(false)
@@ -60,8 +66,9 @@ test('next system follows smoothly, in-view steps stay still, manual scrolling s
   await page.getByRole('button', { name: '現在位置へ戻る', exact: true }).click(); await visible(page)
   expect((await position(page)).scroll).toBeLessThan(manual.scroll)
   await page.evaluate(() => document.querySelector('.score-view')!.scrollTo({ top: 3500, behavior: 'instant' }))
-  await advance(page, 8, 1); await visible(page)
-  await expect(page.locator('.position')).toHaveText('10 / 128 ステップ')
+  await advance(page, 16, 1)
+  await expect(page.locator('.position')).toHaveText('18 / 128 ステップ')
+  await visible(page)
 })
 
 test('late practice cursor and red noteheads, three-digit progress, resize and restart remain usable', async ({ page }) => {
