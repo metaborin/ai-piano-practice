@@ -36,8 +36,9 @@
 .connected .status-dot { background: #258759; }
 .waiting .status-dot { background: #b27816; }
 .error .status-dot { background: #bf4434; }
-.score-card { border: 1px solid #d9e1dc; border-radius: 14px; background: white; }
-.score-status { position: sticky; top: 0; z-index: 5; background: #fff; border-radius: 14px 14px 0 0; border-bottom: 1px solid #edf2ee; }
+.score-card { border: 1px solid #d9e1dc; border-radius: 14px; background: white; display: flex; flex-direction: column; max-height: calc(100dvh - 24px); }
+.score-status { position: sticky; top: 0; z-index: 5; background: #fff; border-radius: 14px 14px 0 0; border-bottom: 1px solid #edf2ee; flex-shrink: 0; }
+.return-to-cursor { min-height: 48px; padding: 8px 16px; font-size: 15px; }
 .score-feedback { padding: 2px 16px 10px; text-align: center; }
 .score-feedback .practice-feedback { height: 30px; min-height: 0; line-height: 30px; margin: 0; font-size: clamp(14px, 2vw, 20px); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .score-feedback .feedback-notes { height: 20px; line-height: 20px; font-size: 14px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #a52424; }
@@ -51,7 +52,8 @@
 .current-measure { font-size: 0.85em; overflow-wrap: anywhere; }
 .validation-report { overflow-wrap: anywhere; }
 .validation-note { color: #536b60; font-size: 0.9em; }
-.score-view { padding: 0 16px 12px; overflow-x: auto; }
+.score-view { padding: 0 16px 12px; overflow: auto; min-height: 0; scrollbar-gutter: stable; overflow-anchor: none; }
+.score-view:focus-visible { outline: 3px solid #2269c0; outline-offset: -3px; }
 .score-renderer { min-height: 260px; position: relative; isolation: isolate; }
 .practice-controls { padding: 20px 0 22px; text-align: center; }
 .demo-controls { margin-top: 22px; text-align: center; }
@@ -110,6 +112,8 @@ footer { margin-top: 24px; color: #647168; text-align: center; font-size: 14px; 
   .app-header { align-items: flex-start; gap: 10px; }
   .midi-status { padding: 8px 12px; font-size: 14px; }
   .score-heading { padding: 16px 14px 4px; font-size: 14px; }
+  .score-heading { flex-wrap: wrap; }
+  .return-to-cursor { order: 3; width: 100%; }
   .score-view { padding: 0 4px 8px; }
   .midi-connection { flex-direction: column; align-items: stretch; gap: 16px; padding: 18px; }
   .cursor-buttons button { min-width: 0; flex: 1; }

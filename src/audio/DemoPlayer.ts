@@ -114,7 +114,7 @@ export class DemoPlayer {
       if (generation === this.generation) this.interrupted()
     })
     const startedAt = performance.now()
-    const endMs = Math.max(...notes.map((note) => note.noteOffMs))
+    const endMs = notes.reduce((end, note) => Math.max(end, note.noteOffMs), 0)
     const play = (index: number) => {
       if (generation !== this.generation || this.snapshot.status !== 'playing') return
       const note = notes[index]

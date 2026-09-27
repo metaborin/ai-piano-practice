@@ -30,7 +30,7 @@ export class ScoreNoteRenderMap {
     try {
       let steps = 0
       while (!cursor.Iterator.EndReached) {
-        if (++steps > 5000) throw new Error('Note map traversal limit')
+        if (++steps > model.notes.length + model.rests.length + model.measures.length + 1) throw new Error('Note map traversal did not finish')
         const measure = model.measures[cursor.Iterator.CurrentMeasureIndex]
         if (measure) for (const note of cursor.NotesUnderCursor()) {
           if (note.isRest() || !note.Pitch) continue

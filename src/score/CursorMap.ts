@@ -9,7 +9,7 @@ export function buildCursorMap(model: ScoreModel, cursor: Cursor, octaveXmlDiffe
   try {
     let index = 0
     while (!cursor.Iterator.EndReached) {
-      if (index > 5000) throw new Error('Cursor traversal limit')
+      if (index > model.notes.length + model.rests.length + model.measures.length) throw new Error('Cursor traversal did not finish')
       const measure = model.measures[cursor.Iterator.CurrentMeasureIndex]
       const relative = cursor.Iterator.CurrentRelativeInMeasureTimestamp
       if (measure && relative) {

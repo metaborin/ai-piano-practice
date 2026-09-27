@@ -5,7 +5,7 @@ import { mockMidi } from './midiFixture'
 async function setup(page: Page) {
   await mockMidi(page)
   await page.goto('./')
-  await expect(page.locator('.eyebrow')).toHaveText('ピアノ練習 · Phase 2E-D1.1')
+  await expect(page.locator('.eyebrow')).toHaveText('ピアノ練習 · Phase 2E-D2')
   await expect(page.getByRole('button', { name: 'テスト音 C4' })).toBeDisabled()
   await page.getByRole('button', { name: 'MIDI接続', exact: true }).click()
   await expect(page.locator('.output-status')).toHaveText('MIDI入力：接続済み ／ MIDI出力：接続済み')

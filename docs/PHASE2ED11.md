@@ -4,6 +4,8 @@
 
 公開先：[AIピアノ練習アプリ](https://metaborin.github.io/ai-piano-practice/)
 
+**後日更新（2026-09-27）：ユーザーからD1.1のChromebook + PX-100 + U2MIDI Proでの実機確認完了を受領しました。以下は実装時点の記録です。長曲対応と新しい実機確認は [D2報告](PHASE2ED2.md) を参照してください。**
+
 ## 作成・変更ファイル
 
 | ファイル | 内容 |

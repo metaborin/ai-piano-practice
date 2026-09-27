@@ -1,5 +1,6 @@
 import { useDemoPlayer } from './audio/useDemoPlayer'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+import type { Song } from './songs/Song'
 import { PracticeFeedback } from './components/PracticeFeedback'
 import { missingSourceNoteIds } from './score/ScoreNoteRenderMap'
 import type { DemoChoice } from './components/DemoControls'
@@ -25,11 +26,14 @@ export default function App() {
   const { session, practice, start, restart, moveCursor } = usePracticeSession(events)
   const { demo, player } = useDemoPlayer(outputManager, session)
   const { selection, songState } = useSongSelection(session, player, outputManager)
+  const [focusRequest, setFocusRequest] = useState(0)
+  const returnToCursor = () => setFocusRequest((value) => value + 1)
+  const selectSong = (song: Song) => { returnToCursor(); return selection.select(song) }
   const { library, retry, addSong, deleteSong } = useSongLibrary(songRepository, selection.select, DEFAULT_SONG_ID)
   const removeSong = async (id: string) => {
     if (songState.song?.id === id) {
       const fallback = library.songs.find((song) => song.id === DEFAULT_SONG_ID)
-      if (fallback) void selection.select(fallback)
+      if (fallback) void selectSong(fallback)
     }
     await deleteSong(id)
   }
@@ -42,8 +46,8 @@ export default function App() {
   const cursorMomentId = songState.plan?.targets[cursorIndex]?.scoreMomentId ?? null
   const currentMeasure = songState.plan?.targets[cursorIndex]?.measureNumber
   const positionUnit = songState.model?.practiceCompatibility === 'simpleMelody' ? '音' : 'ステップ'
-  const startPractice = () => { if (!practiceBlocked) { player.resetDisplay(); start() } }
-  const restartPractice = () => { if (!practiceBlocked) { player.resetDisplay(); restart() } }
+  const startPractice = () => { if (!practiceBlocked) { returnToCursor(); player.resetDisplay(); start() } }
+  const restartPractice = () => { if (!practiceBlocked) { returnToCursor(); player.resetDisplay(); restart() } }
   const missingNoteIds = useMemo(() => missingSourceNoteIds(songState.plan, practice.matchFeedback), [songState.plan, practice.matchFeedback])
   const playDemo = (choice: DemoChoice) => {
     if (!scoreReady) return
@@ -57,20 +61,21 @@ export default function App() {
     <main className="app">
       <header className="app-header">
         <div>
-          <p className="eyebrow">ピアノ練習 · Phase 2E-D1.1</p>
+          <p className="eyebrow">ピアノ練習 · Phase 2E-D2</p>
           <h1>{title}</h1>
           <p className="subtitle">{songState.song?.partLabel ?? '曲を選んで練習しましょう'}</p>
         </div>
         <MidiStatus status={midi.status} />
       </header>
-      <SongLibrary library={library} selectedId={songState.song?.id ?? ''} onSelect={selection.select} onRetry={retry} onAdd={addSong} onDelete={removeSong} />
+      <SongLibrary library={library} selectedId={songState.song?.id ?? ''} onSelect={selectSong} onRetry={retry} onAdd={addSong} onDelete={removeSong} />
       {songState.model?.staffCount === 2 && <section className="practice-mode" aria-label="練習するパート">
         <h2>練習するパート</h2>
-        <div className="mode-buttons">{(['right', 'left', 'both'] as PracticeMode[]).map((mode) => <button key={mode} aria-pressed={songState.mode === mode} onClick={() => selection.setMode(mode)}>{MODE_LABELS[mode]}</button>)}</div>
+        <div className="mode-buttons">{(['right', 'left', 'both'] as PracticeMode[]).map((mode) => <button key={mode} aria-pressed={songState.mode === mode} onClick={() => { returnToCursor(); selection.setMode(mode) }}>{MODE_LABELS[mode]}</button>)}</div>
       </section>}
       <section className="score-card" aria-label={songState.song ? title + 'の楽譜' : '楽譜'} aria-busy={!scoreReady && songState.status === 'loading'}>
         <div className="score-status"><div className="score-heading">
           {songState.model && !songState.canPractice ? <span>楽譜表示</span> : <span className="cursor-legend"><span aria-hidden="true" />緑の帯が現在位置</span>}
+          <button className="return-to-cursor" disabled={!scoreReady} onClick={returnToCursor}>現在位置へ戻る</button>
           <div className="score-position" aria-live="polite">
             {scoreReady && currentMeasure !== undefined && <span className="current-measure">{currentMeasure}小節目</span>}
             <span className="position">{scoreReady && noteCount > 0 ? `${cursorIndex + 1} / ${noteCount} ${positionUnit}` : '— / — 音'}</span>
@@ -83,7 +88,7 @@ export default function App() {
         {songState.status === 'ready' && !songState.canPractice && <p className="score-message" role="status">{songState.plan
           ? '選択したパートには、新しく押す音がありません。別のパートを選んでください。'
           : 'この曲は表示できますが、現在の練習・手本演奏には未対応です。'}<br />{songState.model?.practiceReasons.join('、')}</p>}
-        {songState.source && <ScoreView key={songState.requestId} requestId={songState.requestId} score={songState.source} cursorIndex={cursorIndex} cursorMomentId={cursorMomentId} missingNoteIds={missingNoteIds} onReady={selection.ready} onError={selection.fail} />}
+        {songState.source && <ScoreView key={songState.requestId} requestId={songState.requestId} score={songState.source} cursorIndex={cursorIndex} cursorMomentId={cursorMomentId} missingNoteIds={missingNoteIds} followMode={showDemoCursor ? 'demo' : practice.status === 'idle' ? 'idle' : 'practice'} focusRequest={focusRequest} onReady={selection.ready} onError={selection.fail} />}
       </section>
       <DemoControls key={`${songState.requestId}:${songState.mode}`} demo={demo} plan={songState.plan} outputReady={scoreReady && output.status === 'connected'} outputBusy={output.playing} onPlay={playDemo} onStop={player.stop} />
       <PracticeControls practice={practice} midiConnected={midi.status === 'connected'} blocked={practiceBlocked} onStart={startPractice} onRestart={restartPractice} />
@@ -107,7 +112,7 @@ export default function App() {
       <DeveloperControls practice={practice} model={songState.model} plan={songState.plan} song={songState.song} error={songState.error} cursorIndex={cursorIndex} blocked={!scoreReady || showDemoCursor} onPrevious={() => moveCursor(-1)} onNext={() => moveCursor(1)} />
       <MidiDebugPanel latest={midi.latestEvent} lastNoteOn={midi.lastNoteOn} lastNoteOff={midi.lastNoteOff} />
       <MidiOutputPanel output={output} inputStatus={midi.status} onSelect={selectOutput} onPlay={playTestNote} onStop={stopAllNotes} onRetry={retryOutput} />
-      <footer>Phase 2E-D1.1 · 曲を選んで、順番に弾いてみよう</footer>
+      <footer>Phase 2E-D2 · 曲を選んで、順番に弾いてみよう</footer>
     </main>
   )
 }

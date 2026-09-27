@@ -6,17 +6,21 @@ import { parseMusicXml } from '../score/parseMusicXml'
 import { toPracticeScore } from '../score/toPracticeScore'
 import { buildCursorMap } from '../score/CursorMap'
 import { ScoreNoteRenderMap } from '../score/ScoreNoteRenderMap'
+import { followScoreCursor } from '../score/ScoreFollow'
 type Props = {
   requestId: number
   score: ScoreSource
   cursorIndex: number
   cursorMomentId?: string | null
   missingNoteIds?: readonly string[]
+  followMode?: 'idle' | 'practice' | 'demo'
+  focusRequest?: number
   onReady: (requestId: number, model: ScoreModel) => void
   onError: (requestId: number, message: string) => void
 }
 
-export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missingNoteIds, onReady, onError }: Props) {
+export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missingNoteIds, followMode, focusRequest = 0, onReady, onError }: Props) {
+  const viewRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const displayRef = useRef<OpenSheetMusicDisplay | null>(null)
   const currentIndexRef = useRef(0)
@@ -24,6 +28,7 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
   const cursorVisibleRef = useRef(cursorMomentId !== null)
   const noteMapRef = useRef<ScoreNoteRenderMap | null>(null)
   const missingRef = useRef(missingNoteIds)
+  const followRef = useRef<{ mode?: string; moment?: string | null; request: number; y?: number; active: boolean }>({ mode: 'idle', request: 0, active: false })
 
   useEffect(() => {
     const container = containerRef.current
@@ -71,6 +76,7 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
       else display.cursor.hide()
       display.cursor.cursorElement.alt = ''
       display.cursor.cursorElement.setAttribute('aria-hidden', 'true')
+      if (followRef.current.active && viewRef.current && practiceCursor && cursorVisibleRef.current) followScoreCursor(viewRef.current, display.cursor.cursorElement, true)
     }
     const load = async () => {
       try {
@@ -148,11 +154,21 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
       while (currentIndexRef.current < targetIndex) { display.cursor.next(); currentIndexRef.current++ }
       while (currentIndexRef.current > targetIndex) { display.cursor.previous(); currentIndexRef.current-- }
       display.cursor.show()
+      if (followMode && viewRef.current) {
+        const previous = followRef.current, view = viewRef.current, element = display.cursor.cursorElement
+        const y = element.getBoundingClientRect().top - view.getBoundingClientRect().top + view.scrollTop
+        const explicit = previous.request !== focusRequest || previous.mode !== followMode
+        const moved = previous.moment !== cursorMomentId
+        const changedSystem = previous.y === undefined || Math.abs(previous.y - y) > 1
+        const shouldFollow = explicit || (moved && (followMode !== 'idle' || previous.moment != null))
+        if (shouldFollow) followScoreCursor(view, element, explicit, explicit || followMode !== 'demo' || changedSystem)
+        followRef.current = { mode: followMode, moment: cursorMomentId, request: focusRequest, y, active: previous.active || shouldFollow }
+      }
     } catch {
       displayRef.current = null
       onError(requestId, '楽譜の現在位置を表示できませんでした。別の曲を選んでください。')
     }
-  }, [cursorIndex, cursorMomentId, requestId, onError])
+  }, [cursorIndex, cursorMomentId, requestId, onError, followMode, focusRequest])
 
   useLayoutEffect(() => {
     missingRef.current = missingNoteIds
@@ -160,7 +176,7 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
   }, [missingNoteIds])
 
   return (
-    <div className="score-view">
+    <div ref={viewRef} className="score-view" role="region" tabIndex={0} aria-label="楽譜のスクロール領域">
       <div ref={containerRef} className="score-renderer" role="img" aria-label={score.title + 'の楽譜'} />
     </div>
   )

@@ -12,9 +12,10 @@ export function buildDemoPlan(plan: PracticePlan, start: DemoStart = { kind: 'be
   const tempo = resolveTempo(plan.score, plan.songTempoBpm)
   const timeAt = (beat: number) => millisecondsAtBeat(tempo, beat)
   const origin = resolveDemoStart(plan, start), offset = timeAt(origin.onsetBeats)
+  const targetByOnset = new Map(plan.targets.map((target, index) => [Beat.from(target.onset).key, index]))
   const notes = soundSpans(plan.sourceNotes).map((span) => {
-    const index = plan.targets.findIndex((target) => Beat.from(target.onset).compare(span.onset) === 0)
-    if (index < 0) throw new Error('No practice target for demo attack')
+    const index = targetByOnset.get(span.onset.key)
+    if (index === undefined) throw new Error('No practice target for demo attack')
     const startMs = timeAt(span.onset.beats)
     return { index, midiNote: span.midiNote, startMs,
       durationMs: timeAt(span.end.beats) - startMs,
