@@ -36,6 +36,7 @@ export class PracticeSession {
   constructor(notes: readonly ScoreNote[] = []) { this.setNotes(notes) }
 
   getSnapshot = (): PracticeSnapshot => this.snapshot
+  isBeforeNavigationJump = () => this.snapshot.status === 'practicing' && this.repeatJumps.has(this.snapshot.currentNoteIndex + 1)
   subscribe = (listener: () => void) => {
     this.listeners.add(listener)
     return () => { this.listeners.delete(listener) }

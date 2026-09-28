@@ -2,6 +2,8 @@
 
 実装日：2026-09-28。D3.1はユーザーからChromebook + PX-100 + U2MIDI Proでの実機確認完了を受領済みです。D3.2は実装・自動検証と、今回の反復機能の実機受入を分けます。Phase 3へは進みません。
 
+追記：D3.3の依頼時に、original版の反復がChromebook実機で意図どおり動作したとの確認を受領しました。段替わり・反復時の先読みスクロール改善は [D3.3](PHASE2ED33.md) で扱います。
+
 公開先：[AIピアノ練習アプリ](https://metaborin.github.io/ai-piano-practice/)
 
 ## 対象と結果

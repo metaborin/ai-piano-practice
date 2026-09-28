@@ -72,7 +72,8 @@ for(const [mode,label] of [['right','右手'],['left','左手'],['both','両手'
     await page.evaluate(()=>window.midiTest.loopback=true)
     await button(page,'手本を聴く').click()
     const notes=buildDemoPlan(plan),last=notes.find(n=>n.index===second-1)!,jump=notes.find(n=>n.index===second)!
-    await page.clock.runFor(Math.ceil(last.startMs)+1);await expect(page.locator('.current-measure')).toHaveText('30小節目');await visible(page)
+    // Inspect before the look-ahead event (which can start 1 ms after this attack).
+    await page.clock.runFor(Math.ceil(last.startMs));await expect(page.locator('.current-measure')).toHaveText('30小節目');await visible(page)
     const bottom=await page.locator('.score-view').evaluate(el=>el.scrollTop)
     await page.clock.runFor(Math.ceil(jump.startMs)-Math.ceil(last.startMs)+1)
     await expect(page.locator('.current-measure')).toHaveText('5小節目');await expect(page.locator('.repeat-position')).toHaveText('反復 2回目');await visible(page)

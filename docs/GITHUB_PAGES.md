@@ -4,7 +4,7 @@
 
 公開URL: **https://metaborin.github.io/ai-piano-practice/**
 
-Phase 2E-D3.2の単純反復と、任意小節からの安全な練習開始・再開始・長曲追従・不足音表示・途中手本演奏・テンポ・検証レポート・和音・両手練習・曲保存・MIDI入出力をChromeOSのChromeからHTTPSで利用するための公開設定です。Chromebookでの利用にNode.jsやLinux開発環境は必要ありません。追加曲は端末のブラウザにだけ保存します。
+Phase 2E-D3.3の先読みスクロール、単純反復と、任意小節からの安全な練習開始・再開始・長曲追従・不足音表示・途中手本演奏・テンポ・検証レポート・和音・両手練習・曲保存・MIDI入出力をChromeOSのChromeからHTTPSで利用するための公開設定です。Chromebookでの利用にNode.jsやLinux開発環境は必要ありません。追加曲は端末のブラウザにだけ保存します。
 
 ## 変更内容
 
@@ -74,7 +74,7 @@ npx playwright install chromium
 npm run test:pages
 ```
 
-このコマンドはbuild後、4174番ポートで `dist/` を起動し、曲追加・実IndexedDB・MXL・曲選択・既存機能・長曲追従・単純反復・手本演奏・サブパスのテストを実行します。3つの内蔵XMLがassets配下から取得されることも確認します。MIDI入出力を模擬し、実際の演奏機器は操作しません。最新の件数・結果と今回の実機確認項目は [Phase 2E-D3.2報告](PHASE2ED32.md) を参照してください。
+このコマンドはbuild後、4174番ポートで `dist/` を起動し、曲追加・実IndexedDB・MXL・曲選択・既存機能・長曲追従・先読み・単純反復・手本演奏・サブパスのテストを実行します。3つの内蔵XMLがassets配下から取得されることも確認します。MIDI入出力を模擬し、実際の演奏機器は操作しません。最新の件数・結果と今回の実機確認項目は [Phase 2E-D3.3報告](PHASE2ED33.md) を参照してください。
 
 公開済みサイトを PowerShell から同じテストで確認する場合:
 
