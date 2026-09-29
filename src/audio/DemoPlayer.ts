@@ -8,6 +8,8 @@ import { buildDemoPreviews } from './DemoLookAhead'
 import type { DemoPreview } from './DemoLookAhead'
 import type { ScoreSystems } from '../score/ScoreLookAhead'
 import { DemoPreviewScheduler } from './DemoPreviewScheduler'
+import type { DemoMidiTrace } from '../midi/DemoMidiTrace'
+import { navigationJump } from '../score/ScoreLookAhead'
 
 export { DEFAULT_TEMPO_BPM, DEMO_GATE_RATIO } from './tempo'
 const MAX_ATTACK_LATENESS_MS = 150
@@ -36,8 +38,10 @@ export function buildDemoNotes(score: ScoreModel, tempoBpm = DEFAULT_TEMPO_BPM):
   })
 }
 export type DemoOutput = {
+  trace?: DemoMidiTrace
   beginDemo: () => boolean
   playDemoNote: (midiNote: number, onTime: number, offTime: number) => boolean
+  playDemoNotes?: (notes: readonly { midiNote: number; offTime: number }[], onTime: number) => boolean
   finishDemo: () => void
   stopAllNotes: () => void
   subscribeDemoInterrupted: (listener: () => void) => () => void
@@ -97,13 +101,19 @@ export class DemoPlayer {
   }
   /** Rendering is best-effort. An adapter failure must not tear down the MIDI clock. */
   private position(patch: Partial<DemoSnapshot>, before?: () => void) {
+    const generation = this.generation
     let applied = false
-    const update = () => { if (applied) return; applied = true; before?.(); this.publish(patch) }
+    const update = () => { if (applied || generation !== this.generation) return; applied = true; before?.(); this.publish(patch) }
     try { this.publishPosition(update) }
     catch {
       this.visualErrors++
       if (!applied) update()
     }
+  }
+  private tracePosition(index: number) {
+    const occurrence = this.plan?.sequence.occurrences[index]
+    this.output.trace?.setContext({ session: this.playbackSession, generation: this.generation, sequenceIndex: index,
+      measure: occurrence?.sourceMoment.measureNumber ?? null, repeatPass: occurrence?.repeatPass ?? null })
   }
   loadScore = (score: ScoreModel | null) => {
     ++this.playbackSession
@@ -148,6 +158,8 @@ export class DemoPlayer {
     const generation = this.generation
     const playbackSession = ++this.playbackSession
     this.startSequenceIndex = firstIndex; this.skippedNotes = 0; this.visualErrors = 0
+    this.tracePosition(firstIndex)
+    this.output.trace?.record('START')
     if (!this.output.beginDemo()) {
       this.publish({ status: 'error', message: 'MIDI出力の接続と、テスト音が終了していることを確認してください。' })
       return
@@ -176,6 +188,7 @@ export class DemoPlayer {
       if (remaining > 0) { this.timer = setTimeout(finish, remaining); return }
       this.cancelTimers()
       this.output.finishDemo()
+      this.output.trace?.record('COMPLETE')
       this.publish({ status: 'completed', message: '手本の再生が終わりました', preview: null })
     }
     const play = (index: number) => {
@@ -184,8 +197,17 @@ export class DemoPlayer {
       // Do not burst overdue attacks, shift musical time, or stop because drawing
       // blocked the UI thread. Resume the original clock at a still-valid attack.
       const caughtUpAt = performance.now()
-      while (index < notes.length && (caughtUpAt - (startedAt + notes[index].startMs) > MAX_ATTACK_LATENESS_MS || caughtUpAt >= startedAt + notes[index].noteOffMs)) {
-        this.skippedNotes++; index++
+      while (index < notes.length) {
+        let end = index + 1
+        while (end < notes.length && notes[end].startMs === notes[index].startMs) end++
+        const onset = notes.slice(index, end)
+        if (caughtUpAt - (startedAt + notes[index].startMs) <= MAX_ATTACK_LATENESS_MS && onset.every(voice => caughtUpAt < startedAt + voice.noteOffMs)) break
+        for (const voice of onset) {
+          this.tracePosition(voice.index)
+          this.output.trace?.record('SKIP', { timestamp: startedAt + voice.startMs, pitch: voice.midiNote, reason: 'whole onset expired before audio callback' })
+          this.skippedNotes++
+        }
+        index = end
       }
       if (index >= notes.length) { finish(); return }
       const note = notes[index]
@@ -193,30 +215,32 @@ export class DemoPlayer {
       const now = performance.now()
       // A timer may fire slightly early. Never put a future Note On in an uncancellable queue.
       if (now < due) { this.timer = setTimeout(() => play(index), due - now); return }
-      // One callback and one timestamp for every Note On at this onset.
-      // Commit the actual cursor and any jump fallback before MIDI, without waiting
-      // for animation or changing due. Preview notifications never move the cursor.
+      // Complete the entire MIDI onset BEFORE committing React/OSMD work.
+      // Initial positioning happened before startedAt; upcoming viewports still
+      // use independent previews. A display stall cannot selectively lose a voice.
       const cursorMomentId = note.cursorMomentId ?? this.plan?.sequence.occurrences[note.index]?.sourceMoment.id ?? null
       const preview = this.snapshot.preview && this.snapshot.preview.occurrenceIndex > note.index ? this.snapshot.preview : null
-      if (this.snapshot.currentNoteIndex !== note.index || this.snapshot.cursorMomentId !== cursorMomentId || this.snapshot.preview !== preview) {
-        this.position({ currentNoteIndex: note.index, cursorMomentId, preview })
-      }
+      this.tracePosition(note.index)
+      if (this.plan && navigationJump(this.plan, this.snapshot.currentNoteIndex, note.index)) this.output.trace?.record('REPEAT_JUMP', { timestamp: due })
       let next = index
-      while (next < notes.length && notes[next].startMs === note.startMs) {
-        if (generation !== this.generation) return
-        const voice = notes[next++]
-        if (performance.now() - due > MAX_ATTACK_LATENESS_MS || performance.now() >= startedAt + voice.noteOffMs) { this.skippedNotes++; continue }
-        if (!this.output.playDemoNote(voice.midiNote, due, startedAt + voice.noteOffMs)) {
-          if (playbackSession !== this.playbackSession) return
-          this.stop()
-          this.publish({ status: 'error', message: '手本を送信できませんでした。MIDI出力の接続を確認してください。' })
-          return
-        }
+      while (next < notes.length && notes[next].startMs === note.startMs) next++
+      const voices = notes.slice(index, next).map(voice => ({ midiNote: voice.midiNote, offTime: startedAt + voice.noteOffMs }))
+      const sent = this.output.playDemoNotes ? this.output.playDemoNotes(voices, due)
+        : voices.every(voice => generation === this.generation && this.output.playDemoNote(voice.midiNote, due, voice.offTime))
+      if (!sent) {
+        if (playbackSession !== this.playbackSession) return
+        this.stop()
+        this.publish({ status: 'error', message: '手本を送信できませんでした。MIDI出力の接続を確認してください。' })
+        return
       }
+      if (generation !== this.generation) return
       if (next < notes.length) {
         this.timer = setTimeout(() => play(next), Math.max(0, startedAt + notes[next].startMs - performance.now()))
       } else {
         this.timer = setTimeout(finish, Math.max(0, startedAt + endMs - performance.now()))
+      }
+      if (this.snapshot.currentNoteIndex !== note.index || this.snapshot.cursorMomentId !== cursorMomentId || this.snapshot.preview !== preview) {
+        this.position({ currentNoteIndex: note.index, cursorMomentId, preview })
       }
     }
     if (notes[0].startMs > 0) this.timer = setTimeout(() => play(0), notes[0].startMs)
@@ -225,6 +249,8 @@ export class DemoPlayer {
   }
   private cancelTimers() {
     ++this.generation
+    this.tracePosition(this.snapshot.currentNoteIndex)
+    this.output.trace?.record('GENERATION_CHANGE')
     clearTimeout(this.timer)
     this.previews.cancel()
     this.refreshPreviews = undefined
@@ -233,11 +259,13 @@ export class DemoPlayer {
     this.unsubscribeOutput = undefined
   }
   private interrupted() {
+    this.output.trace?.record('INTERRUPTED')
     this.cancelTimers()
     this.publish({ status: 'stopped', message: '手本を停止しました', preview: null })
   }
   stop = () => {
     if (this.snapshot.status !== 'playing') return
+    this.output.trace?.record('STOP')
     this.cancelTimers()
     this.output.stopAllNotes()
     this.publish({ status: 'stopped', message: '手本を停止しました', preview: null })

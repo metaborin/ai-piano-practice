@@ -1,0 +1,1021 @@
+{
+  "baseline": "b6740e99d0079280abadf19b4c3ef0b12d53d24b",
+  "method": "Real OSMD cursor image.width writes cost 3ms during actual pass-2 bar-5 positioning. Real clock and mock MIDI, start at measure 30. Not a trace captured from the physical Chromebook.",
+  "cases": [
+    {
+      "mode": "both",
+      "second": 109,
+      "expected": [
+        {
+          "index": 107,
+          "midiNote": 52,
+          "startMs": 0,
+          "durationMs": 258.6206896551703,
+          "noteOffMs": 232.75862068965216,
+          "measure": "30",
+          "pass": 1
+        },
+        {
+          "index": 107,
+          "midiNote": 56,
+          "startMs": 0,
+          "durationMs": 258.6206896551703,
+          "noteOffMs": 232.75862068965216,
+          "measure": "30",
+          "pass": 1
+        },
+        {
+          "index": 107,
+          "midiNote": 59,
+          "startMs": 0,
+          "durationMs": 258.6206896551703,
+          "noteOffMs": 232.75862068965216,
+          "measure": "30",
+          "pass": 1
+        },
+        {
+          "index": 107,
+          "midiNote": 40,
+          "startMs": 0,
+          "durationMs": 258.6206896551703,
+          "noteOffMs": 232.75862068965216,
+          "measure": "30",
+          "pass": 1
+        },
+        {
+          "index": 108,
+          "midiNote": 52,
+          "startMs": 258.6206896551703,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 491.3793103448261,
+          "measure": "30",
+          "pass": 1
+        },
+        {
+          "index": 108,
+          "midiNote": 57,
+          "startMs": 258.6206896551703,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 491.3793103448261,
+          "measure": "30",
+          "pass": 1
+        },
+        {
+          "index": 108,
+          "midiNote": 60,
+          "startMs": 258.6206896551703,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 491.3793103448261,
+          "measure": "30",
+          "pass": 1
+        },
+        {
+          "index": 108,
+          "midiNote": 45,
+          "startMs": 258.6206896551703,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 491.3793103448261,
+          "measure": "30",
+          "pass": 1
+        },
+        {
+          "index": 109,
+          "midiNote": 45,
+          "startMs": 775.8620689655145,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 1008.6206896551666,
+          "measure": "5",
+          "pass": 2
+        },
+        {
+          "index": 110,
+          "midiNote": 52,
+          "startMs": 1034.4827586206884,
+          "durationMs": 258.62068965516664,
+          "noteOffMs": 1267.2413793103406,
+          "measure": "5",
+          "pass": 2
+        },
+        {
+          "index": 110,
+          "midiNote": 57,
+          "startMs": 1034.4827586206884,
+          "durationMs": 258.62068965516664,
+          "noteOffMs": 1267.2413793103406,
+          "measure": "5",
+          "pass": 2
+        },
+        {
+          "index": 110,
+          "midiNote": 60,
+          "startMs": 1034.4827586206884,
+          "durationMs": 258.62068965516664,
+          "noteOffMs": 1267.2413793103406,
+          "measure": "5",
+          "pass": 2
+        },
+        {
+          "index": 111,
+          "midiNote": 40,
+          "startMs": 1293.103448275855,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 1525.8620689655145,
+          "measure": "5",
+          "pass": 2
+        },
+        {
+          "index": 112,
+          "midiNote": 52,
+          "startMs": 1551.724137931029,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 1784.4827586206884,
+          "measure": "5",
+          "pass": 2
+        },
+        {
+          "index": 112,
+          "midiNote": 57,
+          "startMs": 1551.724137931029,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 1784.4827586206884,
+          "measure": "5",
+          "pass": 2
+        },
+        {
+          "index": 112,
+          "midiNote": 60,
+          "startMs": 1551.724137931029,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 1784.4827586206884,
+          "measure": "5",
+          "pass": 2
+        }
+      ],
+      "actual": [
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            52,
+            80
+          ],
+          "timestamp": 2602.5,
+          "requestedAt": 2603
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            52,
+            0
+          ],
+          "timestamp": 2835.258620689652,
+          "requestedAt": 2603
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            56,
+            80
+          ],
+          "timestamp": 2602.5,
+          "requestedAt": 2603.199999988079
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            56,
+            0
+          ],
+          "timestamp": 2835.258620689652,
+          "requestedAt": 2603.199999988079
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            59,
+            80
+          ],
+          "timestamp": 2602.5,
+          "requestedAt": 2603.199999988079
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            59,
+            0
+          ],
+          "timestamp": 2835.258620689652,
+          "requestedAt": 2603.199999988079
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            40,
+            80
+          ],
+          "timestamp": 2602.5,
+          "requestedAt": 2603.199999988079
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            40,
+            0
+          ],
+          "timestamp": 2835.258620689652,
+          "requestedAt": 2603.199999988079
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            52,
+            80
+          ],
+          "timestamp": 2861.1206896551703,
+          "requestedAt": 2873.800000011921
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            52,
+            0
+          ],
+          "timestamp": 3093.879310344826,
+          "requestedAt": 2873.800000011921
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            57,
+            80
+          ],
+          "timestamp": 2861.1206896551703,
+          "requestedAt": 2873.899999976158
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            57,
+            0
+          ],
+          "timestamp": 3093.879310344826,
+          "requestedAt": 2873.899999976158
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            60,
+            80
+          ],
+          "timestamp": 2861.1206896551703,
+          "requestedAt": 2873.899999976158
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            60,
+            0
+          ],
+          "timestamp": 3093.879310344826,
+          "requestedAt": 2873.899999976158
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            45,
+            80
+          ],
+          "timestamp": 2861.1206896551703,
+          "requestedAt": 2873.899999976158
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            45,
+            0
+          ],
+          "timestamp": 3093.879310344826,
+          "requestedAt": 2873.899999976158
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            52,
+            80
+          ],
+          "timestamp": 3636.9827586206884,
+          "requestedAt": 3732
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            52,
+            0
+          ],
+          "timestamp": 3869.7413793103406,
+          "requestedAt": 3732
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            57,
+            80
+          ],
+          "timestamp": 3636.9827586206884,
+          "requestedAt": 3732.099999964237
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            57,
+            0
+          ],
+          "timestamp": 3869.7413793103406,
+          "requestedAt": 3732.099999964237
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            60,
+            80
+          ],
+          "timestamp": 3636.9827586206884,
+          "requestedAt": 3732.099999964237
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            60,
+            0
+          ],
+          "timestamp": 3869.7413793103406,
+          "requestedAt": 3732.099999964237
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            40,
+            80
+          ],
+          "timestamp": 3895.603448275855,
+          "requestedAt": 3923.599999964237
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            40,
+            0
+          ],
+          "timestamp": 4128.3620689655145,
+          "requestedAt": 3923.599999964237
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            52,
+            80
+          ],
+          "timestamp": 4154.224137931029,
+          "requestedAt": 4177.5
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            52,
+            0
+          ],
+          "timestamp": 4386.982758620688,
+          "requestedAt": 4177.5
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            57,
+            80
+          ],
+          "timestamp": 4154.224137931029,
+          "requestedAt": 4177.5
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            57,
+            0
+          ],
+          "timestamp": 4386.982758620688,
+          "requestedAt": 4177.5
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            60,
+            80
+          ],
+          "timestamp": 4154.224137931029,
+          "requestedAt": 4177.5
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            60,
+            0
+          ],
+          "timestamp": 4386.982758620688,
+          "requestedAt": 4177.5
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            45,
+            80
+          ],
+          "timestamp": 4412.844827586203,
+          "requestedAt": 4427.199999988079
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            45,
+            0
+          ],
+          "timestamp": 4645.603448275855,
+          "requestedAt": 4427.199999988079
+        }
+      ],
+      "cursorWrites": "104",
+      "clears": [],
+      "diagnostics": "",
+      "anchor": 2602.5,
+      "missing": [
+        {
+          "index": 109,
+          "midiNote": 45,
+          "startMs": 775.8620689655145,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 1008.6206896551666,
+          "measure": "5",
+          "pass": 2
+        }
+      ]
+    },
+    {
+      "mode": "left",
+      "second": 76,
+      "expected": [
+        {
+          "index": 74,
+          "midiNote": 40,
+          "startMs": 0,
+          "durationMs": 258.6206896551703,
+          "noteOffMs": 232.75862068965216,
+          "measure": "30",
+          "pass": 1
+        },
+        {
+          "index": 75,
+          "midiNote": 45,
+          "startMs": 258.6206896551703,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 491.3793103448261,
+          "measure": "30",
+          "pass": 1
+        },
+        {
+          "index": 76,
+          "midiNote": 45,
+          "startMs": 775.8620689655145,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 1008.6206896551666,
+          "measure": "5",
+          "pass": 2
+        },
+        {
+          "index": 77,
+          "midiNote": 40,
+          "startMs": 1293.103448275855,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 1525.8620689655145,
+          "measure": "5",
+          "pass": 2
+        }
+      ],
+      "actual": [
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            40,
+            80
+          ],
+          "timestamp": 2596.800000011921,
+          "requestedAt": 2597.099999964237
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            40,
+            0
+          ],
+          "timestamp": 2829.558620701573,
+          "requestedAt": 2597.099999964237
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            45,
+            80
+          ],
+          "timestamp": 2855.420689667091,
+          "requestedAt": 2876
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            45,
+            0
+          ],
+          "timestamp": 3088.179310356747,
+          "requestedAt": 2876
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            40,
+            80
+          ],
+          "timestamp": 3889.903448287776,
+          "requestedAt": 3915.599999964237
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            40,
+            0
+          ],
+          "timestamp": 4122.662068977435,
+          "requestedAt": 3915.599999964237
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            45,
+            80
+          ],
+          "timestamp": 4407.144827598124,
+          "requestedAt": 4427.599999964237
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            45,
+            0
+          ],
+          "timestamp": 4639.903448287776,
+          "requestedAt": 4427.599999964237
+        }
+      ],
+      "cursorWrites": "101",
+      "clears": [],
+      "diagnostics": "",
+      "anchor": 2596.800000011921,
+      "missing": [
+        {
+          "index": 76,
+          "midiNote": 45,
+          "startMs": 775.8620689655145,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 1008.6206896551666,
+          "measure": "5",
+          "pass": 2
+        }
+      ]
+    },
+    {
+      "mode": "right",
+      "second": 48,
+      "expected": [
+        {
+          "index": 46,
+          "midiNote": 52,
+          "startMs": 0,
+          "durationMs": 258.6206896551703,
+          "noteOffMs": 232.75862068965216,
+          "measure": "30",
+          "pass": 1
+        },
+        {
+          "index": 46,
+          "midiNote": 56,
+          "startMs": 0,
+          "durationMs": 258.6206896551703,
+          "noteOffMs": 232.75862068965216,
+          "measure": "30",
+          "pass": 1
+        },
+        {
+          "index": 46,
+          "midiNote": 59,
+          "startMs": 0,
+          "durationMs": 258.6206896551703,
+          "noteOffMs": 232.75862068965216,
+          "measure": "30",
+          "pass": 1
+        },
+        {
+          "index": 47,
+          "midiNote": 52,
+          "startMs": 258.6206896551703,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 491.3793103448261,
+          "measure": "30",
+          "pass": 1
+        },
+        {
+          "index": 47,
+          "midiNote": 57,
+          "startMs": 258.6206896551703,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 491.3793103448261,
+          "measure": "30",
+          "pass": 1
+        },
+        {
+          "index": 47,
+          "midiNote": 60,
+          "startMs": 258.6206896551703,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 491.3793103448261,
+          "measure": "30",
+          "pass": 1
+        },
+        {
+          "index": 48,
+          "midiNote": 52,
+          "startMs": 1034.4827586206884,
+          "durationMs": 258.62068965516664,
+          "noteOffMs": 1267.2413793103406,
+          "measure": "5",
+          "pass": 2
+        },
+        {
+          "index": 48,
+          "midiNote": 57,
+          "startMs": 1034.4827586206884,
+          "durationMs": 258.62068965516664,
+          "noteOffMs": 1267.2413793103406,
+          "measure": "5",
+          "pass": 2
+        },
+        {
+          "index": 48,
+          "midiNote": 60,
+          "startMs": 1034.4827586206884,
+          "durationMs": 258.62068965516664,
+          "noteOffMs": 1267.2413793103406,
+          "measure": "5",
+          "pass": 2
+        },
+        {
+          "index": 49,
+          "midiNote": 52,
+          "startMs": 1551.724137931029,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 1784.4827586206884,
+          "measure": "5",
+          "pass": 2
+        },
+        {
+          "index": 49,
+          "midiNote": 57,
+          "startMs": 1551.724137931029,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 1784.4827586206884,
+          "measure": "5",
+          "pass": 2
+        },
+        {
+          "index": 49,
+          "midiNote": 60,
+          "startMs": 1551.724137931029,
+          "durationMs": 258.6206896551739,
+          "noteOffMs": 1784.4827586206884,
+          "measure": "5",
+          "pass": 2
+        }
+      ],
+      "actual": [
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            52,
+            80
+          ],
+          "timestamp": 2654.400000035763,
+          "requestedAt": 2654.699999988079
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            52,
+            0
+          ],
+          "timestamp": 2887.158620725415,
+          "requestedAt": 2654.699999988079
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            56,
+            80
+          ],
+          "timestamp": 2654.400000035763,
+          "requestedAt": 2654.800000011921
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            56,
+            0
+          ],
+          "timestamp": 2887.158620725415,
+          "requestedAt": 2654.800000011921
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            59,
+            80
+          ],
+          "timestamp": 2654.400000035763,
+          "requestedAt": 2654.800000011921
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            59,
+            0
+          ],
+          "timestamp": 2887.158620725415,
+          "requestedAt": 2654.800000011921
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            52,
+            80
+          ],
+          "timestamp": 2913.020689690933,
+          "requestedAt": 2927.100000023842
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            52,
+            0
+          ],
+          "timestamp": 3145.779310380589,
+          "requestedAt": 2927.100000023842
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            57,
+            80
+          ],
+          "timestamp": 2913.020689690933,
+          "requestedAt": 2927.100000023842
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            57,
+            0
+          ],
+          "timestamp": 3145.779310380589,
+          "requestedAt": 2927.100000023842
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            60,
+            80
+          ],
+          "timestamp": 2913.020689690933,
+          "requestedAt": 2927.100000023842
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            60,
+            0
+          ],
+          "timestamp": 3145.779310380589,
+          "requestedAt": 2927.100000023842
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            52,
+            80
+          ],
+          "timestamp": 4206.124137966792,
+          "requestedAt": 4234.5
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            52,
+            0
+          ],
+          "timestamp": 4438.882758656451,
+          "requestedAt": 4234.5
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            57,
+            80
+          ],
+          "timestamp": 4206.124137966792,
+          "requestedAt": 4234.600000023842
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            57,
+            0
+          ],
+          "timestamp": 4438.882758656451,
+          "requestedAt": 4234.600000023842
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            60,
+            80
+          ],
+          "timestamp": 4206.124137966792,
+          "requestedAt": 4234.600000023842
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            60,
+            0
+          ],
+          "timestamp": 4438.882758656451,
+          "requestedAt": 4234.600000023842
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            52,
+            80
+          ],
+          "timestamp": 4723.36551727714,
+          "requestedAt": 4749.800000011921
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            52,
+            0
+          ],
+          "timestamp": 4956.124137966792,
+          "requestedAt": 4749.800000011921
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            57,
+            80
+          ],
+          "timestamp": 4723.36551727714,
+          "requestedAt": 4749.900000035763
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            57,
+            0
+          ],
+          "timestamp": 4956.124137966792,
+          "requestedAt": 4749.900000035763
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            144,
+            60,
+            80
+          ],
+          "timestamp": 4723.36551727714,
+          "requestedAt": 4749.900000035763
+        },
+        {
+          "id": "cme-out",
+          "data": [
+            128,
+            60,
+            0
+          ],
+          "timestamp": 4956.124137966792,
+          "requestedAt": 4749.900000035763
+        }
+      ],
+      "cursorWrites": "100",
+      "clears": [],
+      "diagnostics": "",
+      "anchor": 2654.400000035763,
+      "missing": [
+        {
+          "index": 48,
+          "midiNote": 52,
+          "startMs": 1034.4827586206884,
+          "durationMs": 258.62068965516664,
+          "noteOffMs": 1267.2413793103406,
+          "measure": "5",
+          "pass": 2
+        },
+        {
+          "index": 48,
+          "midiNote": 57,
+          "startMs": 1034.4827586206884,
+          "durationMs": 258.62068965516664,
+          "noteOffMs": 1267.2413793103406,
+          "measure": "5",
+          "pass": 2
+        },
+        {
+          "index": 48,
+          "midiNote": 60,
+          "startMs": 1034.4827586206884,
+          "durationMs": 258.62068965516664,
+          "noteOffMs": 1267.2413793103406,
+          "measure": "5",
+          "pass": 2
+        }
+      ]
+    }
+  ]
+}

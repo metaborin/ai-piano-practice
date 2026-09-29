@@ -141,7 +141,8 @@ for (const mode of ['right', 'left', 'both'] as const) test('original ' + mode +
   expect((await geometry(page)).currentVisible).toBe(true)
   const returned = (await geometry(page)).scroll
   await page.clock.runFor(20); expect((await geometry(page)).scroll).toBe(returned)
-  // At the actual boundary, even this override is resolved before the Note On call.
+  // The preview was already visible before the boundary. After a manual override,
+  // audio now takes priority: the real cursor commits after the complete MIDI onset.
   await page.evaluate(() => {
     const messages = window.midiTest.outputMessages, push = messages.push.bind(messages)
     messages.push = (...items) => {
@@ -155,7 +156,9 @@ for (const mode of ['right', 'left', 'both'] as const) test('original ' + mode +
   })
   await page.clock.runFor(Math.ceil(jump.startMs) - Math.ceil(previewAt) - 20)
   expect(await page.evaluate(() => document.body.dataset.jumpMidiVisible)).toBe('true')
-  expect(await page.evaluate(() => document.body.dataset.jumpMidiMeasure)).toBe('5小節目')
+  expect(await page.evaluate(() => document.body.dataset.jumpMidiMeasure)).toBe('30小節目')
+  await expect(page.locator('.current-measure')).toHaveText('5小節目')
+  expect((await geometry(page)).currentVisible).toBe(true)
   const ons = await page.evaluate(() => window.midiTest.outputMessages.filter(m => m.data[0] === 0x90))
   for (let i = 0; i < ons.length; i++) expect(ons[i].timestamp - ons[0].timestamp).toBeCloseTo(notes[i].startMs - notes[0].startMs, 5)
   await button(page, '停止').click()

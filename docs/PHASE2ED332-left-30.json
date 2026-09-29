@@ -1,0 +1,204 @@
+{
+  "mode": "left",
+  "fromMeasure": 30,
+  "expected": [
+    {
+      "index": 74,
+      "midiNote": 40,
+      "startMs": 0,
+      "durationMs": 258.6206896551703,
+      "noteOffMs": 232.75862068965216
+    },
+    {
+      "index": 75,
+      "midiNote": 45,
+      "startMs": 258.6206896551703,
+      "durationMs": 258.6206896551739,
+      "noteOffMs": 491.3793103448261
+    },
+    {
+      "index": 76,
+      "midiNote": 45,
+      "startMs": 775.8620689655145,
+      "durationMs": 258.6206896551739,
+      "noteOffMs": 1008.6206896551666
+    },
+    {
+      "index": 77,
+      "midiNote": 40,
+      "startMs": 1293.103448275855,
+      "durationMs": 258.6206896551739,
+      "noteOffMs": 1525.8620689655145
+    },
+    {
+      "index": 78,
+      "midiNote": 45,
+      "startMs": 1810.3448275862029,
+      "durationMs": 258.6206896551739,
+      "noteOffMs": 2043.103448275855
+    }
+  ],
+  "trace": [
+    {
+      "session": 1,
+      "generation": 1,
+      "sequenceIndex": 0,
+      "measure": null,
+      "repeatPass": null,
+      "order": 1,
+      "event": "GENERATION_CHANGE",
+      "requestedAt": 0
+    },
+    {
+      "session": 1,
+      "generation": 2,
+      "sequenceIndex": 0,
+      "measure": "1",
+      "repeatPass": null,
+      "order": 2,
+      "event": "GENERATION_CHANGE",
+      "requestedAt": 0
+    },
+    {
+      "session": 2,
+      "generation": 2,
+      "sequenceIndex": 74,
+      "measure": "30",
+      "repeatPass": 1,
+      "order": 3,
+      "event": "START",
+      "requestedAt": 0
+    },
+    {
+      "session": 2,
+      "generation": 2,
+      "sequenceIndex": 74,
+      "measure": "30",
+      "repeatPass": 1,
+      "order": 4,
+      "event": "NOTE_ON",
+      "requestedAt": 0,
+      "timestamp": 0,
+      "pitch": 40
+    },
+    {
+      "session": 2,
+      "generation": 2,
+      "sequenceIndex": 74,
+      "measure": "30",
+      "repeatPass": 1,
+      "order": 5,
+      "event": "NOTE_OFF",
+      "requestedAt": 0,
+      "timestamp": 232.75862068965216,
+      "pitch": 40
+    },
+    {
+      "session": 2,
+      "generation": 2,
+      "sequenceIndex": 75,
+      "measure": "30",
+      "repeatPass": 1,
+      "order": 6,
+      "event": "NOTE_ON",
+      "requestedAt": 259,
+      "timestamp": 258.6206896551703,
+      "pitch": 45
+    },
+    {
+      "session": 2,
+      "generation": 2,
+      "sequenceIndex": 75,
+      "measure": "30",
+      "repeatPass": 1,
+      "order": 7,
+      "event": "NOTE_OFF",
+      "requestedAt": 259,
+      "timestamp": 491.3793103448261,
+      "pitch": 45
+    },
+    {
+      "session": 2,
+      "generation": 2,
+      "sequenceIndex": 76,
+      "measure": "5",
+      "repeatPass": 2,
+      "order": 8,
+      "event": "REPEAT_JUMP",
+      "requestedAt": 776,
+      "timestamp": 775.8620689655145
+    },
+    {
+      "session": 2,
+      "generation": 2,
+      "sequenceIndex": 76,
+      "measure": "5",
+      "repeatPass": 2,
+      "order": 9,
+      "event": "NOTE_ON",
+      "requestedAt": 776,
+      "timestamp": 775.8620689655145,
+      "pitch": 45
+    },
+    {
+      "session": 2,
+      "generation": 2,
+      "sequenceIndex": 76,
+      "measure": "5",
+      "repeatPass": 2,
+      "order": 10,
+      "event": "NOTE_OFF",
+      "requestedAt": 776,
+      "timestamp": 1008.6206896551666,
+      "pitch": 45
+    },
+    {
+      "session": 2,
+      "generation": 2,
+      "sequenceIndex": 77,
+      "measure": "5",
+      "repeatPass": 2,
+      "order": 11,
+      "event": "NOTE_ON",
+      "requestedAt": 1294,
+      "timestamp": 1293.103448275855,
+      "pitch": 40
+    },
+    {
+      "session": 2,
+      "generation": 2,
+      "sequenceIndex": 77,
+      "measure": "5",
+      "repeatPass": 2,
+      "order": 12,
+      "event": "NOTE_OFF",
+      "requestedAt": 1294,
+      "timestamp": 1525.8620689655145,
+      "pitch": 40
+    },
+    {
+      "session": 2,
+      "generation": 2,
+      "sequenceIndex": 78,
+      "measure": "6",
+      "repeatPass": 2,
+      "order": 13,
+      "event": "NOTE_ON",
+      "requestedAt": 1811,
+      "timestamp": 1810.3448275862029,
+      "pitch": 45
+    },
+    {
+      "session": 2,
+      "generation": 2,
+      "sequenceIndex": 78,
+      "measure": "6",
+      "repeatPass": 2,
+      "order": 14,
+      "event": "NOTE_OFF",
+      "requestedAt": 1811,
+      "timestamp": 2043.103448275855,
+      "pitch": 45
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import { readScoreModel } from '../score/readScoreModel'
 import { parseMusicXml } from '../score/parseMusicXml'
 import { toPracticeScore } from '../score/toPracticeScore'
 import { buildCursorMap } from '../score/CursorMap'
+import { seekScoreCursor } from '../score/seekScoreCursor'
 import { ScoreNoteRenderMap } from '../score/ScoreNoteRenderMap'
 import { followScoreCursor } from '../score/ScoreFollow'
 import { readScoreLayout, lookAheadZoom } from '../score/ScoreLayout'
@@ -98,6 +99,7 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
         noteMapRef.current = new ScoreNoteRenderMap(model, display, octaveDifference)
         noteMapRef.current.highlight(missingRef.current ?? [])
       }
+      display.cursor.hide()
       display.cursor.reset()
       for (let index = 0; index < currentIndexRef.current; index++) display.cursor.next()
       if (practiceCursor && cursorVisibleRef.current) display.cursor.show()
@@ -185,9 +187,7 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
     try {
       const targetIndex = cursorMomentId ? mappingRef.current.get(cursorMomentId) : 0
       if (targetIndex === undefined) throw new Error('Missing cursor target')
-      while (currentIndexRef.current < targetIndex) { display.cursor.next(); currentIndexRef.current++ }
-      while (currentIndexRef.current > targetIndex) { display.cursor.previous(); currentIndexRef.current-- }
-      display.cursor.show()
+      currentIndexRef.current = seekScoreCursor(display.cursor, currentIndexRef.current, targetIndex)
       if (followMode && viewRef.current) {
         const previous = followRef.current, view = viewRef.current, element = display.cursor.cursorElement
         const y = element.getBoundingClientRect().top - view.getBoundingClientRect().top + view.scrollTop

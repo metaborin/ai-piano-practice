@@ -8,10 +8,12 @@ import type { Song } from '../songs/Song'
 import { ValidationReport } from './ValidationReport'
 import type { DemoPlayer, DemoSnapshot } from '../audio/DemoPlayer'
 import type { MidiOutputManager } from '../midi/MidiOutputManager'
+import { DemoMidiTracePanel } from './DemoMidiTracePanel'
+import type { DemoMidiTrace } from '../midi/DemoMidiTrace'
 
 type Props = { practice: PracticeSnapshot; model?: ScoreModel | null; plan?: PracticePlan | null; song?: Song | null; error?: string | null; cursorIndex?: number; blocked?: boolean; onPrevious: () => void; onNext: () => void;
-  demo?: DemoSnapshot; demoDiagnostics?: ReturnType<DemoPlayer['getDiagnostics']>; outputDiagnostics?: ReturnType<MidiOutputManager['getDiagnostics']> }
-export function DeveloperControls({ practice, model, plan, song, error, cursorIndex, blocked = false, onPrevious, onNext, demo, demoDiagnostics: diagnostic, outputDiagnostics: output }: Props) {
+  demo?: DemoSnapshot; demoDiagnostics?: ReturnType<DemoPlayer['getDiagnostics']>; outputDiagnostics?: ReturnType<MidiOutputManager['getDiagnostics']>; midiTrace?: DemoMidiTrace }
+export function DeveloperControls({ practice, model, plan, song, error, cursorIndex, blocked = false, onPrevious, onNext, demo, demoDiagnostics: diagnostic, outputDiagnostics: output, midiTrace }: Props) {
   const { currentNoteIndex, totalNotes, expectedMidiNote, status } = practice
   const disabled = blocked || totalNotes === 0 || status !== 'idle'
   return (
@@ -25,6 +27,7 @@ export function DeveloperControls({ practice, model, plan, song, error, cursorIn
           Scheduled timers：{diagnostic.scheduledTimers + output.scheduledTimers} ／ Active output notes：[{output.activeNotes.join(', ')}]<br />
           Expired attacks：{diagnostic.skippedNotes} ／ Display errors：{diagnostic.visualErrors}</p>
       </section>}
+      {midiTrace && <DemoMidiTracePanel trace={midiTrace} />}
       {(model || error) && <section className="score-analysis" aria-label="Score解析">
         <h3>Score解析</h3>
         {song && <p>曲：{song.title} ／ パート：{song.partLabel}<br />作曲者・由来：{song.composer || '未指定'} ／ source：{song.source}</p>}

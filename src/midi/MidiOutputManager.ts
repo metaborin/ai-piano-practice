@@ -1,4 +1,5 @@
 import type { MidiConnectionStatus, MidiInputDevice } from './midiTypes'
+import { DemoMidiTrace } from './DemoMidiTrace'
 
 export const OUTPUT_CHANNEL = 1
 export const TEST_NOTE = 60
@@ -31,6 +32,7 @@ function initialSnapshot(): MidiOutputSnapshot {
 
 /** Uses the input manager's MIDIAccess; never requests permission or feeds input events. */
 export class MidiOutputManager {
+  readonly trace = new DemoMidiTrace()
   private snapshot = initialSnapshot()
   private listeners = new Set<() => void>()
   private access: MIDIAccess | null = null
@@ -155,29 +157,35 @@ export class MidiOutputManager {
     this.publish({ playing: true })
     return true
   }
-  playDemoNote = (midiNote: number, onTime: number, offTime: number) => {
+  playDemoNote = (midiNote: number, onTime: number, offTime: number) => this.playDemoNotes([{ midiNote, offTime }], onTime)
+  /** Validate and send one whole onset before notifying any UI subscriber. */
+  playDemoNotes = (notes: readonly { midiNote: number; offTime: number }[], onTime: number) => {
     const output = this.readyOutput()
     const now = performance.now()
-    if (!this.demoActive || !output || !Number.isInteger(midiNote) || midiNote < 0 || midiNote > 127
-      || !Number.isFinite(onTime) || !Number.isFinite(offTime) || onTime > now || offTime <= now) return false
+    if (!this.demoActive || !output || !notes.length || !Number.isFinite(onTime) || onTime > now
+      || notes.some(({ midiNote, offTime }) => !Number.isInteger(midiNote) || midiNote < 0 || midiNote > 127 || !Number.isFinite(offTime) || offTime <= now)) return false
     this.cancelDisplayTimer()
-    this.activeNote = midiNote
     for (const [pitch, end] of this.sounding) if (end <= now) this.sounding.delete(pitch)
-    this.sounding.set(midiNote, offTime)
-    const noteOn = [0x90 | channelByte, midiNote, TEST_VELOCITY]
-    const noteOff = [0x80 | channelByte, midiNote, 0]
     try {
-      // onTime is now/past: only Note Off is ever placed in the future MIDI queue.
-      output.send(noteOn, onTime)
-      output.send(noteOff, offTime)
-      this.offDeadlines.set(output, Math.max(this.offDeadlines.get(output) ?? 0, offTime))
-      this.publish({ latestMessage: { type: 'noteon', data: noteOn, timestamp: onTime } })
+      for (const { midiNote, offTime } of notes) {
+        this.activeNote = midiNote
+        this.sounding.set(midiNote, offTime)
+        // Prior onsets' Offs are already queued. For a repeated pitch their
+        // deadline precedes this On, including equal-time segment boundaries.
+        output.send([0x90 | channelByte, midiNote, TEST_VELOCITY], onTime)
+        this.trace.record('NOTE_ON', { timestamp: onTime, pitch: midiNote })
+        output.send([0x80 | channelByte, midiNote, 0], offTime)
+        this.trace.record('NOTE_OFF', { timestamp: offTime, pitch: midiNote })
+        this.offDeadlines.set(output, Math.max(this.offDeadlines.get(output) ?? 0, offTime))
+      }
+      this.publish({ latestMessage: { type: 'noteon', data: [0x90 | channelByte, this.activeNote, TEST_VELOCITY], timestamp: onTime } })
       const finalOff = this.lastScheduledOff()
       this.scheduleDisplay(() => {
         this.publish({ latestMessage: finalOff })
       }, Math.max(0, finalOff.timestamp - performance.now()))
       return true
     } catch {
+      this.trace.record('SEND_ERROR')
       this.stopAllNotes()
       this.publish({ status: 'error', message: 'MIDI出力を送信できませんでした。接続を確認し、「出力を再接続」で再試行してください。' })
       return false
@@ -202,11 +210,12 @@ export class MidiOutputManager {
     // clear() is in the Web MIDI spec but is not implemented in every browser/type library.
     const clearable = output as MIDIOutput & { clear?: () => void }
     if (typeof clearable.clear === 'function') {
-      try { clearable.clear(); cleared = true; this.offDeadlines.delete(output) } catch { succeeded = false }
+      try { this.trace.record('CLEAR'); clearable.clear(); cleared = true; this.offDeadlines.delete(output) } catch { succeeded = false }
     }
     const pitches = [...this.sounding.keys()]
     if (!pitches.length) pitches.push(this.activeNote)
-    for (const action of [...pitches.map((pitch) => () => output.send([0x80 | channelByte, pitch, 0])), () => output.send(ALL_NOTES_OFF)]) {
+    for (const action of [...pitches.map((pitch) => () => { output.send([0x80 | channelByte, pitch, 0]); this.trace.record('NOTE_OFF', { timestamp: performance.now(), pitch, reason: 'forced stop' }) }),
+      () => { output.send(ALL_NOTES_OFF); this.trace.record('ALL_NOTES_OFF', { timestamp: performance.now() }) }]) {
       try { action() } catch { succeeded = false }
     }
     this.sounding.clear()
