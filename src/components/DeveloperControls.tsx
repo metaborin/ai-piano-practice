@@ -10,6 +10,7 @@ import type { DemoPlayer, DemoSnapshot } from '../audio/DemoPlayer'
 import type { MidiOutputManager } from '../midi/MidiOutputManager'
 import { DemoMidiTracePanel } from './DemoMidiTracePanel'
 import type { DemoMidiTrace } from '../midi/DemoMidiTrace'
+import { ScoreOverviewDiagnostics } from './ScoreOverview'
 
 type Props = { practice: PracticeSnapshot; model?: ScoreModel | null; plan?: PracticePlan | null; song?: Song | null; error?: string | null; cursorIndex?: number; blocked?: boolean; onPrevious: () => void; onNext: () => void;
   demo?: DemoSnapshot; demoDiagnostics?: ReturnType<DemoPlayer['getDiagnostics']>; outputDiagnostics?: ReturnType<MidiOutputManager['getDiagnostics']>; midiTrace?: DemoMidiTrace }
@@ -19,6 +20,7 @@ export function DeveloperControls({ practice, model, plan, song, error, cursorIn
   return (
     <details className="developer-controls">
       <summary>開発者用</summary>
+      <ScoreOverviewDiagnostics />
       {demo && diagnostic && output && <section className="demo-diagnostics" aria-label="手本再生の診断">
         <h3>手本再生の診断</h3>
         <p>Demo status：{demo.status} ／ Session：{diagnostic.playbackSession} ／ Generation：{diagnostic.generation}<br />

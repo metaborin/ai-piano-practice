@@ -14,6 +14,9 @@ import { navigationJump, practiceLookAhead } from '../score/ScoreLookAhead'
 import type { ScoreSystems } from '../score/ScoreLookAhead'
 import type { PracticePlan } from '../practice/PracticePlan'
 import type { DemoPreview } from '../audio/DemoLookAhead'
+import type { RefObject } from 'react'
+import { ScoreOverview } from './ScoreOverview'
+import type { ScoreOverviewHandle } from './ScoreOverview'
 type Props = {
   requestId: number
   score: ScoreSource
@@ -28,15 +31,18 @@ type Props = {
   onSystems?: (requestId: number, systems: ScoreSystems) => void
   onReady: (requestId: number, model: ScoreModel) => void
   onError: (requestId: number, message: string) => void
+  overviewTarget?: RefObject<HTMLDivElement | null>
+  overviewBusy?: boolean
 }
 
-export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missingNoteIds, followMode, focusRequest = 0, returnRequest = 0, plan, demoPreview, onSystems, onReady, onError }: Props) {
+export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missingNoteIds, followMode, focusRequest = 0, returnRequest = 0, plan, demoPreview, onSystems, onReady, onError, overviewTarget, overviewBusy = false }: Props) {
   const [followWarning, setFollowWarning] = useState(false)
   const safeFollow = useCallback((...args: Parameters<typeof followScoreCursor>) => {
     try { followScoreCursor(...args) } catch { setFollowWarning(true) }
   }, [])
   const viewRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const overviewRef = useRef<ScoreOverviewHandle>(null)
   const displayRef = useRef<OpenSheetMusicDisplay | null>(null)
   const currentIndexRef = useRef(0)
   const mappingRef = useRef<ReadonlyMap<string, number>>(new Map())
@@ -94,6 +100,7 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
           layout = readScoreLayout(model, display, mappingRef.current, host)
         }
         layoutRef.current = layout
+        overviewRef.current?.layout(layout)
         onSystems?.(requestId, layout.systems)
         noteMapRef.current?.clear()
         noteMapRef.current = new ScoreNoteRenderMap(model, display, octaveDifference)
@@ -152,6 +159,7 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
         displayRef.current = practiceCursor ? display : null
         host.style.visibility = 'visible'
         onReady(requestId, model)
+        overviewRef.current?.prepare(host, layoutRef.current, model)
         lastWidth = container.clientWidth
         lastWindowHeight = window.innerHeight
         observer = new ResizeObserver(() => {
@@ -180,6 +188,7 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
   }, [requestId, score, onReady, onError, onSystems, safeFollow])
 
   useLayoutEffect(() => {
+    overviewRef.current?.position(cursorMomentId ?? null, overviewBusy)
     cursorVisibleRef.current = cursorMomentId !== null
     const display = displayRef.current
     if (!display) return
@@ -219,7 +228,7 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
         followRef.current = { mode: followMode, moment: cursorMomentId, occurrenceIndex: cursorIndex, request: focusRequest, returnRequest, y, previewId, active: previous.active || shouldFollow }
       }
     } catch { setFollowWarning(true) }
-  }, [cursorIndex, cursorMomentId, requestId, onError, followMode, focusRequest, returnRequest, plan, demoPreview, safeFollow])
+  }, [cursorIndex, cursorMomentId, requestId, onError, followMode, focusRequest, returnRequest, plan, demoPreview, safeFollow, overviewBusy])
 
   useLayoutEffect(() => {
     missingRef.current = missingNoteIds
@@ -227,9 +236,12 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
   }, [missingNoteIds])
 
   return (
+    <>
+    {overviewTarget && <ScoreOverview ref={overviewRef} target={overviewTarget} view={viewRef} />}
     <div ref={viewRef} className="score-view" role="region" tabIndex={0} aria-label="楽譜のスクロール領域">
       {followWarning && <p role="status">楽譜の追従を更新できませんでした。手本の音は続きます。停止後に曲を選び直してください。</p>}
       <div ref={containerRef} className="score-renderer" role="img" aria-label={score.title + 'の楽譜'} />
     </div>
+    </>
   )
 }
