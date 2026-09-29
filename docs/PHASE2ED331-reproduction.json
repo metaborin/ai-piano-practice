@@ -1,0 +1,19 @@
+{
+  "cases": [
+    {
+      "scenario": "Fresh original beginning",
+      "result": "stopped",
+      "message": "再生が遅れたため停止しました。開始位置を確認して「手本を聴く」を押してください。",
+      "redrawMeasure": "5"
+    },
+    {
+      "scenario": "Practice completed then original beginning",
+      "result": "stopped",
+      "message": "再生が遅れたため停止しました。開始位置を確認して「手本を聴く」を押してください。",
+      "redrawMeasure": "1"
+    }
+  ],
+  "method": "Real browser clock; add 500ms of main-thread work only when OSMD replaces its SVG during demo playback.",
+  "baselineCommit": "c30e12b320b532cc3a242220ea4d909e16b6e392",
+  "limitation": "Reproduced code path with simulated rendering load. No performance trace from the actual Chromebook was available."
+}

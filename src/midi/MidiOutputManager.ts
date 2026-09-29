@@ -39,6 +39,7 @@ export class MidiOutputManager {
   private preferredId: string | null | undefined
   private generation = 0
   private displayTimer: ReturnType<typeof setTimeout> | undefined
+  private displayGeneration = 0
   private demoActive = false
   private demoInterruptedListeners = new Set<() => void>()
   private activeNote = TEST_NOTE
@@ -46,6 +47,8 @@ export class MidiOutputManager {
   private offDeadlines = new WeakMap<MIDIOutput, number>()
 
   getSnapshot = () => this.snapshot
+  getDiagnostics = () => ({ demoActive: this.demoActive, activeNotes: [...this.sounding].filter(([, end]) => end > performance.now()).map(([pitch]) => pitch),
+    scheduledTimers: Number(this.displayTimer !== undefined), pendingOffUntil: this.output ? this.offDeadlines.get(this.output) ?? null : null })
   subscribe = (listener: () => void) => {
     this.listeners.add(listener)
     return () => { this.listeners.delete(listener) }
@@ -134,8 +137,7 @@ export class MidiOutputManager {
       output.send(NOTE_OFF, now + TEST_DURATION_MS)
       this.offDeadlines.set(output, now + TEST_DURATION_MS)
       this.publish({ playing: true, latestMessage: { type: 'noteon', data: [...NOTE_ON], timestamp: now } })
-      this.displayTimer = setTimeout(() => {
-        this.displayTimer = undefined
+      this.scheduleDisplay(() => {
         this.publish({ playing: false, ...(this.snapshot.latestMessage?.type === 'noteon'
           ? { latestMessage: { type: 'noteoff' as const, data: [...NOTE_OFF], timestamp: now + TEST_DURATION_MS } } : {}) })
       }, TEST_DURATION_MS)
@@ -147,6 +149,8 @@ export class MidiOutputManager {
 
   beginDemo = () => {
     if (!this.readyOutput() || this.snapshot.playing) return false
+    this.cancelDisplayTimer()
+    this.sounding.clear()
     this.demoActive = true
     this.publish({ playing: true })
     return true
@@ -169,8 +173,7 @@ export class MidiOutputManager {
       this.offDeadlines.set(output, Math.max(this.offDeadlines.get(output) ?? 0, offTime))
       this.publish({ latestMessage: { type: 'noteon', data: noteOn, timestamp: onTime } })
       const finalOff = this.lastScheduledOff()
-      this.displayTimer = setTimeout(() => {
-        this.displayTimer = undefined
+      this.scheduleDisplay(() => {
         this.publish({ latestMessage: finalOff })
       }, Math.max(0, finalOff.timestamp - performance.now()))
       return true
@@ -234,15 +237,23 @@ export class MidiOutputManager {
   private waitForPendingOff(output: MIDIOutput) {
     const remaining = Math.max(0, (this.offDeadlines.get(output) ?? 0) - performance.now())
     this.publish({ playing: remaining > 0 })
-    if (remaining > 0) this.displayTimer = setTimeout(() => {
-      this.displayTimer = undefined
+    if (remaining > 0) this.scheduleDisplay(() => {
       this.publish({ playing: false })
     }, remaining)
   }
 
   private cancelDisplayTimer() {
+    ++this.displayGeneration
     clearTimeout(this.displayTimer)
     this.displayTimer = undefined
+  }
+  private scheduleDisplay(update: () => void, delay: number) {
+    const generation = ++this.displayGeneration
+    this.displayTimer = setTimeout(() => {
+      if (generation !== this.displayGeneration) return
+      this.displayTimer = undefined
+      update()
+    }, delay)
   }
   private releaseOutput() {
     this.interruptDemo()

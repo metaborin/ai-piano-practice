@@ -1,0 +1,3049 @@
+[
+  {
+    "mode": "right",
+    "occurrenceCount": 88,
+    "noteOnCount": 228,
+    "measures": [
+      {
+        "sequenceIndex": 0,
+        "measureNumber": "1",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 1,
+        "measureNumber": "2",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 2,
+        "measureNumber": "3",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 3,
+        "measureNumber": "4",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 4,
+        "measureNumber": "5",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 5,
+        "measureNumber": "6",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 6,
+        "measureNumber": "7",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 7,
+        "measureNumber": "8",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 8,
+        "measureNumber": "9",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 9,
+        "measureNumber": "10",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 10,
+        "measureNumber": "11",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 11,
+        "measureNumber": "12",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 12,
+        "measureNumber": "13",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 13,
+        "measureNumber": "14",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 14,
+        "measureNumber": "15",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 15,
+        "measureNumber": "16",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 16,
+        "measureNumber": "17",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 17,
+        "measureNumber": "18",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 18,
+        "measureNumber": "19",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 19,
+        "measureNumber": "20",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 20,
+        "measureNumber": "21",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 21,
+        "measureNumber": "22",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 22,
+        "measureNumber": "23",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 23,
+        "measureNumber": "24",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 24,
+        "measureNumber": "25",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 25,
+        "measureNumber": "26",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 26,
+        "measureNumber": "27",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 27,
+        "measureNumber": "28",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 28,
+        "measureNumber": "29",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 29,
+        "measureNumber": "30",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 30,
+        "measureNumber": "5",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 31,
+        "measureNumber": "6",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 32,
+        "measureNumber": "7",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 33,
+        "measureNumber": "8",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 34,
+        "measureNumber": "9",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 35,
+        "measureNumber": "10",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 36,
+        "measureNumber": "11",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 37,
+        "measureNumber": "12",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 38,
+        "measureNumber": "13",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 39,
+        "measureNumber": "14",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 40,
+        "measureNumber": "15",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 41,
+        "measureNumber": "16",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 42,
+        "measureNumber": "17",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 43,
+        "measureNumber": "18",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 44,
+        "measureNumber": "19",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 45,
+        "measureNumber": "20",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 46,
+        "measureNumber": "21",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 47,
+        "measureNumber": "22",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 48,
+        "measureNumber": "23",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 49,
+        "measureNumber": "24",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 50,
+        "measureNumber": "25",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 51,
+        "measureNumber": "26",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 52,
+        "measureNumber": "27",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 53,
+        "measureNumber": "28",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 54,
+        "measureNumber": "29",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 55,
+        "measureNumber": "30",
+        "repeatPass": 2
+      }
+    ],
+    "occurrences": [
+      {
+        "sequenceIndex": 0,
+        "measureNumber": "1",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 1,
+        "measureNumber": "1",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 2,
+        "measureNumber": "2",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 3,
+        "measureNumber": "2",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 4,
+        "measureNumber": "3",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 5,
+        "measureNumber": "3",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 6,
+        "measureNumber": "4",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 7,
+        "measureNumber": "4",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 8,
+        "measureNumber": "5",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 9,
+        "measureNumber": "5",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 10,
+        "measureNumber": "6",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 11,
+        "measureNumber": "6",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 12,
+        "measureNumber": "7",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 13,
+        "measureNumber": "7",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 14,
+        "measureNumber": "8",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 15,
+        "measureNumber": "8",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 16,
+        "measureNumber": "9",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 17,
+        "measureNumber": "9",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 18,
+        "measureNumber": "10",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 19,
+        "measureNumber": "10",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 20,
+        "measureNumber": "11",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 21,
+        "measureNumber": "11",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 22,
+        "measureNumber": "12",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 23,
+        "measureNumber": "12",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 24,
+        "measureNumber": "13",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 25,
+        "measureNumber": "15",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 26,
+        "measureNumber": "17",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 27,
+        "measureNumber": "19",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 28,
+        "measureNumber": "21",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 29,
+        "measureNumber": "21",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 30,
+        "measureNumber": "22",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 31,
+        "measureNumber": "22",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 32,
+        "measureNumber": "23",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 33,
+        "measureNumber": "23",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 34,
+        "measureNumber": "24",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 35,
+        "measureNumber": "24",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 36,
+        "measureNumber": "25",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 37,
+        "measureNumber": "25",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 38,
+        "measureNumber": "26",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 39,
+        "measureNumber": "26",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 40,
+        "measureNumber": "27",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 41,
+        "measureNumber": "27",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 42,
+        "measureNumber": "28",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 43,
+        "measureNumber": "28",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 44,
+        "measureNumber": "29",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 45,
+        "measureNumber": "29",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 46,
+        "measureNumber": "30",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 47,
+        "measureNumber": "30",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 48,
+        "measureNumber": "5",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 49,
+        "measureNumber": "5",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 50,
+        "measureNumber": "6",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 51,
+        "measureNumber": "6",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 52,
+        "measureNumber": "7",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 53,
+        "measureNumber": "7",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 54,
+        "measureNumber": "8",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 55,
+        "measureNumber": "8",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 56,
+        "measureNumber": "9",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 57,
+        "measureNumber": "9",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 58,
+        "measureNumber": "10",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 59,
+        "measureNumber": "10",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 60,
+        "measureNumber": "11",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 61,
+        "measureNumber": "11",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 62,
+        "measureNumber": "12",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 63,
+        "measureNumber": "12",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 64,
+        "measureNumber": "13",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 65,
+        "measureNumber": "15",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 66,
+        "measureNumber": "17",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 67,
+        "measureNumber": "19",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 68,
+        "measureNumber": "21",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 69,
+        "measureNumber": "21",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 70,
+        "measureNumber": "22",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 71,
+        "measureNumber": "22",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 72,
+        "measureNumber": "23",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 73,
+        "measureNumber": "23",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 74,
+        "measureNumber": "24",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 75,
+        "measureNumber": "24",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 76,
+        "measureNumber": "25",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 77,
+        "measureNumber": "25",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 78,
+        "measureNumber": "26",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 79,
+        "measureNumber": "26",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 80,
+        "measureNumber": "27",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 81,
+        "measureNumber": "27",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 82,
+        "measureNumber": "28",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 83,
+        "measureNumber": "28",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 84,
+        "measureNumber": "29",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 85,
+        "measureNumber": "29",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 86,
+        "measureNumber": "30",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 87,
+        "measureNumber": "30",
+        "repeatPass": 2
+      }
+    ]
+  },
+  {
+    "mode": "left",
+    "occurrenceCount": 144,
+    "noteOnCount": 176,
+    "measures": [
+      {
+        "sequenceIndex": 0,
+        "measureNumber": "1",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 1,
+        "measureNumber": "2",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 2,
+        "measureNumber": "3",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 3,
+        "measureNumber": "4",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 4,
+        "measureNumber": "5",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 5,
+        "measureNumber": "6",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 6,
+        "measureNumber": "7",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 7,
+        "measureNumber": "8",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 8,
+        "measureNumber": "9",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 9,
+        "measureNumber": "10",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 10,
+        "measureNumber": "11",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 11,
+        "measureNumber": "12",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 12,
+        "measureNumber": "13",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 13,
+        "measureNumber": "14",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 14,
+        "measureNumber": "15",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 15,
+        "measureNumber": "16",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 16,
+        "measureNumber": "17",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 17,
+        "measureNumber": "18",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 18,
+        "measureNumber": "19",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 19,
+        "measureNumber": "20",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 20,
+        "measureNumber": "21",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 21,
+        "measureNumber": "22",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 22,
+        "measureNumber": "23",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 23,
+        "measureNumber": "24",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 24,
+        "measureNumber": "25",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 25,
+        "measureNumber": "26",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 26,
+        "measureNumber": "27",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 27,
+        "measureNumber": "28",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 28,
+        "measureNumber": "29",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 29,
+        "measureNumber": "30",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 30,
+        "measureNumber": "5",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 31,
+        "measureNumber": "6",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 32,
+        "measureNumber": "7",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 33,
+        "measureNumber": "8",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 34,
+        "measureNumber": "9",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 35,
+        "measureNumber": "10",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 36,
+        "measureNumber": "11",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 37,
+        "measureNumber": "12",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 38,
+        "measureNumber": "13",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 39,
+        "measureNumber": "14",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 40,
+        "measureNumber": "15",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 41,
+        "measureNumber": "16",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 42,
+        "measureNumber": "17",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 43,
+        "measureNumber": "18",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 44,
+        "measureNumber": "19",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 45,
+        "measureNumber": "20",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 46,
+        "measureNumber": "21",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 47,
+        "measureNumber": "22",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 48,
+        "measureNumber": "23",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 49,
+        "measureNumber": "24",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 50,
+        "measureNumber": "25",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 51,
+        "measureNumber": "26",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 52,
+        "measureNumber": "27",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 53,
+        "measureNumber": "28",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 54,
+        "measureNumber": "29",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 55,
+        "measureNumber": "30",
+        "repeatPass": 2
+      }
+    ],
+    "occurrences": [
+      {
+        "sequenceIndex": 0,
+        "measureNumber": "1",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 1,
+        "measureNumber": "1",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 2,
+        "measureNumber": "2",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 3,
+        "measureNumber": "2",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 4,
+        "measureNumber": "3",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 5,
+        "measureNumber": "3",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 6,
+        "measureNumber": "4",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 7,
+        "measureNumber": "4",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 8,
+        "measureNumber": "5",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 9,
+        "measureNumber": "5",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 10,
+        "measureNumber": "6",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 11,
+        "measureNumber": "6",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 12,
+        "measureNumber": "7",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 13,
+        "measureNumber": "7",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 14,
+        "measureNumber": "8",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 15,
+        "measureNumber": "8",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 16,
+        "measureNumber": "9",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 17,
+        "measureNumber": "9",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 18,
+        "measureNumber": "10",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 19,
+        "measureNumber": "10",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 20,
+        "measureNumber": "11",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 21,
+        "measureNumber": "11",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 22,
+        "measureNumber": "12",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 23,
+        "measureNumber": "12",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 24,
+        "measureNumber": "13",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 25,
+        "measureNumber": "13",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 26,
+        "measureNumber": "13",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 27,
+        "measureNumber": "13",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 28,
+        "measureNumber": "14",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 29,
+        "measureNumber": "14",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 30,
+        "measureNumber": "14",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 31,
+        "measureNumber": "14",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 32,
+        "measureNumber": "15",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 33,
+        "measureNumber": "15",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 34,
+        "measureNumber": "15",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 35,
+        "measureNumber": "15",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 36,
+        "measureNumber": "16",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 37,
+        "measureNumber": "16",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 38,
+        "measureNumber": "16",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 39,
+        "measureNumber": "16",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 40,
+        "measureNumber": "17",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 41,
+        "measureNumber": "17",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 42,
+        "measureNumber": "17",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 43,
+        "measureNumber": "17",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 44,
+        "measureNumber": "18",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 45,
+        "measureNumber": "18",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 46,
+        "measureNumber": "18",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 47,
+        "measureNumber": "18",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 48,
+        "measureNumber": "19",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 49,
+        "measureNumber": "19",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 50,
+        "measureNumber": "19",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 51,
+        "measureNumber": "19",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 52,
+        "measureNumber": "20",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 53,
+        "measureNumber": "20",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 54,
+        "measureNumber": "20",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 55,
+        "measureNumber": "20",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 56,
+        "measureNumber": "21",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 57,
+        "measureNumber": "21",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 58,
+        "measureNumber": "22",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 59,
+        "measureNumber": "22",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 60,
+        "measureNumber": "23",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 61,
+        "measureNumber": "23",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 62,
+        "measureNumber": "24",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 63,
+        "measureNumber": "24",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 64,
+        "measureNumber": "25",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 65,
+        "measureNumber": "25",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 66,
+        "measureNumber": "26",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 67,
+        "measureNumber": "26",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 68,
+        "measureNumber": "27",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 69,
+        "measureNumber": "27",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 70,
+        "measureNumber": "28",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 71,
+        "measureNumber": "28",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 72,
+        "measureNumber": "29",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 73,
+        "measureNumber": "29",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 74,
+        "measureNumber": "30",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 75,
+        "measureNumber": "30",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 76,
+        "measureNumber": "5",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 77,
+        "measureNumber": "5",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 78,
+        "measureNumber": "6",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 79,
+        "measureNumber": "6",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 80,
+        "measureNumber": "7",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 81,
+        "measureNumber": "7",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 82,
+        "measureNumber": "8",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 83,
+        "measureNumber": "8",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 84,
+        "measureNumber": "9",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 85,
+        "measureNumber": "9",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 86,
+        "measureNumber": "10",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 87,
+        "measureNumber": "10",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 88,
+        "measureNumber": "11",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 89,
+        "measureNumber": "11",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 90,
+        "measureNumber": "12",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 91,
+        "measureNumber": "12",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 92,
+        "measureNumber": "13",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 93,
+        "measureNumber": "13",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 94,
+        "measureNumber": "13",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 95,
+        "measureNumber": "13",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 96,
+        "measureNumber": "14",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 97,
+        "measureNumber": "14",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 98,
+        "measureNumber": "14",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 99,
+        "measureNumber": "14",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 100,
+        "measureNumber": "15",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 101,
+        "measureNumber": "15",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 102,
+        "measureNumber": "15",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 103,
+        "measureNumber": "15",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 104,
+        "measureNumber": "16",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 105,
+        "measureNumber": "16",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 106,
+        "measureNumber": "16",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 107,
+        "measureNumber": "16",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 108,
+        "measureNumber": "17",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 109,
+        "measureNumber": "17",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 110,
+        "measureNumber": "17",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 111,
+        "measureNumber": "17",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 112,
+        "measureNumber": "18",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 113,
+        "measureNumber": "18",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 114,
+        "measureNumber": "18",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 115,
+        "measureNumber": "18",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 116,
+        "measureNumber": "19",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 117,
+        "measureNumber": "19",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 118,
+        "measureNumber": "19",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 119,
+        "measureNumber": "19",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 120,
+        "measureNumber": "20",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 121,
+        "measureNumber": "20",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 122,
+        "measureNumber": "20",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 123,
+        "measureNumber": "20",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 124,
+        "measureNumber": "21",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 125,
+        "measureNumber": "21",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 126,
+        "measureNumber": "22",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 127,
+        "measureNumber": "22",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 128,
+        "measureNumber": "23",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 129,
+        "measureNumber": "23",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 130,
+        "measureNumber": "24",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 131,
+        "measureNumber": "24",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 132,
+        "measureNumber": "25",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 133,
+        "measureNumber": "25",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 134,
+        "measureNumber": "26",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 135,
+        "measureNumber": "26",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 136,
+        "measureNumber": "27",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 137,
+        "measureNumber": "27",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 138,
+        "measureNumber": "28",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 139,
+        "measureNumber": "28",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 140,
+        "measureNumber": "29",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 141,
+        "measureNumber": "29",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 142,
+        "measureNumber": "30",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 143,
+        "measureNumber": "30",
+        "repeatPass": 2
+      }
+    ]
+  },
+  {
+    "mode": "both",
+    "occurrenceCount": 204,
+    "noteOnCount": 404,
+    "measures": [
+      {
+        "sequenceIndex": 0,
+        "measureNumber": "1",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 1,
+        "measureNumber": "2",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 2,
+        "measureNumber": "3",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 3,
+        "measureNumber": "4",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 4,
+        "measureNumber": "5",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 5,
+        "measureNumber": "6",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 6,
+        "measureNumber": "7",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 7,
+        "measureNumber": "8",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 8,
+        "measureNumber": "9",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 9,
+        "measureNumber": "10",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 10,
+        "measureNumber": "11",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 11,
+        "measureNumber": "12",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 12,
+        "measureNumber": "13",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 13,
+        "measureNumber": "14",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 14,
+        "measureNumber": "15",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 15,
+        "measureNumber": "16",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 16,
+        "measureNumber": "17",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 17,
+        "measureNumber": "18",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 18,
+        "measureNumber": "19",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 19,
+        "measureNumber": "20",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 20,
+        "measureNumber": "21",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 21,
+        "measureNumber": "22",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 22,
+        "measureNumber": "23",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 23,
+        "measureNumber": "24",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 24,
+        "measureNumber": "25",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 25,
+        "measureNumber": "26",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 26,
+        "measureNumber": "27",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 27,
+        "measureNumber": "28",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 28,
+        "measureNumber": "29",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 29,
+        "measureNumber": "30",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 30,
+        "measureNumber": "5",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 31,
+        "measureNumber": "6",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 32,
+        "measureNumber": "7",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 33,
+        "measureNumber": "8",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 34,
+        "measureNumber": "9",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 35,
+        "measureNumber": "10",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 36,
+        "measureNumber": "11",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 37,
+        "measureNumber": "12",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 38,
+        "measureNumber": "13",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 39,
+        "measureNumber": "14",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 40,
+        "measureNumber": "15",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 41,
+        "measureNumber": "16",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 42,
+        "measureNumber": "17",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 43,
+        "measureNumber": "18",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 44,
+        "measureNumber": "19",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 45,
+        "measureNumber": "20",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 46,
+        "measureNumber": "21",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 47,
+        "measureNumber": "22",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 48,
+        "measureNumber": "23",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 49,
+        "measureNumber": "24",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 50,
+        "measureNumber": "25",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 51,
+        "measureNumber": "26",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 52,
+        "measureNumber": "27",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 53,
+        "measureNumber": "28",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 54,
+        "measureNumber": "29",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 55,
+        "measureNumber": "30",
+        "repeatPass": 2
+      }
+    ],
+    "occurrences": [
+      {
+        "sequenceIndex": 0,
+        "measureNumber": "1",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 1,
+        "measureNumber": "1",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 2,
+        "measureNumber": "1",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 3,
+        "measureNumber": "1",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 4,
+        "measureNumber": "2",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 5,
+        "measureNumber": "2",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 6,
+        "measureNumber": "2",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 7,
+        "measureNumber": "2",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 8,
+        "measureNumber": "3",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 9,
+        "measureNumber": "3",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 10,
+        "measureNumber": "3",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 11,
+        "measureNumber": "3",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 12,
+        "measureNumber": "4",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 13,
+        "measureNumber": "4",
+        "repeatPass": null
+      },
+      {
+        "sequenceIndex": 14,
+        "measureNumber": "5",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 15,
+        "measureNumber": "5",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 16,
+        "measureNumber": "5",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 17,
+        "measureNumber": "5",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 18,
+        "measureNumber": "6",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 19,
+        "measureNumber": "6",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 20,
+        "measureNumber": "6",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 21,
+        "measureNumber": "6",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 22,
+        "measureNumber": "7",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 23,
+        "measureNumber": "7",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 24,
+        "measureNumber": "7",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 25,
+        "measureNumber": "7",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 26,
+        "measureNumber": "8",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 27,
+        "measureNumber": "8",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 28,
+        "measureNumber": "8",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 29,
+        "measureNumber": "9",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 30,
+        "measureNumber": "9",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 31,
+        "measureNumber": "9",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 32,
+        "measureNumber": "9",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 33,
+        "measureNumber": "10",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 34,
+        "measureNumber": "10",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 35,
+        "measureNumber": "10",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 36,
+        "measureNumber": "10",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 37,
+        "measureNumber": "11",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 38,
+        "measureNumber": "11",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 39,
+        "measureNumber": "11",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 40,
+        "measureNumber": "11",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 41,
+        "measureNumber": "12",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 42,
+        "measureNumber": "12",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 43,
+        "measureNumber": "13",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 44,
+        "measureNumber": "13",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 45,
+        "measureNumber": "13",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 46,
+        "measureNumber": "13",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 47,
+        "measureNumber": "14",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 48,
+        "measureNumber": "14",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 49,
+        "measureNumber": "14",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 50,
+        "measureNumber": "14",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 51,
+        "measureNumber": "15",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 52,
+        "measureNumber": "15",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 53,
+        "measureNumber": "15",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 54,
+        "measureNumber": "15",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 55,
+        "measureNumber": "16",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 56,
+        "measureNumber": "16",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 57,
+        "measureNumber": "16",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 58,
+        "measureNumber": "16",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 59,
+        "measureNumber": "17",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 60,
+        "measureNumber": "17",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 61,
+        "measureNumber": "17",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 62,
+        "measureNumber": "17",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 63,
+        "measureNumber": "18",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 64,
+        "measureNumber": "18",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 65,
+        "measureNumber": "18",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 66,
+        "measureNumber": "18",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 67,
+        "measureNumber": "19",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 68,
+        "measureNumber": "19",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 69,
+        "measureNumber": "19",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 70,
+        "measureNumber": "19",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 71,
+        "measureNumber": "20",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 72,
+        "measureNumber": "20",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 73,
+        "measureNumber": "20",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 74,
+        "measureNumber": "20",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 75,
+        "measureNumber": "21",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 76,
+        "measureNumber": "21",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 77,
+        "measureNumber": "22",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 78,
+        "measureNumber": "22",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 79,
+        "measureNumber": "23",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 80,
+        "measureNumber": "23",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 81,
+        "measureNumber": "23",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 82,
+        "measureNumber": "23",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 83,
+        "measureNumber": "24",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 84,
+        "measureNumber": "24",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 85,
+        "measureNumber": "24",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 86,
+        "measureNumber": "24",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 87,
+        "measureNumber": "25",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 88,
+        "measureNumber": "25",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 89,
+        "measureNumber": "25",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 90,
+        "measureNumber": "25",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 91,
+        "measureNumber": "26",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 92,
+        "measureNumber": "26",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 93,
+        "measureNumber": "26",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 94,
+        "measureNumber": "26",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 95,
+        "measureNumber": "27",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 96,
+        "measureNumber": "27",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 97,
+        "measureNumber": "27",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 98,
+        "measureNumber": "27",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 99,
+        "measureNumber": "28",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 100,
+        "measureNumber": "28",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 101,
+        "measureNumber": "28",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 102,
+        "measureNumber": "28",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 103,
+        "measureNumber": "29",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 104,
+        "measureNumber": "29",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 105,
+        "measureNumber": "29",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 106,
+        "measureNumber": "29",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 107,
+        "measureNumber": "30",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 108,
+        "measureNumber": "30",
+        "repeatPass": 1
+      },
+      {
+        "sequenceIndex": 109,
+        "measureNumber": "5",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 110,
+        "measureNumber": "5",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 111,
+        "measureNumber": "5",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 112,
+        "measureNumber": "5",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 113,
+        "measureNumber": "6",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 114,
+        "measureNumber": "6",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 115,
+        "measureNumber": "6",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 116,
+        "measureNumber": "6",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 117,
+        "measureNumber": "7",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 118,
+        "measureNumber": "7",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 119,
+        "measureNumber": "7",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 120,
+        "measureNumber": "7",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 121,
+        "measureNumber": "8",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 122,
+        "measureNumber": "8",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 123,
+        "measureNumber": "8",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 124,
+        "measureNumber": "9",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 125,
+        "measureNumber": "9",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 126,
+        "measureNumber": "9",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 127,
+        "measureNumber": "9",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 128,
+        "measureNumber": "10",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 129,
+        "measureNumber": "10",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 130,
+        "measureNumber": "10",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 131,
+        "measureNumber": "10",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 132,
+        "measureNumber": "11",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 133,
+        "measureNumber": "11",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 134,
+        "measureNumber": "11",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 135,
+        "measureNumber": "11",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 136,
+        "measureNumber": "12",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 137,
+        "measureNumber": "12",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 138,
+        "measureNumber": "13",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 139,
+        "measureNumber": "13",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 140,
+        "measureNumber": "13",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 141,
+        "measureNumber": "13",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 142,
+        "measureNumber": "14",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 143,
+        "measureNumber": "14",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 144,
+        "measureNumber": "14",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 145,
+        "measureNumber": "14",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 146,
+        "measureNumber": "15",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 147,
+        "measureNumber": "15",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 148,
+        "measureNumber": "15",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 149,
+        "measureNumber": "15",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 150,
+        "measureNumber": "16",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 151,
+        "measureNumber": "16",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 152,
+        "measureNumber": "16",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 153,
+        "measureNumber": "16",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 154,
+        "measureNumber": "17",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 155,
+        "measureNumber": "17",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 156,
+        "measureNumber": "17",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 157,
+        "measureNumber": "17",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 158,
+        "measureNumber": "18",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 159,
+        "measureNumber": "18",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 160,
+        "measureNumber": "18",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 161,
+        "measureNumber": "18",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 162,
+        "measureNumber": "19",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 163,
+        "measureNumber": "19",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 164,
+        "measureNumber": "19",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 165,
+        "measureNumber": "19",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 166,
+        "measureNumber": "20",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 167,
+        "measureNumber": "20",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 168,
+        "measureNumber": "20",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 169,
+        "measureNumber": "20",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 170,
+        "measureNumber": "21",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 171,
+        "measureNumber": "21",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 172,
+        "measureNumber": "22",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 173,
+        "measureNumber": "22",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 174,
+        "measureNumber": "23",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 175,
+        "measureNumber": "23",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 176,
+        "measureNumber": "23",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 177,
+        "measureNumber": "23",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 178,
+        "measureNumber": "24",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 179,
+        "measureNumber": "24",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 180,
+        "measureNumber": "24",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 181,
+        "measureNumber": "24",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 182,
+        "measureNumber": "25",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 183,
+        "measureNumber": "25",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 184,
+        "measureNumber": "25",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 185,
+        "measureNumber": "25",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 186,
+        "measureNumber": "26",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 187,
+        "measureNumber": "26",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 188,
+        "measureNumber": "26",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 189,
+        "measureNumber": "26",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 190,
+        "measureNumber": "27",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 191,
+        "measureNumber": "27",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 192,
+        "measureNumber": "27",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 193,
+        "measureNumber": "27",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 194,
+        "measureNumber": "28",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 195,
+        "measureNumber": "28",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 196,
+        "measureNumber": "28",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 197,
+        "measureNumber": "28",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 198,
+        "measureNumber": "29",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 199,
+        "measureNumber": "29",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 200,
+        "measureNumber": "29",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 201,
+        "measureNumber": "29",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 202,
+        "measureNumber": "30",
+        "repeatPass": 2
+      },
+      {
+        "sequenceIndex": 203,
+        "measureNumber": "30",
+        "repeatPass": 2
+      }
+    ]
+  }
+]

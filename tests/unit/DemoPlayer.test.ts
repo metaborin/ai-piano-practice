@@ -205,14 +205,19 @@ it('a missing score/output or a send failure never starts uncontrolled playback'
   expect(port.send).toHaveBeenCalledTimes(sends)
 })
 
-it('stops if the UI stalls instead of sending a burst of overdue notes', async () => {
+it('recovers on the original clock if the UI stalls without a burst of overdue notes', async () => {
   const { player, port } = await setup()
   player.start()
   const realNow = performance.now
   vi.spyOn(performance, 'now').mockImplementation(() => realNow.call(performance) + 2000)
   vi.advanceTimersByTime(600)
-  expect(player.getSnapshot().status).toBe('stopped')
+  expect(player.getSnapshot().status).toBe('playing')
   expect(port.send.mock.calls.filter(([bytes]) => bytes[0] === 0x90)).toHaveLength(1)
+  expect(player.getDiagnostics().skippedNotes).toBe(4)
+  vi.advanceTimersByTime(400)
+  expect(port.send.mock.calls.filter(([bytes]) => bytes[0] === 0x90).at(-1)![1]).toBe(3000)
+  vi.runAllTimers()
+  expect(player.getSnapshot().status).toBe('completed')
   vi.restoreAllMocks()
 })
 

@@ -7,9 +7,10 @@ import type { DemoStart } from './DemoStart'
 import { buildDemoPreviews } from './DemoLookAhead'
 import type { DemoPreview } from './DemoLookAhead'
 import type { ScoreSystems } from '../score/ScoreLookAhead'
+import { DemoPreviewScheduler } from './DemoPreviewScheduler'
 
 export { DEFAULT_TEMPO_BPM, DEMO_GATE_RATIO } from './tempo'
-const MAX_LATENESS_MS = 150
+const MAX_ATTACK_LATENESS_MS = 150
 
 export type DemoNote = {
   index: number
@@ -59,9 +60,13 @@ export class DemoPlayer {
   private timer: ReturnType<typeof setTimeout> | undefined
   private unsubscribeOutput: (() => void) | undefined
   private generation = 0
+  private playbackSession = 0
   private systems: ScoreSystems | null = null
-  private previewTimer: ReturnType<typeof setTimeout> | undefined
+  private previews = new DemoPreviewScheduler()
   private refreshPreviews: (() => void) | undefined
+  private startSequenceIndex = 0
+  private skippedNotes = 0
+  private visualErrors = 0
   setSystems = (systems: ScoreSystems | null) => {
     this.systems = systems
     this.refreshPreviews?.()
@@ -76,6 +81,12 @@ export class DemoPlayer {
     this.publishPosition = publishPosition
   }
   getSnapshot = () => this.snapshot
+  getDiagnostics = () => {
+    const occurrence = this.plan?.sequence.occurrences[this.snapshot.currentNoteIndex]
+    return { generation: this.generation, playbackSession: this.playbackSession, startSequenceIndex: this.startSequenceIndex, sequenceIndex: this.snapshot.currentNoteIndex,
+      sequenceLength: this.snapshot.totalNotes, measure: occurrence?.sourceMoment.measureNumber ?? null, repeatPass: occurrence?.repeatPass ?? null,
+      scheduledTimers: Number(this.timer !== undefined) + Number(this.previews.pending), skippedNotes: this.skippedNotes, visualErrors: this.visualErrors }
+  }
   subscribe = (listener: () => void) => {
     this.listeners.add(listener)
     return () => { this.listeners.delete(listener) }
@@ -84,7 +95,18 @@ export class DemoPlayer {
     this.snapshot = { ...this.snapshot, ...patch }
     this.listeners.forEach((listener) => listener())
   }
+  /** Rendering is best-effort. An adapter failure must not tear down the MIDI clock. */
+  private position(patch: Partial<DemoSnapshot>, before?: () => void) {
+    let applied = false
+    const update = () => { if (applied) return; applied = true; before?.(); this.publish(patch) }
+    try { this.publishPosition(update) }
+    catch {
+      this.visualErrors++
+      if (!applied) update()
+    }
+  }
   loadScore = (score: ScoreModel | null) => {
+    ++this.playbackSession
     this.stop()
     this.cancelTimers()
     this.score = score
@@ -106,10 +128,12 @@ export class DemoPlayer {
     let notes: DemoNote[]
     let firstIndex = 0
     let firstMoment: string | null = null
+    let startMessage = '手本を再生中です'
     try {
       if (this.plan) {
         const origin = resolveDemoStart(this.plan, start)
         firstIndex = origin.index
+        startMessage = origin.message ?? startMessage
         firstMoment = origin.cursorMomentId ?? this.plan.sequence.occurrences[firstIndex].sourceMoment.id
         notes = buildDemoPlan(this.plan, start)
       }
@@ -119,65 +143,71 @@ export class DemoPlayer {
       this.publish({ status: 'error', message: error instanceof Error && error.message.startsWith('指定した位置') ? error.message : '手本の楽譜を読み込めません。ページを再読み込みしてください。' })
       return
     }
+    // Every play has fresh clocks and subscriptions, before exposing the new session.
+    this.cancelTimers()
+    const generation = this.generation
+    const playbackSession = ++this.playbackSession
+    this.startSequenceIndex = firstIndex; this.skippedNotes = 0; this.visualErrors = 0
     if (!this.output.beginDemo()) {
       this.publish({ status: 'error', message: 'MIDI出力の接続と、テスト音が終了していることを確認してください。' })
       return
     }
     // Synchronous: reset/disable grading before any MIDI output or possible loopback.
     // The adapter commits cursor position synchronously before the first MIDI send.
-    this.publishPosition(() => {
-      this.beforeStart()
-      this.publish({ status: 'playing', currentNoteIndex: firstIndex, cursorMomentId: firstMoment, message: '手本を再生中です', preview: null })
-    })
-    const generation = ++this.generation
     this.unsubscribeOutput = this.output.subscribeDemoInterrupted(() => {
       if (generation === this.generation) this.interrupted()
     })
+    this.position({ status: 'playing', currentNoteIndex: firstIndex, cursorMomentId: firstMoment, message: startMessage, preview: null }, this.beforeStart)
+    if (generation !== this.generation || this.getSnapshot().status !== 'playing') return
     const startedAt = performance.now()
     this.refreshPreviews = () => {
-      clearTimeout(this.previewTimer)
+      this.previews.cancel()
       this.publish({ preview: null })
       const events = this.plan && this.systems ? buildDemoPreviews(notes, this.plan, this.systems) : []
-      const schedule = (index: number) => {
-        if (generation !== this.generation) return
-        while (index < events.length && startedAt + events[index].dueMs <= performance.now()) index++
-        if (index >= events.length) return
-        const event = events[index]
-        this.previewTimer = setTimeout(() => {
-          if (generation !== this.generation || this.snapshot.status !== 'playing') return
-          if (performance.now() < startedAt + event.atMs) { schedule(index); return }
-          if (performance.now() < startedAt + event.dueMs) this.publishPosition(() => this.publish({ preview: event }))
-          schedule(index + 1)
-        }, Math.max(0, startedAt + event.atMs - performance.now()))
-      }
-      schedule(0)
+      this.previews.start(events, startedAt, event => {
+        if (generation === this.generation && this.snapshot.status === 'playing') this.position({ preview: event })
+      })
     }
     const endMs = notes.reduce((end, note) => Math.max(end, note.noteOffMs), 0)
+    const finish = () => {
+      if (generation !== this.generation) return
+      this.timer = undefined
+      const remaining = startedAt + endMs - performance.now()
+      if (remaining > 0) { this.timer = setTimeout(finish, remaining); return }
+      this.cancelTimers()
+      this.output.finishDemo()
+      this.publish({ status: 'completed', message: '手本の再生が終わりました', preview: null })
+    }
     const play = (index: number) => {
       if (generation !== this.generation || this.snapshot.status !== 'playing') return
+      this.timer = undefined
+      // Do not burst overdue attacks, shift musical time, or stop because drawing
+      // blocked the UI thread. Resume the original clock at a still-valid attack.
+      const caughtUpAt = performance.now()
+      while (index < notes.length && (caughtUpAt - (startedAt + notes[index].startMs) > MAX_ATTACK_LATENESS_MS || caughtUpAt >= startedAt + notes[index].noteOffMs)) {
+        this.skippedNotes++; index++
+      }
+      if (index >= notes.length) { finish(); return }
       const note = notes[index]
       const due = startedAt + note.startMs
       const now = performance.now()
       // A timer may fire slightly early. Never put a future Note On in an uncancellable queue.
       if (now < due) { this.timer = setTimeout(() => play(index), due - now); return }
-      if (now - due > MAX_LATENESS_MS || now >= startedAt + note.noteOffMs) {
-        this.stop()
-        this.publish({ message: '再生が遅れたため停止しました。開始位置を確認して「手本を聴く」を押してください。' })
-        return
-      }
       // One callback and one timestamp for every Note On at this onset.
       // Commit the actual cursor and any jump fallback before MIDI, without waiting
       // for animation or changing due. Preview notifications never move the cursor.
       const cursorMomentId = note.cursorMomentId ?? this.plan?.sequence.occurrences[note.index]?.sourceMoment.id ?? null
       const preview = this.snapshot.preview && this.snapshot.preview.occurrenceIndex > note.index ? this.snapshot.preview : null
       if (this.snapshot.currentNoteIndex !== note.index || this.snapshot.cursorMomentId !== cursorMomentId || this.snapshot.preview !== preview) {
-        this.publishPosition(() => this.publish({ currentNoteIndex: note.index, cursorMomentId, preview }))
+        this.position({ currentNoteIndex: note.index, cursorMomentId, preview })
       }
       let next = index
       while (next < notes.length && notes[next].startMs === note.startMs) {
         if (generation !== this.generation) return
         const voice = notes[next++]
+        if (performance.now() - due > MAX_ATTACK_LATENESS_MS || performance.now() >= startedAt + voice.noteOffMs) { this.skippedNotes++; continue }
         if (!this.output.playDemoNote(voice.midiNote, due, startedAt + voice.noteOffMs)) {
+          if (playbackSession !== this.playbackSession) return
           this.stop()
           this.publish({ status: 'error', message: '手本を送信できませんでした。MIDI出力の接続を確認してください。' })
           return
@@ -186,14 +216,6 @@ export class DemoPlayer {
       if (next < notes.length) {
         this.timer = setTimeout(() => play(next), Math.max(0, startedAt + notes[next].startMs - performance.now()))
       } else {
-        const finish = () => {
-          if (generation !== this.generation) return
-          const remaining = startedAt + endMs - performance.now()
-          if (remaining > 0) { this.timer = setTimeout(finish, remaining); return }
-          this.cancelTimers()
-          this.output.finishDemo()
-          this.publish({ status: 'completed', message: '手本の再生が終わりました', preview: null })
-        }
         this.timer = setTimeout(finish, Math.max(0, startedAt + endMs - performance.now()))
       }
     }
@@ -204,8 +226,7 @@ export class DemoPlayer {
   private cancelTimers() {
     ++this.generation
     clearTimeout(this.timer)
-    clearTimeout(this.previewTimer)
-    this.previewTimer = undefined
+    this.previews.cancel()
     this.refreshPreviews = undefined
     this.timer = undefined
     this.unsubscribeOutput?.()

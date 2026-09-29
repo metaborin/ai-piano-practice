@@ -65,9 +65,8 @@ export default function App() {
   const playDemo = (choice: DemoChoice) => {
     if (!scoreReady) return
     if (choice === 'current') {
-      if (session.getSnapshot().startTargetIndex === null) return
-      const occurrence = songState.plan?.sequence.occurrences[session.getSnapshot().currentNoteIndex]
-      if (occurrence) player.playFromOccurrence(occurrence.id)
+      const position = session.getSnapshot()
+      player.start({ kind: 'current', occurrenceIndex: position.startTargetIndex === null ? null : position.currentNoteIndex, completed: position.status === 'completed' })
     } else player.start(choice === 'beginning' ? { kind: 'beginning' } : { kind: 'measure', measureIndex: Number(choice.slice(8)) })
   }
 
@@ -75,7 +74,7 @@ export default function App() {
     <main className="app">
       <header className="app-header">
         <div>
-          <p className="eyebrow">ピアノ練習 · Phase 2E-D3.3</p>
+          <p className="eyebrow">ピアノ練習 · Phase 2E-D3.3.1</p>
           <h1>{title}</h1>
           <p className="subtitle">{songState.song?.partLabel ?? '曲を選んで練習しましょう'}</p>
         </div>
@@ -94,7 +93,9 @@ export default function App() {
           <button className="return-to-cursor" disabled={!scoreReady || !cursorMomentId} onClick={returnToCursor}>現在位置へ戻る</button>
           <div className="score-position" aria-live="polite">
             {scoreReady && cursorMomentId && currentMeasure !== undefined && <span className="current-measure">{currentMeasure}小節目</span>}
-            {scoreReady && cursorMomentId && repeatPass && <span className="repeat-position">反復 {repeatPass}回目</span>}
+            {scoreReady && !!songState.model?.navigation.repeats.length && <span className="repeat-position-slot">
+              {cursorMomentId && repeatPass ? <span className="repeat-position">反復 {repeatPass}回目</span> : '\u00a0'}
+            </span>}
             <span className="position">{scoreReady && cursorMomentId && noteCount > 0 ? `${cursorIndex + 1} / ${noteCount} ${positionUnit}` : '— / — 音'}</span>
           </div>
         </div>
@@ -127,10 +128,11 @@ export default function App() {
           {midi.requesting ? '接続しています…' : midi.status === 'connected' ? 'MIDI接続済み' : 'MIDI接続'}
         </button>
       </section>
-      <DeveloperControls practice={practice} model={songState.model} plan={songState.plan} song={songState.song} error={songState.error} cursorIndex={cursorIndex} blocked={!scoreReady || showDemoCursor} onPrevious={() => moveCursor(-1)} onNext={() => moveCursor(1)} />
+      <DeveloperControls practice={practice} model={songState.model} plan={songState.plan} song={songState.song} error={songState.error} cursorIndex={cursorIndex} blocked={!scoreReady || showDemoCursor} onPrevious={() => moveCursor(-1)} onNext={() => moveCursor(1)}
+        demo={demo} demoDiagnostics={player.getDiagnostics()} outputDiagnostics={outputManager.getDiagnostics()} />
       <MidiDebugPanel latest={midi.latestEvent} lastNoteOn={midi.lastNoteOn} lastNoteOff={midi.lastNoteOff} />
       <MidiOutputPanel output={output} inputStatus={midi.status} onSelect={selectOutput} onPlay={playTestNote} onStop={stopAllNotes} onRetry={retryOutput} />
-      <footer>Phase 2E-D3.3 · 曲を選んで、順番に弾いてみよう</footer>
+      <footer>Phase 2E-D3.3.1 · 曲を選んで、順番に弾いてみよう</footer>
     </main>
   )
 }

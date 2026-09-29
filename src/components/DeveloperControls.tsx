@@ -6,14 +6,25 @@ import type { PracticePlan } from '../practice/PracticePlan'
 import { CHORD_WINDOW_MS } from '../practice/MomentMatcher'
 import type { Song } from '../songs/Song'
 import { ValidationReport } from './ValidationReport'
+import type { DemoPlayer, DemoSnapshot } from '../audio/DemoPlayer'
+import type { MidiOutputManager } from '../midi/MidiOutputManager'
 
-type Props = { practice: PracticeSnapshot; model?: ScoreModel | null; plan?: PracticePlan | null; song?: Song | null; error?: string | null; cursorIndex?: number; blocked?: boolean; onPrevious: () => void; onNext: () => void }
-export function DeveloperControls({ practice, model, plan, song, error, cursorIndex, blocked = false, onPrevious, onNext }: Props) {
+type Props = { practice: PracticeSnapshot; model?: ScoreModel | null; plan?: PracticePlan | null; song?: Song | null; error?: string | null; cursorIndex?: number; blocked?: boolean; onPrevious: () => void; onNext: () => void;
+  demo?: DemoSnapshot; demoDiagnostics?: ReturnType<DemoPlayer['getDiagnostics']>; outputDiagnostics?: ReturnType<MidiOutputManager['getDiagnostics']> }
+export function DeveloperControls({ practice, model, plan, song, error, cursorIndex, blocked = false, onPrevious, onNext, demo, demoDiagnostics: diagnostic, outputDiagnostics: output }: Props) {
   const { currentNoteIndex, totalNotes, expectedMidiNote, status } = practice
   const disabled = blocked || totalNotes === 0 || status !== 'idle'
   return (
     <details className="developer-controls">
       <summary>開発者用</summary>
+      {demo && diagnostic && output && <section className="demo-diagnostics" aria-label="手本再生の診断">
+        <h3>手本再生の診断</h3>
+        <p>Demo status：{demo.status} ／ Session：{diagnostic.playbackSession} ／ Generation：{diagnostic.generation}<br />
+          Sequence index：{diagnostic.sequenceIndex} ／ Start：{diagnostic.startSequenceIndex} ／ Length：{diagnostic.sequenceLength}<br />
+          Measure：{diagnostic.measure ?? '—'} ／ Repeat pass：{diagnostic.repeatPass ?? '—'}<br />
+          Scheduled timers：{diagnostic.scheduledTimers + output.scheduledTimers} ／ Active output notes：[{output.activeNotes.join(', ')}]<br />
+          Expired attacks：{diagnostic.skippedNotes} ／ Display errors：{diagnostic.visualErrors}</p>
+      </section>}
       {(model || error) && <section className="score-analysis" aria-label="Score解析">
         <h3>Score解析</h3>
         {song && <p>曲：{song.title} ／ パート：{song.partLabel}<br />作曲者・由来：{song.composer || '未指定'} ／ source：{song.source}</p>}
