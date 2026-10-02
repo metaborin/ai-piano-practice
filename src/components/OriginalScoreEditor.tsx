@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { Song } from '../songs/Song'
 import type { OriginalScoreAttachment, OriginalScoreRepository } from '../songs/OriginalScoreRepository'
 import { ORIGINAL_SCORE_ACCEPT, originalScoreSize, readOriginalScoreFile } from '../songs/readOriginalScoreFile'
@@ -10,6 +10,12 @@ export function OriginalScoreEditor({ song, repository, disabled, onSaved }: Pro
   const [deleting, setDeleting] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const confirmation = useRef<HTMLFormElement>(null)
+  useEffect(() => {
+    // The personal library has its own bounded scroller. Reveal the decision UI
+    // when the file picker closes instead of leaving it below the clipped card.
+    if (pending || deleting) confirmation.current?.scrollIntoView({ block: 'nearest' })
+  }, [pending, deleting])
   const generation = useRef(0)
   const read = async (file: File) => {
     const request = ++generation.current
@@ -36,7 +42,7 @@ export function OriginalScoreEditor({ song, repository, disabled, onSaved }: Pro
       <button disabled={disabled || busy} onClick={() => input.current?.click()}>{song.originalScore ? '元の楽譜を変更' : '元の楽譜を登録'}</button>
       {song.originalScore && <button disabled={disabled || busy} onClick={() => { setPending(null); setError(null); setDeleting(true) }}>元の楽譜を削除</button>}
     </div>
-    {(pending || deleting) && <form className="import-confirmation" aria-label="元の楽譜の登録・削除確認" onSubmit={event => { event.preventDefault(); void save() }}>
+    {(pending || deleting) && <form ref={confirmation} className="import-confirmation" aria-label="元の楽譜の登録・削除確認" onSubmit={event => { event.preventDefault(); void save() }}>
       <p>曲：{song.title}</p>
       {pending && <><p>ファイル：{pending.metadata.fileName}</p><p>形式：{pending.metadata.mimeType} · サイズ：{originalScoreSize(pending.metadata.size)}</p>
         {song.originalScore && <p>現在登録されている元の楽譜を置き換えますか？</p>}</>}

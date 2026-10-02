@@ -140,3 +140,26 @@ test('PDF fonts, Japanese CMaps and scan codecs are served below the repository 
     if (file.endsWith('.wasm')) expect(bytes.subarray(0, 4)).toEqual(Buffer.from([0, 97, 115, 109]))
   }
 })
+
+test('file-picker and delete confirmations are revealed within the library on desktop and touch widths', async ({ page }) => {
+  await setup(page)
+  for (const width of [1366, 390]) {
+    await page.setViewportSize({ width, height: 900 })
+    const chooser = page.waitForEvent('filechooser')
+    await button(page, '元の楽譜を登録').click()
+    await (await chooser).setFiles({ name: 'reference.pdf', mimeType: 'application/pdf', buffer: referencePdf() })
+    await expect(form(page)).toBeInViewport({ ratio: 0.95 })
+    await expect(form(page).getByRole('button', { name: '登録する', exact: true })).toBeInViewport({ ratio: 1 })
+    await expect.poll(() => form(page).evaluate(element => {
+      const box = element.getBoundingClientRect(), list = element.closest('.personal-song-list')!.getBoundingClientRect()
+      return box.top >= list.top - 1 && box.bottom <= list.bottom + 1
+    })).toBe(true)
+    await form(page).getByRole('button', { name: 'キャンセル' }).click()
+  }
+  await attach(page); await button(page, '元の楽譜を削除').click()
+  await expect(form(page)).toBeInViewport({ ratio: 0.95 })
+  await expect(button(page, '元の楽譜だけ削除する')).toBeInViewport({ ratio: 1 })
+  await page.screenshot({ path: 'test-results/phase2ee-confirmation.png' })
+  await form(page).getByRole('button', { name: 'キャンセル' }).click()
+  expect((await database(page)).assets).toHaveLength(1)
+})

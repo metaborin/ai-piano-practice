@@ -45,6 +45,8 @@ DB名は `ai-piano-practice` のまま、versionを1から2へ上げます。upg
 - 曲削除：曲レコードと紐付くBlobを同時削除。
 - transaction失敗：すべてrollback。新Blobだけ残る／旧Blobだけ消える状態を作りません。
 
+ファイル選択後と削除確認時は、一覧の内部スクロールを確認欄へ合わせます。高さ制限のある曲一覧でも確認欄が下に隠れず、登録・キャンセルを選べます。1366pxと390px幅で実際のfile chooserを使って確認しています。
+
 原譜は端末の同じブラウザ・同じサイトに保存されます。GitHubへのアップロードや端末間同期、バックアップ機能はありません。サイトデータ削除等に備え、ユーザーの元ファイルは引き続き保管してください。
 
 ## PDFと画像の表示
@@ -86,9 +88,9 @@ Appの表示状態は `{ requestId, mode: 'practice' | 'original' }`。右手／
 | `npm test` | 25ファイル・394件成功 |
 | `npm run build` | 成功、TypeScriptを含む。既存のOSMD大サイズチャンク警告あり |
 | 開発版E2E | 全196件を対象に実行。194件成功後、時刻依存2件を修正して成功を確認。関連32件の再実行は31件成功・長い反復1件が30秒の総実行枠に達したため60秒に変更し、本番版で成功を確認 |
-| ローカル本番配信 | 元の楽譜18件＋既存Pagesアセット1件、計19件すべて成功 |
+| ローカル本番配信 | 元の楽譜19件（確認欄の表示範囲を含む）＋既存Pagesアセット1件、計20件すべて成功 |
 
-長いシナリオの総実行枠は60秒ですが、個別の表示・状態の条件は緩めていません。本番配信19件は `npx playwright test --config=playwright.pages.config.ts tests/e2e/originalScore.spec.ts tests/e2e/originalErrors.spec.ts tests/pages/assets.spec.ts` で実行しました。GitHub Actionsでは既存機能も含む全197件を一括実行し、成功後だけ公開する既存条件を維持します。対象commit・Actions・公開URLでの実結果は最終報告で示します。
+長いシナリオの総実行枠は60秒ですが、個別の表示・状態の条件は緩めていません。本番配信テストは `npx playwright test --config=playwright.pages.config.ts tests/e2e/originalScore.spec.ts tests/e2e/originalErrors.spec.ts tests/pages/assets.spec.ts` で実行します。初回公開のCI全197件・公開URL19件は成功。登録確認の表示範囲を改善した最終版では、既存機能も含む全198件をCIで一括実行し、成功後だけ公開する条件を維持します。対象commit・Actions・公開URLでの実結果は最終報告で示します。
 
 追加テストは実ブラウザのIndexedDBを使い、PDF/各画像の保存・バイト一致・同一Songへの紐付け・再読み込み・取得・置換/両削除・v1移行・rollbackを検証します。マイムoriginal版で両手の反復2回目・赤表示・現在位置を保持し、参照中にも練習が進むこと、元の楽譜表示中の手本継続、復帰後のOSMD、MIDI clear/CC123/重複ハンドラーなしを確認します。
 
