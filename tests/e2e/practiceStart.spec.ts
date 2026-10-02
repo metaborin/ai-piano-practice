@@ -10,7 +10,7 @@ async function setup(page: Page, name = 'maim-maim-full-once') {
   await mockMidi(page); await page.goto('./')
   await expect(page.locator('.position')).toHaveText('1 / 14 音')
   await page.getByRole('button', { name: 'MIDI接続', exact: true }).click()
-  await page.locator('input[type=file]').setInputFiles({ name: name + '.musicxml', mimeType: 'application/xml', buffer: Buffer.from(fixture(name)) })
+  await page.locator('.song-import input[type=file]').setInputFiles({ name: name + '.musicxml', mimeType: 'application/xml', buffer: Buffer.from(fixture(name)) })
   await page.getByRole('form', { name: '曲の登録確認' }).getByRole('button', { name: '追加する', exact: true }).click()
   await page.locator('.personal-song-list > li').getByRole('button', { name: '選択', exact: true }).click()
   await expect(page.getByRole('combobox', { name: '練習の開始位置', exact: true })).toBeEnabled()

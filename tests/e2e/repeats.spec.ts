@@ -12,7 +12,7 @@ async function setup(page: Page, xml = fixture('maim-maim-full-original'), compr
   await mockMidi(page); await page.goto('./'); await expect(page.locator('.position')).toHaveText('1 / 14 音')
   await page.getByRole('button',{name:'MIDI接続',exact:true}).click()
   const buffer = compressed ? await new JSZip().file('META-INF/container.xml','<container><rootfiles><rootfile full-path="score.musicxml" media-type="application/vnd.recordare.musicxml+xml"/></rootfiles></container>').file('score.musicxml',xml).generateAsync({type:'nodebuffer'}) : Buffer.from(xml)
-  await page.locator('input[type=file]').setInputFiles({name:compressed?'original.mxl':'original.musicxml',mimeType:compressed?'application/vnd.recordare.musicxml':'application/xml',buffer})
+  await page.locator('.song-import input[type=file]').setInputFiles({name:compressed?'original.mxl':'original.musicxml',mimeType:compressed?'application/vnd.recordare.musicxml':'application/xml',buffer})
   await page.getByRole('form',{name:'曲の登録確認'}).getByRole('button',{name:'追加する',exact:true}).click()
   await page.locator('.personal-song-list > li').getByRole('button',{name:'選択',exact:true}).click()
   await expect(page.locator('.score-renderer svg')).toBeVisible()

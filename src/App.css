@@ -37,6 +37,19 @@
 .waiting .status-dot { background: #b27816; }
 .error .status-dot { background: #bf4434; }
 .score-card { border: 1px solid #d9e1dc; border-radius: 14px; background: white; display: flex; flex-direction: column; max-height: calc(100dvh - 24px); }
+.score-display-controls { display: flex; gap: 8px; padding: 8px 12px; flex-shrink: 0; }
+.score-display-controls button { min-height: 48px; padding: 8px 20px; }
+.score-display-controls button[aria-pressed="true"] { background: #28694e; color: white; }
+.original-score-editor { border-top: 1px solid #e3e9e5; margin-top: 12px; padding-top: 10px; }
+.original-score-editor button { padding: 8px 12px; font-size: 14px; }
+.original-score-view { overflow: auto; overflow-anchor: none; scrollbar-gutter: stable; min-height: 0; height: 70dvh; padding: 12px; background: #e8eeea; }
+.original-score-view:focus-visible { outline: 3px solid #2269c0; outline-offset: -3px; }
+.original-reference-note { font-size: 13px; margin-bottom: 10px; overflow-wrap: anywhere; }
+.original-score-image { display: block; width: 100%; height: auto; }
+.original-pdf-page { position: relative; width: 100%; margin: 0 0 12px; background: white; }
+.original-pdf-page canvas { width: 100%; height: 100%; display: block; }
+.pdf-page-number { position: absolute; bottom: 4px; right: 8px; font-size: 12px; color: #555; background: #ffffffc0; }
+[hidden] { display: none !important; }
 .score-status { position: sticky; top: 0; z-index: 5; background: #fff; border-radius: 14px 14px 0 0; border-bottom: 1px solid #edf2ee; flex-shrink: 0; }
 .score-status { display: flex; align-items: center; }
 .score-feedback-panel { flex: 1; min-width: 0; }

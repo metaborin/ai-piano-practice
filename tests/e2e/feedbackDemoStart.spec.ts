@@ -9,7 +9,7 @@ async function setup(page: Page, file?: string, xml?: string) {
   await expect(page.locator('.position')).toHaveText('1 / 14 音')
   await page.getByRole('button', { name: 'MIDI接続', exact: true }).click()
   if (file) {
-    await page.locator('input[type=file]').setInputFiles({ name: `${file}.musicxml`, mimeType: 'application/xml', buffer: Buffer.from(xml ?? fixture(file)) })
+    await page.locator('.song-import input[type=file]').setInputFiles({ name: `${file}.musicxml`, mimeType: 'application/xml', buffer: Buffer.from(xml ?? fixture(file)) })
     await page.getByRole('form', { name: '曲の登録確認' }).getByRole('button', { name: '追加する', exact: true }).click()
     await page.locator('.personal-song-list > li').getByRole('button', { name: '選択', exact: true }).click()
     await expect(page.locator('.score-renderer svg')).toBeVisible()

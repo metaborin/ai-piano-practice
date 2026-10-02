@@ -12,7 +12,7 @@ async function setup(page: Page) {
   await mockMidi(page); await page.goto('./')
   await expect(page.locator('.position')).toHaveText('1 / 14 音')
   await page.getByRole('button', { name: 'MIDI接続', exact: true }).click()
-  await page.locator('input[type=file]').setInputFiles({ name: 'long-study.musicxml', mimeType: 'application/xml', buffer: Buffer.from(xml) })
+  await page.locator('.song-import input[type=file]').setInputFiles({ name: 'long-study.musicxml', mimeType: 'application/xml', buffer: Buffer.from(xml) })
   await page.getByRole('form', { name: '曲の登録確認' }).getByRole('button', { name: '追加する', exact: true }).click()
   const started = Date.now()
   await page.locator('.personal-song-list > li').getByRole('button', { name: '選択', exact: true }).click()

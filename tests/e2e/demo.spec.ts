@@ -17,6 +17,8 @@ test('plays the actual XML score in order with durations and cursor, ignores loo
   await page.getByRole('button', { name: '練習開始' }).click()
   await page.evaluate(() => { window.midiTest.send([0x90, 60, 80]); window.midiTest.send([0x80, 60, 0]); window.midiTest.loopback = true })
   await expect(page.locator('.position')).toHaveText('2 / 14 音')
+  await page.clock.install()
+  await page.clock.pauseAt(new Date(await page.evaluate(() => Date.now() + 100)))
   await page.getByRole('button', { name: '手本を聴く' }).click()
   await expect(page.locator('.practice-controls')).toHaveAttribute('data-practice-status', 'demoPlaying')
   await expect(page.getByRole('button', { name: '再生中…' })).toBeDisabled()
@@ -35,7 +37,9 @@ test('plays the actual XML score in order with durations and cursor, ignores loo
     await expect(page.locator('.practice-controls')).toHaveAttribute('data-correct-count', '1')
     await expect(page.locator('.practice-controls')).toHaveAttribute('data-practice-index', '1')
     if (index === 4) await page.screenshot({ path: 'test-results/phase2cb-playing.png', fullPage: true })
+    if (index < 13) await page.clock.runFor(index === 6 ? 1200 : 600)
   }
+  await page.clock.runFor(1080)
   await expect(page.locator('.demo-controls')).toHaveAttribute('data-demo-status', 'completed')
   await expect(page.locator('.demo-message')).toHaveText('手本の再生が終わりました')
   await expect(page.locator('.position')).toHaveText('2 / 14 音')

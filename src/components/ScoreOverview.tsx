@@ -34,7 +34,7 @@ export const ScoreOverview = memo(function ScoreOverview({ ref, target, view }: 
     let moment: string | null = null, busy = false, disposed = false, attempted = false, ready = false, updates = 0
     const fail = () => { if (!disposed) { ready = false; container.dataset.state = 'error'; status.hidden = false; status.textContent = '全体表示を作成できませんでした'; content.hidden = true } }
     const update = () => {
-      if (disposed || !host) return
+      if (disposed || !host || panel.hidden || !area.clientWidth) return
       // Deferred generation must never start once practice/demo has begun.
       if (!attempted && !busy) {
         attempted = true

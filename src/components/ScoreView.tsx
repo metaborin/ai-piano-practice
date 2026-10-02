@@ -33,9 +33,19 @@ type Props = {
   onError: (requestId: number, message: string) => void
   overviewTarget?: RefObject<HTMLDivElement | null>
   overviewBusy?: boolean
+  active?: boolean
 }
 
-export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missingNoteIds, followMode, focusRequest = 0, returnRequest = 0, plan, demoPreview, onSystems, onReady, onError, overviewTarget, overviewBusy = false }: Props) {
+export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missingNoteIds, followMode, focusRequest = 0, returnRequest = 0, plan, demoPreview, onSystems, onReady, onError, overviewTarget, overviewBusy = false, active = true }: Props) {
+  const activeRef = useRef(active)
+  const savedScroll = useRef({ top: 0, left: 0 })
+  useLayoutEffect(() => {
+    activeRef.current = active
+    if (active && viewRef.current) {
+      viewRef.current.scrollTop = savedScroll.current.top
+      viewRef.current.scrollLeft = savedScroll.current.left
+    }
+  }, [active])
   const [followWarning, setFollowWarning] = useState(false)
   const safeFollow = useCallback((...args: Parameters<typeof followScoreCursor>) => {
     try { followScoreCursor(...args) } catch { setFollowWarning(true) }
@@ -113,7 +123,7 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
       else display.cursor.hide()
       display.cursor.cursorElement.alt = ''
       display.cursor.cursorElement.setAttribute('aria-hidden', 'true')
-      if (followRef.current.active && viewRef.current && practiceCursor && cursorVisibleRef.current) safeFollow(viewRef.current, display.cursor.cursorElement, true)
+      if (activeRef.current && followRef.current.active && viewRef.current && practiceCursor && cursorVisibleRef.current) safeFollow(viewRef.current, display.cursor.cursorElement, true)
     }
     const load = async () => {
       try {
@@ -165,10 +175,10 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
         observer = new ResizeObserver(() => {
           // A repeat badge / progress message must not rebuild the whole score.
           const width = container.clientWidth, height = window.innerHeight
-          if (width <= 0 || (Math.abs(width - lastWidth) < 1 && Math.abs(height - lastWindowHeight) < 1)) return
+          if (!activeRef.current || width <= 0 || (Math.abs(width - lastWidth) < 1 && Math.abs(height - lastWindowHeight) < 1)) return
           lastWidth = width; lastWindowHeight = height
           cancelAnimationFrame(frame)
-          frame = requestAnimationFrame(() => { try { render() } catch { setFollowWarning(true) } })
+          frame = requestAnimationFrame(() => { if (activeRef.current) { try { render() } catch { setFollowWarning(true) } } })
         })
         observer.observe(container)
         if (viewRef.current) observer.observe(viewRef.current)
@@ -188,6 +198,7 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
   }, [requestId, score, onReady, onError, onSystems, safeFollow])
 
   useLayoutEffect(() => {
+    if (!active) return
     overviewRef.current?.position(cursorMomentId ?? null, overviewBusy)
     cursorVisibleRef.current = cursorMomentId !== null
     const display = displayRef.current
@@ -221,24 +232,26 @@ export function ScoreView({ requestId, score, cursorIndex, cursorMomentId, missi
           rect && hostBox && preview ? { box: { top: hostBox.top + rect.top, bottom: hostBox.top + rect.bottom, left: hostBox.left + rect.left, right: hostBox.left + rect.right },
             currentBox: currentRect ? { top: hostBox.top + currentRect.top, bottom: hostBox.top + currentRect.bottom, left: hostBox.left + currentRect.left, right: hostBox.left + currentRect.right } : undefined,
             navigationJump: preview.navigationJump } : undefined)
-        view.dataset.currentSystem = String(layout?.systems.get(cursorMomentId ?? '')?.system ?? '')
-        view.dataset.lookaheadMoment = preview?.momentId ?? ''
-        view.dataset.lookaheadSystem = String(preview ? layout?.systems.get(preview.momentId)?.system ?? '' : '')
-        view.dataset.navigationJump = String(jumping || !!preview?.navigationJump)
+        view.setAttribute('data-current-system', String(layout?.systems.get(cursorMomentId ?? '')?.system ?? ''))
+        view.setAttribute('data-lookahead-moment', preview?.momentId ?? '')
+        view.setAttribute('data-lookahead-system', String(preview ? layout?.systems.get(preview.momentId)?.system ?? '' : ''))
+        view.setAttribute('data-navigation-jump', String(jumping || !!preview?.navigationJump))
         followRef.current = { mode: followMode, moment: cursorMomentId, occurrenceIndex: cursorIndex, request: focusRequest, returnRequest, y, previewId, active: previous.active || shouldFollow }
       }
     } catch { setFollowWarning(true) }
-  }, [cursorIndex, cursorMomentId, requestId, onError, followMode, focusRequest, returnRequest, plan, demoPreview, safeFollow, overviewBusy])
+  }, [active, cursorIndex, cursorMomentId, requestId, onError, followMode, focusRequest, returnRequest, plan, demoPreview, safeFollow, overviewBusy])
 
   useLayoutEffect(() => {
     missingRef.current = missingNoteIds
-    noteMapRef.current?.highlight(missingNoteIds ?? [])
-  }, [missingNoteIds])
+    if (active) noteMapRef.current?.highlight(missingNoteIds ?? [])
+  }, [active, missingNoteIds])
 
   return (
     <>
     {overviewTarget && <ScoreOverview ref={overviewRef} target={overviewTarget} view={viewRef} />}
-    <div ref={viewRef} className="score-view" role="region" tabIndex={0} aria-label="楽譜のスクロール領域">
+    <div ref={viewRef} className="score-view" hidden={!active} role="region" tabIndex={0} aria-label="楽譜のスクロール領域" onScroll={event => {
+      if (active) savedScroll.current = { top: event.currentTarget.scrollTop, left: event.currentTarget.scrollLeft }
+    }}>
       {followWarning && <p role="status">楽譜の追従を更新できませんでした。手本の音は続きます。停止後に曲を選び直してください。</p>}
       <div ref={containerRef} className="score-renderer" role="img" aria-label={score.title + 'の楽譜'} />
     </div>

@@ -47,5 +47,8 @@ export function useSongLibrary(repository: WritableSongRepository, onInitialSong
     ++generation.current
     setLibrary((state) => ({ ...state, status: 'ready', songs: state.songs.filter((song) => song.id !== id) }))
   }
-  return { library, retry, addSong, deleteSong }
+  const updateOriginalScore = (song: Song) => setLibrary(state => ({ ...state,
+    songs: state.songs.map(item => item.id === song.id ? { ...item, originalScore: song.originalScore } : item),
+  }))
+  return { library, retry, addSong, deleteSong, updateOriginalScore }
 }

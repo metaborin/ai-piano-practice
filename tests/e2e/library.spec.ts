@@ -34,7 +34,7 @@ test('opening and cancelling the file picker preserves the current practice and 
   await expect(page.locator('.practice-controls')).toHaveAttribute('data-practice-status', 'practicing')
   await expect(page.locator('.midi-status')).toHaveText('MIDI 接続中')
   expect(await page.evaluate(() => window.midiTest.requests)).toBe(1)
-  await expect(page.locator('input[type="file"]')).toHaveAttribute('accept', '.musicxml,.xml,.mxl')
+  await expect(page.locator('.song-import input[type="file"]')).toHaveAttribute('accept', '.musicxml,.xml,.mxl')
   expect(dialogs).toEqual([])
   expect(fileChoosers).toBe(2)
   await page.getByRole('combobox', { name: '練習する曲' }).selectOption('short-melody')

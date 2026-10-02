@@ -18,6 +18,10 @@ export type OriginalScore = {
   readonly type: 'pdf' | 'image'
   readonly storageId: string
   readonly fileName?: string
+  /** Optional only for metadata saved before Phase 2E-E. New registrations set all fields. */
+  readonly mimeType?: string
+  readonly size?: number
+  readonly createdAt?: number
 }
 
 /** Serializable metadata; no loaders, DOM, MIDI state or binary attachments. */

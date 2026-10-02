@@ -11,7 +11,7 @@ async function setup(page: Page, mode: PracticeMode, measure: number) {
   await page.setViewportSize({ width: 1366, height: 768 }); await page.emulateMedia({ reducedMotion: 'reduce' })
   await mockMidi(page); await page.goto('./'); await expect(page.locator('.position')).toHaveText('1 / 14 音')
   await button(page, 'MIDI接続').click()
-  await page.locator('input[type=file]').setInputFiles({ name: 'original.musicxml', mimeType: 'application/xml', buffer: Buffer.from(fixture('maim-maim-full-original')) })
+  await page.locator('.song-import input[type=file]').setInputFiles({ name: 'original.musicxml', mimeType: 'application/xml', buffer: Buffer.from(fixture('maim-maim-full-original')) })
   await page.getByRole('form', { name: '曲の登録確認' }).getByRole('button', { name: '追加する', exact: true }).click()
   await page.locator('.personal-song-list > li').getByRole('button', { name: '選択', exact: true }).click()
   await expect(page.locator('.position')).toHaveText('1 / 204 ステップ')

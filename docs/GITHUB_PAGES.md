@@ -4,9 +4,11 @@
 
 公開URL: **https://metaborin.github.io/ai-piano-practice/**
 
-Phase 2E-D3.4の楽譜全体ナビゲータ、D3.3.2のoriginal版手本再生の修正、先読みスクロール、単純反復と、任意小節からの安全な練習開始・再開始・長曲追従・不足音表示・途中手本演奏・テンポ・検証レポート・和音・両手練習・曲保存・MIDI入出力をChromeOSのChromeからHTTPSで利用するための公開設定です。Chromebookでの利用にNode.jsやLinux開発環境は必要ありません。追加曲は端末のブラウザにだけ保存します。
+Phase 2E-Eの練習用／元の楽譜切り替え、D3.4の楽譜全体ナビゲータ、D3.3.2のoriginal版手本再生の修正、先読みスクロール、単純反復と、任意小節からの安全な練習開始・再開始・長曲追従・不足音表示・途中手本演奏・テンポ・検証レポート・和音・両手練習・曲保存・MIDI入出力をChromeOSのChromeからHTTPSで利用するための公開設定です。Chromebookでの利用にNode.jsやLinux開発環境は必要ありません。追加曲と元PDF・画像は端末のブラウザにだけ保存します。
 
 全体ナビゲータはメイン楽譜の描画結果から端末内で1回生成します。追加のURL取得やMIDIアクセス要求はありません。
+
+PDF.js本体とworkerはViteが配信する遅延読み込みアセットです。フォント・CMap・画像デコーダーは `pdfAssets.ts` が `dist/pdfjs/` に同梱し、`import.meta.env.BASE_URL` を使って取得します。CDNやサーバーへ元の楽譜を送る処理はありません。実際のBlobはIndexedDBから読み出します。Eの検証結果・実機手順は [Phase 2E-E報告](PHASE2EE.md) を参照してください。
 
 ## 変更内容
 
@@ -76,7 +78,7 @@ npx playwright install chromium
 npm run test:pages
 ```
 
-このコマンドはbuild後、4174番ポートで `dist/` を起動し、曲追加・実IndexedDB・MXL・曲選択・既存機能・長曲追従・先読み・単純反復・手本演奏・サブパスのテストを実行します。3つの内蔵XMLがassets配下から取得されることも確認します。MIDI入出力を模擬し、実際の演奏機器は操作しません。最新の件数・結果と今回の実機確認項目は [Phase 2E-D3.4報告](PHASE2ED34.md) を参照してください。
+このコマンドはbuild後、4174番ポートで `dist/` を起動し、曲追加・実IndexedDB・MXL・曲選択・既存機能・長曲追従・先読み・単純反復・手本演奏・元PDF/画像・サブパスのテストを実行します。3つの内蔵XMLとPDF.js関連アセットの取得も確認します。MIDI入出力を模擬し、実際の演奏機器は操作しません。最新の件数・結果と今回の実機確認項目は [Phase 2E-E報告](PHASE2EE.md) を参照してください。
 
 公開済みサイトを PowerShell から同じテストで確認する場合:
 

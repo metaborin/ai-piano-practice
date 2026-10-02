@@ -3,6 +3,8 @@ import type { ImportedSong, Song } from '../songs/Song'
 import type { SongLibraryState } from '../songs/useSongLibrary'
 import { compatibilityLabel } from '../songs/inspectMusicXml'
 import { SongImport } from './SongImport'
+import { OriginalScoreEditor } from './OriginalScoreEditor'
+import type { OriginalScoreRepository } from '../songs/OriginalScoreRepository'
 
 type Props = {
   library: SongLibraryState
@@ -11,9 +13,11 @@ type Props = {
   onRetry: () => void
   onAdd: (song: ImportedSong) => Promise<void>
   onDelete: (id: string) => Promise<void>
+  originalRepository: OriginalScoreRepository
+  onOriginalSaved: (song: Song) => void
 }
 
-export function SongLibrary({ library, selectedId, onSelect, onRetry, onAdd, onDelete }: Props) {
+export function SongLibrary({ library, selectedId, onSelect, onRetry, onAdd, onDelete, originalRepository, onOriginalSaved }: Props) {
   const [confirmId, setConfirmId] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [deleteError, setDeleteError] = useState<string | null>(null)
@@ -62,6 +66,7 @@ export function SongLibrary({ library, selectedId, onSelect, onRetry, onAdd, onD
             {song.compatibility?.status === 'unsupported' && <p>{song.compatibility.reasons.join('、')}</p>}
             <div className="library-actions"><button disabled={deletingId === song.id || library.status !== 'ready'} onClick={() => void onSelect(song)} aria-pressed={selectedId === song.id}>選択</button><button disabled={!!deletingId} onClick={() => { setConfirmId(song.id); setDeleteError(null) }}>削除</button></div>
             {confirmId === song.id && <div className="delete-confirmation"><p>この曲を削除しますか？</p><div className="library-actions"><button disabled={!!deletingId} onClick={() => setConfirmId(null)}>キャンセル</button><button disabled={!!deletingId} onClick={() => void remove(song.id)}>{deletingId ? '削除中…' : '削除する'}</button></div></div>}
+            <OriginalScoreEditor song={song} repository={originalRepository} onSaved={onOriginalSaved} disabled={!!deletingId || library.status !== 'ready'} />
           </li>)}</ul>
           {deleteError && <p role="alert">{deleteError}</p>}
         </div>

@@ -1,12 +1,13 @@
 import type { ImportedSong, Song } from './Song'
 import type { SongRepository, WritableSongRepository } from './SongRepository'
 import { recheckCompatibility } from './inspectMusicXml'
+import type { OriginalScoreAttachment, OriginalScoreRepository } from './OriginalScoreRepository'
 
-export class LibrarySongRepository implements WritableSongRepository {
+export class LibrarySongRepository implements WritableSongRepository, OriginalScoreRepository {
   private readonly builtin: SongRepository
-  private readonly imported: WritableSongRepository
+  private readonly imported: WritableSongRepository & OriginalScoreRepository
   private storageError: string | null = null
-  constructor(builtin: SongRepository, imported: WritableSongRepository) {
+  constructor(builtin: SongRepository, imported: WritableSongRepository & OriginalScoreRepository) {
     this.builtin = builtin
     this.imported = imported
   }
@@ -34,4 +35,13 @@ export class LibrarySongRepository implements WritableSongRepository {
     if (await this.builtin.getSong(id)) throw new Error('内蔵曲は削除できません。')
     await this.imported.deleteSong(id)
   }
+  async saveOriginalScore(id: string, attachment: OriginalScoreAttachment) {
+    if (await this.builtin.getSong(id)) throw new Error('内蔵曲は変更できません。')
+    return this.imported.saveOriginalScore(id, attachment)
+  }
+  async deleteOriginalScore(id: string) {
+    if (await this.builtin.getSong(id)) throw new Error('内蔵曲は変更できません。')
+    return this.imported.deleteOriginalScore(id)
+  }
+  getOriginalScore(id: string) { return this.imported.getOriginalScore(id) }
 }

@@ -26,7 +26,7 @@ async function upload(page: Page, content = xml, compressed = false) {
     zip.file('score.xml', content)
     buffer = await zip.generateAsync({ type: 'nodebuffer' })
   }
-  await page.locator('input[type=file]').setInputFiles({ name: 'validation.' + (compressed ? 'mxl' : 'musicxml'), mimeType: 'application/octet-stream', buffer })
+  await page.locator('.song-import input[type=file]').setInputFiles({ name: 'validation.' + (compressed ? 'mxl' : 'musicxml'), mimeType: 'application/octet-stream', buffer })
   await expect(form(page).getByRole('button', { name: '追加する', exact: true })).toBeEnabled()
 }
 async function saveAndSelect(page: Page) {
@@ -35,7 +35,7 @@ async function saveAndSelect(page: Page) {
 }
 async function records(page: Page) {
   return page.evaluate(() => new Promise<ImportedSong[]>((resolve) => {
-    const request = indexedDB.open('ai-piano-practice', 1)
+    const request = indexedDB.open('ai-piano-practice')
     request.onsuccess = () => { const db = request.result, tx = db.transaction('songs'), read = tx.objectStore('songs').getAll(); tx.oncomplete = () => { db.close(); resolve(read.result) } }
   }))
 }
@@ -111,7 +111,7 @@ test('metadata tempo survives reload and mode selection; XML wins; originalScore
   ].map((entry) => ({ ...entry, source: 'imported', composer: '以前の作者', partLabel: 'SECONDO', originalFileName: 'score.xml', fileFormat: 'musicxml', createdAt: 100,
     originalScore: { type: 'pdf', storageId: 'keep-this-reference', fileName: '自分の原譜.pdf' }, compatibility: { status: 'supported', version: 3, reasons: [] } }))
   await page.evaluate((entries) => new Promise<void>((resolve) => {
-    const request = indexedDB.open('ai-piano-practice', 1)
+    const request = indexedDB.open('ai-piano-practice')
     request.onsuccess = () => { const db = request.result, tx = db.transaction('songs', 'readwrite'); for (const entry of entries) tx.objectStore('songs').add(entry); tx.oncomplete = () => { db.close(); resolve() } }
   }), old)
   const before = await records(page)

@@ -19,7 +19,7 @@ async function setup(page: Page) {
   await page.getByRole('button', { name: 'MIDI接続', exact: true }).click()
 }
 async function add(page: Page, file: string) {
-  await page.locator('input[type=file]').setInputFiles({ name: file + '.musicxml', mimeType: 'application/xml', buffer: Buffer.from(fixture(file)) })
+  await page.locator('.song-import input[type=file]').setInputFiles({ name: file + '.musicxml', mimeType: 'application/xml', buffer: Buffer.from(fixture(file)) })
   const form = page.getByRole('form', { name: '曲の登録確認' })
   await expect(form.getByRole('button', { name: '追加する', exact: true })).toBeEnabled()
   await form.getByRole('button', { name: '追加する', exact: true }).click()
@@ -71,7 +71,7 @@ test('existing Phase 2E-B records are reanalysed without migration, rewriting XM
   ].map((song) => ({ ...song, source: 'imported', partLabel: '追加曲', originalFileName: song.id + '.xml', fileFormat: 'musicxml', createdAt: 100, originalScore: { type: 'pdf', storageId: 'future-reference-only' } }))
   await setup(page)
   await page.evaluate((records) => new Promise<void>((resolve, reject) => {
-    const request = indexedDB.open('ai-piano-practice', 1)
+    const request = indexedDB.open('ai-piano-practice')
     request.onerror = () => reject(request.error)
     request.onsuccess = () => {
       const db = request.result, transaction = db.transaction('songs', 'readwrite')
@@ -92,7 +92,7 @@ test('existing Phase 2E-B records are reanalysed without migration, rewriting XM
   await page.locator('[data-song-id="imported:old-melody"]').getByRole('button', { name: '選択', exact: true }).click()
   await expect(page.locator('.position')).toHaveText('1 / 3 音')
   const after = await page.evaluate(() => new Promise<unknown[]>((resolve) => {
-    const request = indexedDB.open('ai-piano-practice', 1)
+    const request = indexedDB.open('ai-piano-practice')
     request.onsuccess = () => {
       const db = request.result, tx = db.transaction('songs'), get = tx.objectStore('songs').getAll()
       tx.oncomplete = () => { db.close(); resolve(get.result) }

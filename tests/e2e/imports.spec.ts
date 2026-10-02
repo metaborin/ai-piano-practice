@@ -19,7 +19,7 @@ async function setup(page: Page) {
   await expect(page.locator('.position')).toHaveText('1 / 14 音')
 }
 async function upload(page: Page, name = 'test.musicxml', content: string | Buffer = xml) {
-  await page.locator('input[type=file]').setInputFiles({ name, mimeType: 'application/octet-stream', buffer: Buffer.isBuffer(content) ? content : Buffer.from(content) })
+  await page.locator('.song-import input[type=file]').setInputFiles({ name, mimeType: 'application/octet-stream', buffer: Buffer.isBuffer(content) ? content : Buffer.from(content) })
 }
 const form = (page: Page) => page.getByRole('form', { name: '曲の登録確認' })
 const cards = (page: Page) => page.locator('.personal-song-list > li')
@@ -31,7 +31,7 @@ async function save(page: Page, name = 'test.musicxml', content: string | Buffer
 }
 async function records(page: Page) {
   return page.evaluate(() => new Promise<{ id: string; title: string; composer: string; musicXml: { value: string }; source: string; originalFileName: string; createdAt: number; fileFormat: string; compatibility: { status: string } }[]>((resolve, reject) => {
-    const request = indexedDB.open('ai-piano-practice', 1)
+    const request = indexedDB.open('ai-piano-practice')
     request.onerror = () => reject(request.error)
     request.onsuccess = () => {
       const db = request.result
@@ -245,7 +245,7 @@ test('compatibility is rechecked from XML and stale cached versions are not trus
   await setup(page)
   await save(page)
   await page.evaluate(() => new Promise<void>((resolve) => {
-    const open = indexedDB.open('ai-piano-practice', 1)
+    const open = indexedDB.open('ai-piano-practice')
     open.onsuccess = () => {
       const db = open.result
       const transaction = db.transaction('songs', 'readwrite')
