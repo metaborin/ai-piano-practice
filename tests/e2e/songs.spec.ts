@@ -65,6 +65,10 @@ for (const song of catalog) {
     await strike(page, song.first)
     await expect(page.locator('.practice-controls')).toHaveAttribute('data-correct-count', '1')
     await page.evaluate(() => { window.midiTest.loopback = true })
+    // Freeze each target while reading both progress and cursor; wall-time reads can
+    // straddle a note boundary on a busy machine and compare different instants.
+    await page.clock.install()
+    await page.clock.pauseAt(new Date(await page.evaluate(() => Date.now() + 100)))
     await page.getByRole('button', { name: '手本を聴く' }).click()
     let previousCursor = ''
     for (let index = 0; index < notes.length; index++) {
@@ -76,6 +80,7 @@ for (const song of catalog) {
       expect(cursor).not.toBe(previousCursor)
       previousCursor = cursor
       await expect(page.locator('.practice-controls')).toHaveAttribute('data-correct-count', '1')
+      await page.clock.runFor(notes[index].beats * 600)
     }
     await expect(page.locator('.demo-controls')).toHaveAttribute('data-demo-status', 'completed')
     await expect(page.locator('.position')).toHaveText('2 / ' + song.count + ' 音')

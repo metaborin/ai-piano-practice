@@ -4,10 +4,10 @@ import type { OriginalScore } from '../songs/Song'
 import type { OriginalScoreRepository } from '../songs/OriginalScoreRepository'
 
 const PdfScoreView = lazy(() => import('./PdfScoreView'))
-type Props = { original: OriginalScore; repository: OriginalScoreRepository; active: boolean }
+type Props = { original: OriginalScore; repository: OriginalScoreRepository; active: boolean; zoom?: number }
 
 /** Keyed by storageId: never shares a Blob, scroll position or URL across attachments. */
-export const OriginalScoreView = memo(function OriginalScoreView({ original, repository, active }: Props) {
+export const OriginalScoreView = memo(function OriginalScoreView({ original, repository, active, zoom = 100 }: Props) {
   const panel = useRef<HTMLDivElement>(null)
   const scroll = useRef({ top: 0, left: 0 })
   const ready = useRef(false)
@@ -20,7 +20,9 @@ export const OriginalScoreView = memo(function OriginalScoreView({ original, rep
   }, [])
   return <div className="original-score-view" ref={panel} hidden={!active} role="region" tabIndex={0} aria-label="元の楽譜のスクロール領域"
     onScroll={event => { if (active && ready.current) scroll.current = { top: event.currentTarget.scrollTop, left: event.currentTarget.scrollLeft } }}>
-    {active && <OriginalScoreContent original={original} repository={repository} panel={panel} onReady={restore} />}
+    <div className="original-score-content" style={{ width: `${zoom}%` }}>
+      {active && <OriginalScoreContent original={original} repository={repository} panel={panel} onReady={restore} />}
+    </div>
   </div>
 })
 
