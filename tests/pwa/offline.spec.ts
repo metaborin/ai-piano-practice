@@ -3,7 +3,7 @@ import { mockMidi } from '../e2e/midiFixture'
 import { button, midiState, ready, records, savedCard, saveSong, simulateInstallPrompt, simulateStandalone } from './helpers'
 
 test.use({ serviceWorkers: 'allow' })
-test.setTimeout(90_000)
+test.setTimeout(process.env.PLAYWRIGHT_BASE_URL ? 180_000 : 90_000)
 
 test('manifest, Chrome installability, scoped worker and complete static precache', async ({ page, context, baseURL }) => {
   await page.goto('./'); await ready(page)

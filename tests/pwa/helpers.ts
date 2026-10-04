@@ -7,7 +7,9 @@ export const button = (page: Page, name: string) => page.getByRole('button', { n
 export const savedCard = (page: Page) => page.locator('.personal-song-list > li').first()
 export async function ready(page: Page) {
   await expect(page.locator('.position')).toHaveText('1 / 14 音')
-  await expect(page.locator('.pwa-controls')).toHaveAttribute('data-offline-ready', 'true', { timeout: 30_000 })
+  // A cold Pages edge may take over 30s to deliver the complete PDF/font precache.
+  const cacheTimeout = process.env.PLAYWRIGHT_BASE_URL ? 120_000 : 30_000
+  await expect(page.locator('.pwa-controls')).toHaveAttribute('data-offline-ready', 'true', { timeout: cacheTimeout })
   await page.waitForFunction(() => !!navigator.serviceWorker.controller)
 }
 export async function saveSong(page: Page, kind: 'pdf' | 'image' = 'pdf') {
