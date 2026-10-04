@@ -1,0 +1,14 @@
+.pwa-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-bottom: 8px; color: #4a6256; font-size: 14px; }
+.pwa-controls button { min-height: 44px; padding: 8px 14px; font-size: 14px; }
+.pwa-update { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; background: #e5f1e9; border-radius: 8px; padding: 4px 10px; }
+.pwa-offline { padding: 4px 8px; border: 1px solid #b8c8c0; border-radius: 6px; }
+.pwa-help { margin-left: auto; }
+.pwa-help[open] { flex-basis: 100%; }
+.pwa-help summary { cursor: pointer; min-height: 44px; padding: 12px 0; }
+.pwa-help p, .pwa-message { margin: 6px 0; }
+.pwa-confirm { flex-basis: 100%; padding: 10px; border: 2px solid #28694e; border-radius: 8px; background: #f5f7f5; color: #23332f; }
+.pwa-confirm p { margin: 0 0 8px; }
+.pwa-confirm button { margin-right: 8px; }
+.original-fullscreen .pwa-controls { flex: 0 0 auto; order: 0; margin: 0; }
+.original-fullscreen .pwa-help, .original-fullscreen .pwa-install { display: none; }
+.original-fullscreen .pwa-controls:has(> :not(.pwa-help, .pwa-install)) { padding: 4px 12px; }

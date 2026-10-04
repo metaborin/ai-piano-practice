@@ -25,6 +25,7 @@ import type { PracticeMode } from './practice/PracticePlan'
 import { FLOW_LABELS } from './practice/PracticeAttemptResult'
 import type { PracticeFlowMode } from './practice/PracticeAttemptResult'
 import { useOriginalFullscreen } from './components/useOriginalFullscreen'
+import { PwaControls } from './pwa/PwaControls'
 import './App.css'
 
 export default function App() {
@@ -105,7 +106,7 @@ export default function App() {
     <main className="app">
       <header className="app-header">
         <div>
-          <p className="eyebrow">ピアノ練習 · Phase 2E-E1</p>
+          <p className="eyebrow">ピアノ練習 · Phase 2F</p>
           <h1>{title}</h1>
           <p className="subtitle">{songState.song?.partLabel ?? '曲を選んで練習しましょう'}</p>
         </div>
@@ -113,6 +114,7 @@ export default function App() {
       </header>
       <SongLibrary library={library} selectedId={songState.song?.id ?? ''} onSelect={selectSong} onRetry={retry} onAdd={addSong} onDelete={removeSong} originalRepository={songRepository} onOriginalSaved={originalSaved} />
       <div ref={fullscreenRoot} className={`practice-workspace${isFullscreen ? ' original-fullscreen' : ''}`} data-fullscreen={isFullscreen}>
+      <PwaControls busy={practice.status === 'practicing' || demo.status === 'playing' || output.playing} beforeReload={() => { player.stop(); if (outputManager.getSnapshot().playing) outputManager.stopAllNotes() }} />
       <div className="fullscreen-toolbar" hidden={!isFullscreen}>
         <button className="fullscreen-exit" onClick={exitFullscreen}>× 全画面終了</button>
         <div className="original-zoom" role="group" aria-label="原譜の拡大縮小">
@@ -194,7 +196,7 @@ export default function App() {
         demo={demo} demoDiagnostics={player.getDiagnostics()} outputDiagnostics={outputManager.getDiagnostics()} midiTrace={outputManager.trace} />
       <MidiDebugPanel latest={midi.latestEvent} lastNoteOn={midi.lastNoteOn} lastNoteOff={midi.lastNoteOff} />
       <MidiOutputPanel output={output} inputStatus={midi.status} onSelect={selectOutput} onPlay={playTestNote} onStop={stopAllNotes} onRetry={retryOutput} />
-      <footer>Phase 2E-E1 · 曲を選んで、順番に弾いてみよう</footer>
+      <footer>Phase 2F · 曲を選んで、順番に弾いてみよう</footer>
     </main>
   )
 }

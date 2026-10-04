@@ -71,6 +71,8 @@ for (const mode of modes) test(mode.label + ': chord grading, one-step cursor pr
 
 test('mode switch cancels partial input and all sounding pitches; no late sound or state survives', async ({ page }) => {
   await setup(page); await page.clock.install()
+  // Button scrolling must not advance musical time between the captured output and stop.
+  await page.clock.pauseAt(new Date(await page.evaluate(() => Date.now() + 100)))
   await page.getByRole('button', { name: '練習開始', exact: true }).click()
   await notes(page, [72, 76])
   await page.getByRole('button', { name: '左手', exact: true }).click()

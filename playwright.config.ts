@@ -8,6 +8,8 @@ export default defineConfig({
   use: {
     baseURL: 'http://127.0.0.1:5173/ai-piano-practice/',
     viewport: { width: 1280, height: 800 },
+    // Network-failure tests must reach their routes, not a precache. PWA tests opt in.
+    serviceWorkers: 'block',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },

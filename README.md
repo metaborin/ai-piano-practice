@@ -1,10 +1,12 @@
-# AIピアノ練習アプリ — Phase 2E-E1
+# AIピアノ練習アプリ — Phase 2F
 
 曲一覧から練習曲を選び、楽譜を見ながら電子ピアノで正しい鍵盤を順番に弾く練習アプリです。React + TypeScript + Vite、OpenSheetMusicDisplay（OSMD）、Web MIDI API を使用しています。
 
 公開URL: **https://metaborin.github.io/ai-piano-practice/**
 
-**Phase 2E-E1では、元PDF／画像の全画面練習と、誤答も記録して次へ進む「通し練習」を追加しました。従来の「できるまで」も選べます。練習・手本を継続したまま全画面を切り替えられます。E1はChromebook実機受入待ちです。Phase 3のリズム・テンポ評価は追加していません。**
+**Phase 2FではPWAに対応しました。Chromebookへインストールして起動し、一度オンラインで保存したアプリ・内蔵曲と、端末内の自分の曲・元PDF／画像をオフラインでも利用できます。新しい版は通知し、「更新する」を押したときだけ再読み込みします。従来の練習・手本・MIDI処理は維持しています。Phase 2FはChromebook実機受入待ちです。Phase 3には進んでいません。**
+
+- [Phase 2F のPWA構成・更新・インストール・オフライン・実機確認](docs/PHASE2F.md)
 
 - [Phase 2E-E1 の通し練習・全画面・結果モデル・実機確認](docs/PHASE2EE1.md)
 

@@ -8,7 +8,7 @@ const previewUrl = 'http://127.0.0.1:4174/ai-piano-practice/'
 export default defineConfig({
   ...config,
   testDir: './tests',
-  testMatch: ['e2e/**/*.spec.ts', 'pages/**/*.spec.ts'],
+  testMatch: ['e2e/**/*.spec.ts', 'pages/**/*.spec.ts', 'pwa/**/*.spec.ts'],
   use: { ...config.use, baseURL: publishedUrl ?? previewUrl },
   webServer: publishedUrl ? undefined : {
     command: 'npm run preview -- --host 127.0.0.1 --port 4174 --strictPort',
