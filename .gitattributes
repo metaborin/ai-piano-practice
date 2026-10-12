@@ -1,0 +1,5 @@
+# Keep the canonical XML byte-identical to the downloadable MXL on Windows and CI.
+src/scores/harvest-time.musicxml text eol=lf
+# PDF cross-reference offsets and compressed scores must retain their exact bytes.
+*.pdf binary
+*.mxl binary

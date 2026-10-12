@@ -17,7 +17,7 @@ it('blocks attempts to delete or overwrite a built-in song at the repository bou
 it('returns built-in songs and an actionable warning if personal storage fails', async () => {
   const imported = { listSongs: async () => { throw new Error('IDB unavailable') }, getSong: async () => undefined, addSong: vi.fn(), deleteSong: vi.fn(), saveOriginalScore: vi.fn(), deleteOriginalScore: vi.fn(), getOriginalScore: vi.fn() }
   const repository = new LibrarySongRepository(new BuiltInSongRepository(), imported)
-  expect(await repository.listSongs()).toHaveLength(5)
+  expect(await repository.listSongs()).toHaveLength(6)
   expect(repository.getStorageError()).toContain('内蔵曲は利用できます')
   expect((await repository.getSong('twinkle-opening'))?.title).toBe('きらきら星')
 })

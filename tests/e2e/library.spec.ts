@@ -1,13 +1,13 @@
 import { expect, test } from '@playwright/test'
 import { mockMidi } from './midiFixture'
 
-test('library groups the five built-in songs, shows an empty personal area, and defaults to twinkle', async ({ page }) => {
+test('library groups the six built-in songs, shows an empty personal area, and defaults to twinkle', async ({ page }) => {
   await page.goto('./')
   const library = page.getByRole('region', { name: '曲ライブラリ', exact: true })
   await expect(library).toBeVisible()
   await expect(library.getByRole('combobox', { name: '練習する曲' })).toHaveValue('twinkle-opening')
-  await expect(library.locator('optgroup[label="内蔵曲"] option')).toHaveText(['きらきら星', 'ドレミの練習', '短いメロディ', 'マイム・マイム連弾（once版）', 'マイム・マイム連弾（original版）'])
-  await expect(library).toContainText('内蔵曲：5曲')
+  await expect(library.locator('optgroup[label="内蔵曲"] option')).toHaveText(['きらきら星', 'ドレミの練習', '短いメロディ', '刈り入れ時', 'マイム・マイム連弾（once版）', 'マイム・マイム連弾（original版）'])
+  await expect(library).toContainText('内蔵曲：6曲')
   await expect(library.getByRole('region', { name: '自分の曲', exact: true })).toContainText('まだ追加された曲はありません')
   await expect(library.getByRole('button', { name: '＋ 曲を追加', exact: true })).toBeEnabled()
   await expect(page.locator('.position')).toHaveText('1 / 14 音')

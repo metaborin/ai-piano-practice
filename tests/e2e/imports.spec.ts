@@ -205,7 +205,7 @@ test('delete confirmation, selected-demo stop, other-song deletion preserves pra
   await expect(page.getByRole('button', { name: '削除', exact: true })).toHaveCount(0)
   await page.reload()
   await expect(cards(page)).toHaveCount(0)
-  await expect(page.locator('optgroup[label="内蔵曲"] option')).toHaveCount(5)
+  await expect(page.locator('optgroup[label="内蔵曲"] option')).toHaveCount(6)
 })
 
 test('IndexedDB unavailable keeps built-in songs usable; explicit save failure retains draft', async ({ page }) => {

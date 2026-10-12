@@ -4,10 +4,10 @@ import { recheckCompatibility } from './inspectMusicXml'
 import type { OriginalScoreAttachment, OriginalScoreRepository } from './OriginalScoreRepository'
 
 export class LibrarySongRepository implements WritableSongRepository, OriginalScoreRepository {
-  private readonly builtin: SongRepository
+  private readonly builtin: SongRepository & Partial<Pick<OriginalScoreRepository, 'getOriginalScore'>>
   private readonly imported: WritableSongRepository & OriginalScoreRepository
   private storageError: string | null = null
-  constructor(builtin: SongRepository, imported: WritableSongRepository & OriginalScoreRepository) {
+  constructor(builtin: SongRepository & Partial<Pick<OriginalScoreRepository, 'getOriginalScore'>>, imported: WritableSongRepository & OriginalScoreRepository) {
     this.builtin = builtin
     this.imported = imported
   }
@@ -43,5 +43,10 @@ export class LibrarySongRepository implements WritableSongRepository, OriginalSc
     if (await this.builtin.getSong(id)) throw new Error('内蔵曲は変更できません。')
     return this.imported.deleteOriginalScore(id)
   }
-  getOriginalScore(id: string) { return this.imported.getOriginalScore(id) }
+  async getOriginalScore(id: string) {
+    if (this.builtin.getOriginalScore && (await this.builtin.listSongs()).some((song) => song.originalScore?.storageId === id)) {
+      return this.builtin.getOriginalScore(id)
+    }
+    return this.imported.getOriginalScore(id)
+  }
 }
