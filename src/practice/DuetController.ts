@@ -4,6 +4,7 @@ import type { PracticePlan } from './PracticePlan'
 import type { PracticeStart } from './PracticeStartResolver'
 import { buildDuetTimeline } from './DuetPlan'
 import type { DemoNote } from '../audio/DemoPlayer'
+import type { PlaybackRate } from '../audio/playbackRate'
 
 export type DuetSnapshot = { readonly status: 'idle' | 'playing' | 'waiting' | 'stopped' | 'completed' | 'error'; readonly message: string }
 type Timeline = ReturnType<typeof buildDuetTimeline>
@@ -41,10 +42,10 @@ export class DuetController {
     this.session.setClockMode('input')
     this.publish({ status: 'idle', message: '' })
   }
-  start = (start: PracticeStart, partnerEnabled: boolean) => {
+  start = (start: PracticeStart, partnerEnabled: boolean, playbackRate: PlaybackRate = 1) => {
     this.stop()
     if (!this.own || !this.partner || this.session.getSnapshot().startTargetIndex === null) return false
-    try { this.timeline = buildDuetTimeline(this.own, this.partner) }
+    try { this.timeline = buildDuetTimeline(this.own, this.partner, playbackRate) }
     catch (error) { this.publish({ status: 'error', message: error instanceof Error ? error.message : '連弾の演奏順を準備できませんでした。' }); return false }
     this.partnerEnabled = partnerEnabled
     if (partnerEnabled && !this.output.beginDemo()) {

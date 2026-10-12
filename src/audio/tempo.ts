@@ -1,4 +1,6 @@
 import type { ScoreModel } from '../score/ScoreModel'
+import { isPlaybackRate } from './playbackRate'
+import type { PlaybackRate } from './playbackRate'
 
 export const DEFAULT_TEMPO_BPM = 100
 export const DEMO_GATE_RATIO = 0.9
@@ -9,15 +11,16 @@ const validTempo = (bpm: number | undefined): bpm is number => typeof bpm === 'n
 /** Quarter-note tempo. Before the first XML mark, use metadata, then the default.
  * At equal onsets the last XML direction wins, matching the normalized parser.
  */
-export function resolveTempo(score: ScoreModel, songTempoBpm?: number): readonly TempoPoint[] {
+export function resolveTempo(score: ScoreModel, songTempoBpm?: number, playbackRate: PlaybackRate = 1): readonly TempoPoint[] {
+  if (!isPlaybackRate(playbackRate)) throw new Error('Invalid playback rate')
   const initial: TempoPoint = validTempo(songTempoBpm)
-    ? { beat: 0, bpm: songTempoBpm, source: 'Song metadata', startMs: 0 }
-    : { beat: 0, bpm: DEFAULT_TEMPO_BPM, source: 'default', startMs: 0 }
+    ? { beat: 0, bpm: songTempoBpm * playbackRate, source: 'Song metadata', startMs: 0 }
+    : { beat: 0, bpm: DEFAULT_TEMPO_BPM * playbackRate, source: 'default', startMs: 0 }
   const points: TempoPoint[] = [initial]
   for (const tempo of [...score.tempos].sort((a, b) => a.onsetBeats - b.onsetBeats)) {
     if (!validTempo(tempo.bpm) || !Number.isFinite(tempo.onsetBeats) || tempo.onsetBeats < 0) continue
     const previous = points.at(-1)!
-    const point: TempoPoint = { beat: tempo.onsetBeats, bpm: tempo.bpm, source: 'MusicXML',
+    const point: TempoPoint = { beat: tempo.onsetBeats, bpm: tempo.bpm * playbackRate, source: 'MusicXML',
       startMs: previous.startMs + (tempo.onsetBeats - previous.beat) * 60_000 / previous.bpm }
     if (point.beat === previous.beat) points[points.length - 1] = point
     else points.push(point)

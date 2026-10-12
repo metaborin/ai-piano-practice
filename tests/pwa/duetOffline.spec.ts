@@ -20,8 +20,10 @@ test('both duet originals, opposite playback and downloadable artifacts remain u
       expect(await page.evaluate(async href=>{const r=await fetch(href);return r.ok && (await r.arrayBuffer()).byteLength>1000},href)).toBe(true)
     }
     await page.getByRole('combobox',{name:'相手パート自動再生'}).selectOption('on')
+    await page.getByRole('combobox',{name:'再生速度',exact:true}).selectOption('0.5')
     await page.getByRole('button',{name:'練習開始',exact:true}).click()
     await expect(page.locator('.duet-controls')).toHaveAttribute('data-duet-status','playing')
+    await expect(page.getByRole('combobox',{name:'再生速度',exact:true})).toBeDisabled()
     expect(await page.evaluate(()=>window.midiTest.outputMessages.some(m=>m.data[0]===0x90 && m.data[1]===50))).toBe(true)
     await page.getByRole('button',{name:'連弾練習を停止',exact:true}).click()
   }

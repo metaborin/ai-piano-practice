@@ -5,11 +5,12 @@ import type { DemoNote } from './DemoPlayer'
 import { DEMO_GATE_RATIO, millisecondsAtBeat, resolveTempo } from './tempo'
 import { resolveDemoStart } from './DemoStart'
 import type { DemoStart } from './DemoStart'
+import type { PlaybackRate } from './playbackRate'
 
 /** Shared navigation on one MIDI timeline. Written notes are never copied or rewritten. */
-export function buildDemoPlan(plan: PracticePlan, start: DemoStart = { kind: 'beginning' }): DemoNote[] {
+export function buildDemoPlan(plan: PracticePlan, start: DemoStart = { kind: 'beginning' }, playbackRate: PlaybackRate = 1): DemoNote[] {
   if (!plan.sequence.occurrences.length) throw new Error('Empty demo plan')
-  const tempo = resolveTempo(plan.score, plan.songTempoBpm)
+  const tempo = resolveTempo(plan.score, plan.songTempoBpm, playbackRate)
   const timeAt = (beat: number) => millisecondsAtBeat(tempo, beat)
   const origin = resolveDemoStart(plan, start)
   const measures = plan.sequence.playback.measures

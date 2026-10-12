@@ -10,6 +10,8 @@ import type { ScoreSystems } from '../score/ScoreLookAhead'
 import { DemoPreviewScheduler } from './DemoPreviewScheduler'
 import type { DemoMidiTrace } from '../midi/DemoMidiTrace'
 import { navigationJump } from '../score/ScoreLookAhead'
+import { isPlaybackRate } from './playbackRate'
+import type { PlaybackRate } from './playbackRate'
 
 export { DEFAULT_TEMPO_BPM, DEMO_GATE_RATIO } from './tempo'
 const MAX_ATTACK_LATENESS_MS = 150
@@ -23,14 +25,15 @@ export type DemoNote = {
   cursorMomentId?: string
 }
 /** Only the supplied score is read. No separate melody or duration list. */
-export function buildDemoNotes(score: ScoreModel, tempoBpm = DEFAULT_TEMPO_BPM): DemoNote[] {
+export function buildDemoNotes(score: ScoreModel, tempoBpm = DEFAULT_TEMPO_BPM, playbackRate: PlaybackRate = 1): DemoNote[] {
+  if (!isPlaybackRate(playbackRate)) throw new Error('Invalid playback rate')
   if (!Number.isFinite(tempoBpm) || tempoBpm <= 0 || score.notes.length === 0) throw new Error('Invalid demo score or tempo')
   let startMs = 0
   return score.notes.map(({ midiNote, durationBeats }, index) => {
     if (!Number.isInteger(midiNote) || midiNote < 0 || midiNote > 127 || !Number.isFinite(durationBeats) || durationBeats <= 0) {
       throw new Error('Invalid demo note')
     }
-    const durationMs = durationBeats * 60_000 / tempoBpm
+    const durationMs = durationBeats * 60_000 / (tempoBpm * playbackRate)
     if (!Number.isFinite(startMs + durationMs)) throw new Error('Invalid demo duration')
     const note = { index, midiNote, startMs, durationMs, noteOffMs: startMs + durationMs * DEMO_GATE_RATIO }
     startMs += durationMs
@@ -133,7 +136,7 @@ export class DemoPlayer {
   }
   playFromMoment = (momentId: string) => this.start({ kind: 'moment', momentId })
   playFromOccurrence = (occurrenceId: string) => this.start({ kind: 'occurrence', occurrenceId })
-  start = (start: DemoStart = { kind: 'beginning' }) => {
+  start = (start: DemoStart = { kind: 'beginning' }, playbackRate: PlaybackRate = 1) => {
     if (this.snapshot.status === 'playing') return
     let notes: DemoNote[]
     let firstIndex = 0
@@ -145,9 +148,9 @@ export class DemoPlayer {
         firstIndex = origin.index
         startMessage = origin.message ?? startMessage
         firstMoment = origin.cursorMomentId ?? this.plan.sequence.occurrences[firstIndex].sourceMoment.id
-        notes = buildDemoPlan(this.plan, start)
+        notes = buildDemoPlan(this.plan, start, playbackRate)
       }
-      else if (this.score && start.kind === 'beginning') notes = buildDemoNotes(this.score)
+      else if (this.score && start.kind === 'beginning') notes = buildDemoNotes(this.score, DEFAULT_TEMPO_BPM, playbackRate)
       else throw new Error('No score')
     } catch (error) {
       this.publish({ status: 'error', message: error instanceof Error && error.message.startsWith('指定した位置') ? error.message : '手本の楽譜を読み込めません。ページを再読み込みしてください。' })

@@ -28,6 +28,8 @@ import { useOriginalFullscreen } from './components/useOriginalFullscreen'
 import { PwaControls } from './pwa/PwaControls'
 import { useDuetController } from './practice/useDuetController'
 import { DuetControls } from './components/DuetControls'
+import { PlaybackSpeedControls } from './components/PlaybackSpeedControls'
+import type { PlaybackRate } from './audio/playbackRate'
 import './App.css'
 
 export default function App() {
@@ -38,6 +40,7 @@ export default function App() {
   const { controller, duet } = useDuetController(outputManager, session)
   const { selection, songState } = useSongSelection(session, player, outputManager, controller)
   const [partnerEnabled, setPartnerEnabled] = useState(false)
+  const [playbackRate, setPlaybackRate] = useState<PlaybackRate>(1)
   const duetActive = duet.status === 'playing' || duet.status === 'waiting'
   const emergencyStop = () => { controller.stop(); stopAllNotes() }
   const stopDuetPractice = () => { session.stop(); controller.stop() }
@@ -107,7 +110,7 @@ export default function App() {
     const requested = songState.practiceStart.kind === 'current' && !again
       ? { kind: 'current' as const, occurrenceIndex: session.getSnapshot().currentNoteIndex } : songState.practiceStart
     if (requested.kind === 'current' && !again) selection.setPracticeStart(requested)
-    if (songState.song?.duet && (partnerEnabled || practice.flowMode === 'run-through')) controller.start(requested, partnerEnabled)
+    if (songState.song?.duet && (partnerEnabled || practice.flowMode === 'run-through')) controller.start(requested, partnerEnabled, playbackRate)
     else if (again) restart()
     else start()
   }
@@ -123,8 +126,8 @@ export default function App() {
     controller.stop()
     if (choice === 'current') {
       const position = session.getSnapshot()
-      player.start({ kind: 'current', occurrenceIndex: position.startTargetIndex === null ? null : position.currentNoteIndex, completed: position.status === 'completed' })
-    } else player.start(choice === 'beginning' ? { kind: 'beginning' } : { kind: 'measure', measureIndex: Number(choice.slice(8)) })
+      player.start({ kind: 'current', occurrenceIndex: position.startTargetIndex === null ? null : position.currentNoteIndex, completed: position.status === 'completed' }, playbackRate)
+    } else player.start(choice === 'beginning' ? { kind: 'beginning' } : { kind: 'measure', measureIndex: Number(choice.slice(8)) }, playbackRate)
   }
 
   return (
@@ -152,6 +155,9 @@ export default function App() {
         {songState.song?.duet && practice.status === 'practicing' && <button onClick={stopDuetPractice}>連弾練習を停止</button>}
       </div>
       <div id="practice-setup" className="practice-setup" hidden={isFullscreen && !fullscreenControls}>
+      <PlaybackSpeedControls rate={playbackRate} busy={demo.status === 'playing' || duetActive || output.playing} onChange={rate => {
+        if (player.getSnapshot().status !== 'playing' && !['playing', 'waiting'].includes(controller.getSnapshot().status) && !outputManager.getSnapshot().playing) setPlaybackRate(rate)
+      }} />
       {songState.song?.duet && <DuetControls song={songState.song} part={songState.duetPart} partnerEnabled={partnerEnabled} duet={duet} practiceActive={practice.status === 'practicing'}
         onPart={part => { focusCursor(); void selection.setDuetPart(part) }}
         onPartner={enabled => { session.stop(); controller.stop(); player.stop(); player.resetDisplay(); if (outputManager.getSnapshot().playing) outputManager.stopAllNotes(); selection.setPracticeStart(songState.practiceStart); setPartnerEnabled(enabled); focusCursor() }}
