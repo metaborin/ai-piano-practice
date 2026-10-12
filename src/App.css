@@ -143,6 +143,9 @@ dd { margin: 2px 0 0; font-size: 24px; font-weight: 700; font-variant-numeric: t
 footer { margin-top: 24px; color: #647168; text-align: center; font-size: 14px; }
 .practice-flow { margin-bottom: 16px; }
 .playback-speed { margin-bottom: 16px; }
+.metronome-controls { margin-bottom: 16px; }
+.metronome-controls label { display: inline-flex; align-items: center; gap: 12px; min-height: 48px; padding: 4px 12px; border: 1px solid #b8c8c0; border-radius: 6px; font-weight: 700; cursor: pointer; }
+.metronome-controls input { width: 24px; height: 24px; accent-color: #247451; }
 .playback-speed label { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; font-weight: 700; }
 .playback-speed select { min-height: 48px; max-width: 100%; padding: 10px 16px; border: 1px solid #b8c8c0; border-radius: 6px; background: white; font: inherit; color: inherit; }
 .flow-hint { margin-top: 8px; font-size: 14px; color: #53655c; }
@@ -164,7 +167,7 @@ footer { margin-top: 24px; color: #647168; text-align: center; font-size: 14px; 
 .original-fullscreen .practice-start-message { display: none; }
 .original-fullscreen .original-score-view { flex: 1; height: auto; min-height: 0; padding: 8px; }
 .original-fullscreen .practice-setup { order: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; padding: 4px 12px; max-height: 24dvh; overflow: auto; }
-.original-fullscreen .practice-mode, .original-fullscreen .practice-flow, .original-fullscreen .practice-start-controls, .original-fullscreen .playback-speed { margin: 0; }
+.original-fullscreen .practice-mode, .original-fullscreen .practice-flow, .original-fullscreen .practice-start-controls, .original-fullscreen .playback-speed, .original-fullscreen .metronome-controls { margin: 0; }
 .original-fullscreen .practice-setup h2, .original-fullscreen .flow-hint, .original-fullscreen .practice-hint, .original-fullscreen .demo-message { display: none; }
 .original-fullscreen .mode-buttons { margin: 0; gap: 6px; }
 .original-fullscreen .mode-buttons button { min-width: 64px; }

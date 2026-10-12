@@ -30,19 +30,22 @@ import { useDuetController } from './practice/useDuetController'
 import { DuetControls } from './components/DuetControls'
 import { PlaybackSpeedControls } from './components/PlaybackSpeedControls'
 import type { PlaybackRate } from './audio/playbackRate'
+import { useMetronome } from './audio/useMetronome'
+import { MetronomeControls } from './components/MetronomeControls'
 import './App.css'
 
 export default function App() {
   const overviewTarget = useRef<HTMLDivElement>(null)
   const { midi, connect, selectInput, events, output, outputManager, selectOutput, playTestNote, stopAllNotes, retryOutput } = useMidi()
   const { session, practice, start, restart, moveCursor } = usePracticeSession(events)
-  const { demo, player } = useDemoPlayer(outputManager, session)
-  const { controller, duet } = useDuetController(outputManager, session)
+  const { metronome, metronomeState } = useMetronome()
+  const { demo, player } = useDemoPlayer(outputManager, session, metronome)
+  const { controller, duet } = useDuetController(outputManager, session, metronome)
   const { selection, songState } = useSongSelection(session, player, outputManager, controller)
   const [partnerEnabled, setPartnerEnabled] = useState(false)
   const [playbackRate, setPlaybackRate] = useState<PlaybackRate>(1)
   const duetActive = duet.status === 'playing' || duet.status === 'waiting'
-  const emergencyStop = () => { controller.stop(); stopAllNotes() }
+  const emergencyStop = () => { controller.stop(); metronome.stop(); stopAllNotes() }
   const stopDuetPractice = () => { session.stop(); controller.stop() }
   const [systems, setSystems] = useState<{ requestId: number; map: ScoreSystems } | null>(null)
   const acceptSystems = useCallback((requestId: number, map: ScoreSystems) => setSystems({ requestId, map }), [])
@@ -158,6 +161,7 @@ export default function App() {
       <PlaybackSpeedControls rate={playbackRate} busy={demo.status === 'playing' || duetActive || output.playing} onChange={rate => {
         if (player.getSnapshot().status !== 'playing' && !['playing', 'waiting'].includes(controller.getSnapshot().status) && !outputManager.getSnapshot().playing) setPlaybackRate(rate)
       }} />
+      <MetronomeControls state={metronomeState} onChange={enabled => { void metronome.setEnabled(enabled) }} />
       {songState.song?.duet && <DuetControls song={songState.song} part={songState.duetPart} partnerEnabled={partnerEnabled} duet={duet} practiceActive={practice.status === 'practicing'}
         onPart={part => { focusCursor(); void selection.setDuetPart(part) }}
         onPartner={enabled => { session.stop(); controller.stop(); player.stop(); player.resetDisplay(); if (outputManager.getSnapshot().playing) outputManager.stopAllNotes(); selection.setPracticeStart(songState.practiceStart); setPartnerEnabled(enabled); focusCursor() }}

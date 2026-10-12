@@ -5,6 +5,7 @@ import type { PracticeStart } from './PracticeStartResolver'
 import { buildDuetTimeline } from './DuetPlan'
 import type { DemoNote } from '../audio/DemoPlayer'
 import type { PlaybackRate } from '../audio/playbackRate'
+import type { MetronomeTransport } from '../audio/Metronome'
 
 export type DuetSnapshot = { readonly status: 'idle' | 'playing' | 'waiting' | 'stopped' | 'completed' | 'error'; readonly message: string }
 type Timeline = ReturnType<typeof buildDuetTimeline>
@@ -30,7 +31,8 @@ export class DuetController {
   private playbackSession = 0
   private readonly output: MidiOutputManager
   private readonly session: PracticeSession
-  constructor(output: MidiOutputManager, session: PracticeSession) { this.output = output; this.session = session }
+  private readonly metronome?: MetronomeTransport
+  constructor(output: MidiOutputManager, session: PracticeSession, metronome?: MetronomeTransport) { this.output = output; this.session = session; this.metronome = metronome }
   getSnapshot = () => this.snapshot
   getDiagnostics = () => ({ generation: this.generation, timers: Number(this.boundaryTimer !== undefined) + Number(this.attackTimer !== undefined), outputOwned: this.outputOwned })
   subscribe = (listener: () => void) => { this.listeners.add(listener); return () => { this.listeners.delete(listener) } }
@@ -95,6 +97,8 @@ export class DuetController {
     const timeline = this.timeline!
     const to = timeline.targetStarts[this.index + 1] ?? timeline.endMs
     const generation = this.generation
+    if (timeline.clickError) this.metronome?.unavailable?.(timeline.clickError)
+    else this.metronome?.schedule(timeline.clicks, this.startedAt, this.originMs, from, to)
     if (this.partnerEnabled) {
       const notes = timeline.notes.filter(n => n.startMs >= from && n.startMs < to)
       if (restoreHeld) notes.unshift(...timeline.notes.filter(n => n.startMs < from && n.noteOffMs > from).map(n => ({ ...n, startMs: from })))
@@ -109,6 +113,7 @@ export class DuetController {
       if (remaining > 0) { this.boundaryTimer = setTimeout(boundary, Math.ceil(remaining)); return }
       if (this.session.getSnapshot().flowMode === 'until-correct' && !this.session.isTargetSatisfied()) {
         this.waiting = true
+        this.metronome?.stop()
         // Only pause at a target boundary. Continuous correct playing keeps long
         // notes and queued Offs intact, including across repeated measures.
         this.releaseOutput()
@@ -183,6 +188,7 @@ export class DuetController {
   }
   private cancel() {
     ++this.generation
+    this.metronome?.stop()
     clearTimeout(this.boundaryTimer); clearTimeout(this.attackTimer)
     this.boundaryTimer = undefined; this.attackTimer = undefined
     this.subscriptions.splice(0).forEach(unsubscribe => unsubscribe())

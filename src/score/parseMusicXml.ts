@@ -2,7 +2,7 @@ import { Beat } from './Beat'
 import { readScoreNavigation, buildPlaybackSequence } from './ScoreNavigation'
 import { soundSpans } from './soundSpans'
 import { child, children, descendants, readMusicXmlDocument, value } from './musicXmlDocument'
-import type { ScoreMeasure, ScoreModel, ScoreMoment, ScoreNote, ScoreRest, ScoreSource, ScoreTempo, ScoreTie, ScoreWarning } from './ScoreModel'
+import type { ScoreMeasure, ScoreMeter, ScoreModel, ScoreMoment, ScoreNote, ScoreRest, ScoreSource, ScoreTempo, ScoreTie, ScoreWarning } from './ScoreModel'
 
 export const MAX_SCORE_NOTES = 1000
 export const MAX_SCORE_MEASURES = 500
@@ -67,6 +67,7 @@ export function parseMusicXml(source: ScoreSource, document?: Document): ScoreMo
   if (navigation.repeats.length) pending.add('単純反復')
   if (descendants(doc, 'time-modification').length) { warn('tuplet', '連符はduration/divisionsで時間を保持します。今回の練習・手本は未対応です。'); practiceUnsupported.add('連符') }
   let divisions: Beat | null = null, measureStart = Beat.zero(), staffCount = 1
+  let meter: ScoreMeter | null = null
   for (const [measureIndex, measure] of measuresXml.entries()) {
     const measureNumber = measure.getAttribute('number') || String(measureIndex + 1)
     let position = Beat.zero(), end = Beat.zero(), noteIndex = 0
@@ -107,6 +108,17 @@ export function parseMusicXml(source: ScoreSource, document?: Document): ScoreMo
     }
     for (const element of children(measure)) {
       if (element.localName === 'attributes') {
+        const times = children(element, 'time')
+        if (times.length) {
+          const candidates = times.map(time => {
+            const beats = Number(value(time, 'beats')), beatType = Number(value(time, 'beat-type'))
+            return children(time, 'beats').length === 1 && children(time, 'beat-type').length === 1
+              && Number.isInteger(beats) && beats > 0 && beats <= 32 && [1, 2, 4, 8, 16, 32, 64].includes(beatType)
+              ? { beats, beatType } : null
+          })
+          meter = position.n === 0n && candidates[0] && candidates.every(candidate => JSON.stringify(candidate) === JSON.stringify(candidates[0])) ? candidates[0] : null
+          if (!meter) warn('metronome-meter', '複合表記・異なるStaffの拍子・小節途中の拍子変更は、メトロノームを4分音符のクリックで鳴らします。練習判定は変更しません。')
+        }
         const newDivisions = value(element, 'divisions')
         if (newDivisions) {
           const next = positive(newDivisions, 'divisions')
@@ -154,7 +166,7 @@ export function parseMusicXml(source: ScoreSource, document?: Document): ScoreMo
     // Use the longest voice/rest/forward extent, never the last serialized voice cursor.
     // Actual encoded span also preserves pickups and incomplete final measures; no invented rests.
     if (end.n === 0n) return invalid('時間情報のない小節です。練習対象の音がありません。')
-    measures.push({ index: measureIndex, number: measureNumber, implicit: measure.getAttribute('implicit') === 'yes', onset: measureStart.toJSON(), onsetBeats: measureStart.beats, duration: end.toJSON(), durationBeats: end.beats })
+    measures.push({ index: measureIndex, number: measureNumber, implicit: measure.getAttribute('implicit') === 'yes', onset: measureStart.toJSON(), onsetBeats: measureStart.beats, duration: end.toJSON(), durationBeats: end.beats, meter })
     measureStart = measureStart.add(end)
   }
   const compare = (a: { onset: import('./ScoreModel').BeatFraction }, b: { onset: import('./ScoreModel').BeatFraction }) => Beat.from(a.onset).compare(Beat.from(b.onset))

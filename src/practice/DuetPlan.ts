@@ -3,6 +3,8 @@ import type { PracticePlan } from './PracticePlan'
 import { millisecondsAtBeat, resolveTempo } from '../audio/tempo'
 import { buildDemoPlan } from '../audio/buildDemoPlan'
 import type { PlaybackRate } from '../audio/playbackRate'
+import { buildMetronomePlan } from '../audio/buildMetronomePlan'
+import type { MetronomeBeat } from '../audio/buildMetronomePlan'
 
 /** Pair only after both originals validate; a mismatched accompaniment is never enabled. */
 export function validateDuetPair(own: ScoreModel, partner: ScoreModel) {
@@ -28,5 +30,8 @@ export function buildDuetTimeline(own: PracticePlan, partner: PracticePlan, play
     const measure = own.sequence.playback.measures[o.measureOccurrenceIndex].source
     return measureStarts[o.measureOccurrenceIndex] + timeAt(o.sourceMoment.onsetBeats) - timeAt(measure.onsetBeats)
   })
-  return { measureStarts, targetStarts, endMs, notes: buildDemoPlan(partner, { kind: 'beginning' }, playbackRate) }
+  let clicks: MetronomeBeat[] = [], clickError = ''
+  try { clicks = buildMetronomePlan(own, playbackRate) }
+  catch { clickError = 'この楽譜の拍数はメトロノームの対応範囲を超えています。連弾はクリックなしで続けます。' }
+  return { measureStarts, targetStarts, endMs, notes: buildDemoPlan(partner, { kind: 'beginning' }, playbackRate), clicks, clickError }
 }

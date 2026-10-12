@@ -36,10 +36,13 @@ export type ScoreMoment = {
   readonly measureNumber: string
   readonly notes: readonly ScoreNote[]
 }
+export type ScoreMeter = { readonly beats: number; readonly beatType: number }
 export type ScoreMeasure = {
   readonly index: number; readonly number: string; readonly implicit: boolean
   readonly onset: BeatFraction; readonly onsetBeats: number
   readonly duration: BeatFraction; readonly durationBeats: number
+  /** Inherited written meter. Null/absent uses quarter-note metronome clicks. */
+  readonly meter?: ScoreMeter | null
 }
 export type ScoreTempo = {
   readonly onset: BeatFraction; readonly onsetBeats: number; readonly bpm: number

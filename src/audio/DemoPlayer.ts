@@ -12,6 +12,8 @@ import type { DemoMidiTrace } from '../midi/DemoMidiTrace'
 import { navigationJump } from '../score/ScoreLookAhead'
 import { isPlaybackRate } from './playbackRate'
 import type { PlaybackRate } from './playbackRate'
+import { buildMetronomePlan } from './buildMetronomePlan'
+import type { MetronomeTransport } from './Metronome'
 
 export { DEFAULT_TEMPO_BPM, DEMO_GATE_RATIO } from './tempo'
 const MAX_ATTACK_LATENESS_MS = 150
@@ -82,10 +84,12 @@ export class DemoPlayer {
   private readonly output: DemoOutput
   private readonly beforeStart: () => void
   private readonly publishPosition: (update: () => void) => void
-  constructor(output: DemoOutput, beforeStart: () => void = () => {}, publishPosition: (update: () => void) => void = (update) => update()) {
+  private readonly metronome?: MetronomeTransport
+  constructor(output: DemoOutput, beforeStart: () => void = () => {}, publishPosition: (update: () => void) => void = (update) => update(), metronome?: MetronomeTransport) {
     this.output = output
     this.beforeStart = beforeStart
     this.publishPosition = publishPosition
+    this.metronome = metronome
   }
   getSnapshot = () => this.snapshot
   getDiagnostics = () => {
@@ -184,6 +188,10 @@ export class DemoPlayer {
       })
     }
     const endMs = notes.reduce((end, note) => Math.max(end, note.noteOffMs), 0)
+    if (this.plan && this.metronome) {
+      try { this.metronome.schedule(buildMetronomePlan(this.plan, playbackRate, start), startedAt, 0, 0, endMs) }
+      catch { this.metronome.unavailable?.('この楽譜の拍数はメトロノームの対応範囲を超えています。手本はクリックなしで再生します。') }
+    }
     const finish = () => {
       if (generation !== this.generation) return
       this.timer = undefined
@@ -252,6 +260,7 @@ export class DemoPlayer {
   }
   private cancelTimers() {
     ++this.generation
+    this.metronome?.stop()
     this.tracePosition(this.snapshot.currentNoteIndex)
     this.output.trace?.record('GENERATION_CHANGE')
     clearTimeout(this.timer)

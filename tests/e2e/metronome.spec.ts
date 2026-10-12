@@ -1,0 +1,187 @@
+import { expect, test } from '@playwright/test'
+import type { Page } from '@playwright/test'
+import { mockMidi } from './midiFixture'
+import { observeClicks, clicks, metronomeToggle } from './metronomeFixture'
+
+async function setup(page: Page) {
+  await mockMidi(page); await observeClicks(page); await page.goto('./')
+  await expect(page.locator('.position')).toHaveText('1 / 14 音')
+  await page.getByRole('button', { name: 'MIDI接続', exact: true }).click()
+}
+async function freeze(page: Page) {
+  await page.clock.install(); await page.clock.pauseAt(new Date(await page.evaluate(() => Date.now() + 100)))
+}
+async function enable(page: Page) {
+  await metronomeToggle(page).check()
+  await expect(page.locator('.metronome-controls')).toHaveAttribute('data-metronome-status', 'ready')
+}
+async function strike(page: Page, notes: number[]) {
+  await page.evaluate(notes => { for (const n of notes) window.midiTest.send([0x90, n, 80]); for (const n of notes) window.midiTest.send([0x80, n, 0]) }, notes)
+}
+
+for (const rate of [0.5, 0.75, 1]) {
+  test(`${rate}: native click audio follows the entire demo without changing practice or adding MIDI messages`, async ({ page }) => {
+    await setup(page)
+    await expect(metronomeToggle(page)).not.toBeChecked()
+    expect(await page.evaluate(() => window.clickTest.contexts)).toBe(0)
+    await enable(page)
+    await page.getByRole('combobox', { name: '再生速度', exact: true }).selectOption(String(rate))
+    await page.getByRole('button', { name: '練習開始', exact: true }).click(); await strike(page, [60])
+    expect(await clicks(page)).toHaveLength(0) // ordinary input-driven practice has no clock
+    await freeze(page); await page.evaluate(() => { window.midiTest.loopback = true })
+    await page.getByRole('button', { name: '手本を聴く', exact: true }).click()
+    const first = (await clicks(page))[0]
+    expect(first.frequency).toBe(1400)
+    await page.clock.runFor(600 / rate - 1); expect(await clicks(page)).toHaveLength(1)
+    await page.clock.runFor(2); await expect(page.locator('.position')).toHaveText('2 / 14 音')
+    await page.clock.runFor(9480 / rate - 600 / rate + 2)
+    await expect(page.locator('.demo-controls')).toHaveAttribute('data-demo-status', 'completed')
+    const all = await clicks(page)
+    expect(all).toHaveLength(16)
+    all.forEach((click, i) => { expect(Math.abs(click.at - first.at - i * 600 / rate)).toBeLessThan(1.01); expect(click.frequency).toBe(i % 4 === 0 ? 1400 : 900) })
+    await expect(page.locator('.practice-controls')).toHaveAttribute('data-correct-count', '1')
+    await expect(page.locator('.position')).toHaveText('2 / 14 音')
+    expect(await page.evaluate(() => window.midiTest.outputMessages.filter(m => m.data[0] === 0x90).length)).toBe(14)
+    await strike(page, [61]); await expect(page.locator('.practice-controls')).toHaveAttribute('data-correct-count', '1')
+    await strike(page, [60]); await expect(page.locator('.practice-controls')).toHaveAttribute('data-correct-count', '2')
+    await expect(page.locator('.metronome-controls')).toHaveAttribute('data-metronome-status', 'ready')
+    expect(await page.evaluate(() => window.clickTest.states.every(state => state === 'running'))).toBe(true)
+    expect(await page.evaluate(() => window.midiTest.inputListenerCount())).toBe(1)
+  })
+
+  test(`${rate}: until-correct waiting silences clicks and resumes their original half-note phase`, async ({ page }) => {
+    await setup(page); await enable(page)
+    await page.getByRole('combobox', { name: '練習する曲' }).selectOption('maim-maim-duet-once')
+    await expect(page.locator('.position')).toHaveText('1 / 109 ステップ')
+    await page.getByRole('combobox', { name: '練習対象パート' }).selectOption('primo')
+    await expect(page.locator('.position')).toHaveText('1 / 118 ステップ')
+    await page.getByRole('combobox', { name: '相手パート自動再生' }).selectOption('on')
+    await page.getByRole('combobox', { name: '再生速度', exact: true }).selectOption(String(rate))
+    await freeze(page); await page.getByRole('button', { name: '練習開始', exact: true }).click()
+    await strike(page, [60]); await page.clock.runFor(Math.ceil(60000 / 232 / rate) + 1)
+    await expect(page.locator('.duet-controls')).toHaveAttribute('data-duet-status', 'waiting')
+    await expect(page.locator('.metronome-controls')).toHaveAttribute('data-metronome-status', 'ready')
+    const quiet = (await clicks(page)).length
+    await page.clock.runFor(5000); expect(await clicks(page)).toHaveLength(quiet)
+    await metronomeToggle(page).uncheck(); await metronomeToggle(page).check()
+    await strike(page, [79]); await expect(page.locator('.position')).toHaveText('2 / 118 ステップ')
+    expect(await clicks(page)).toHaveLength(quiet) // resume between beats
+    await strike(page, [79]); await page.clock.runFor(Math.ceil(60000 / 232 / rate) + 1)
+    expect(await clicks(page)).toHaveLength(quiet + 1)
+    expect((await clicks(page)).at(-1)!.frequency).toBe(900)
+    await page.getByRole('button', { name: '連弾練習を停止', exact: true }).click()
+    const stopped = (await clicks(page)).length; await page.clock.runFor(120000); expect(await clicks(page)).toHaveLength(stopped)
+    expect(await page.evaluate(() => window.midiTest.inputListenerCount())).toBe(1)
+  })
+}
+
+test('live ON/OFF joins the next beat and emergency stop removes active audio without losing devices or speed', async ({ page }) => {
+  await setup(page); await freeze(page)
+  await page.getByRole('button', { name: '手本を聴く', exact: true }).click()
+  await page.clock.runFor(750); await metronomeToggle(page).check()
+  await expect(page.locator('.metronome-controls')).toHaveAttribute('data-metronome-status', 'playing')
+  expect(await clicks(page)).toHaveLength(0)
+  await page.clock.runFor(450); expect(await clicks(page)).toHaveLength(1)
+  await metronomeToggle(page).uncheck()
+  await page.clock.runFor(700); expect(await clicks(page)).toHaveLength(1)
+  await metronomeToggle(page).check(); await page.clock.runFor(500); expect(await clicks(page)).toHaveLength(2)
+  await page.getByRole('button', { name: 'すべての音を停止', exact: true }).click()
+  const count = (await clicks(page)).length; await page.clock.runFor(10000); expect(await clicks(page)).toHaveLength(count)
+  await expect(metronomeToggle(page)).toBeChecked()
+  await expect(page.getByRole('combobox', { name: '出力機器' })).toHaveValue('cme-out')
+  await expect(page.getByRole('combobox', { name: '再生速度', exact: true })).toHaveValue('1')
+  await page.getByRole('combobox', { name: '練習する曲' }).selectOption('do-re-mi')
+  await expect(page.locator('.position')).toHaveText('1 / 7 音')
+  await page.clock.runFor(1000); expect(await clicks(page)).toHaveLength(count)
+  await page.getByRole('button', { name: '手本を聴く', exact: true }).click()
+  expect(await clicks(page)).toHaveLength(count + 1)
+})
+
+for (const part of ['primo', 'secondo']) test(`${part}: timed original repeat and current/measure starts retain accents at 75%`, async ({ page }) => {
+  await setup(page); await enable(page)
+  await page.getByRole('combobox', { name: '練習する曲' }).selectOption('maim-maim-duet-original')
+  await expect(page.locator('.position')).toHaveText('1 / 204 ステップ')
+  if (part === 'primo') await page.getByRole('combobox', { name: '練習対象パート' }).selectOption(part)
+  await expect(page.locator('.position')).toHaveText(`1 / ${part === 'primo' ? 218 : 204} ステップ`)
+  await page.getByRole('combobox', { name: '相手パート自動再生' }).selectOption('on')
+  await page.getByRole('combobox', { name: '再生速度', exact: true }).selectOption('0.75')
+  await page.getByRole('button', { name: '通し練習', exact: true }).click(); await freeze(page)
+  await page.getByRole('button', { name: '練習開始', exact: true }).click()
+  const first = (await clicks(page))[0].at, interval = 120000 / 232 / 0.75
+  await page.clock.runFor(Math.ceil(interval * 60) + 1)
+  await expect(page.locator('.current-measure')).toHaveText('5小節目')
+  await expect(page.locator('.repeat-position')).toHaveText('反復 2回目')
+  expect((await clicks(page))[60].frequency).toBe(1400)
+  await page.clock.runFor(Math.ceil(interval * 52) + 1)
+  await expect(page.locator('.duet-controls')).toHaveAttribute('data-duet-status', 'completed')
+  expect(await clicks(page)).toHaveLength(112)
+  ;(await clicks(page)).forEach((click, i) => { expect(Math.abs(click.at - first - i * interval)).toBeLessThan(1.01); expect(click.frequency).toBe(i % 2 === 0 ? 1400 : 900) })
+  await expect(page.locator('.practice-controls')).toHaveAttribute('data-correct-count', '0')
+  await page.getByRole('combobox', { name: '練習の開始位置' }).selectOption('measure:29')
+  await page.getByRole('button', { name: '練習開始', exact: true }).click()
+  expect((await clicks(page)).at(-1)!.frequency).toBe(1400)
+  await page.clock.runFor(Math.ceil(interval * 2) + 1)
+  await page.getByRole('button', { name: '連弾練習を停止', exact: true }).click()
+  await page.getByRole('combobox', { name: '練習の開始位置' }).selectOption('current')
+  await page.getByRole('button', { name: '練習開始', exact: true }).click()
+  await expect(page.locator('.repeat-position')).toHaveText('反復 2回目')
+  expect((await clicks(page)).at(-1)!.frequency).toBe(1400)
+})
+
+test('6/8 solo demo clicks twice per bar, stops on hand/start changes, and remains touch-accessible', async ({ page }) => {
+  await setup(page); await enable(page)
+  await page.getByRole('combobox', { name: '練習する曲' }).selectOption('harvest-time')
+  await expect(page.locator('.position')).toHaveText('1 / 331 ステップ')
+  await page.getByRole('combobox', { name: '再生速度', exact: true }).selectOption('0.5')
+  await freeze(page); await page.getByRole('button', { name: '手本を聴く', exact: true }).click()
+  const interval = 90000 / 108 / 0.5
+  await page.clock.runFor(Math.ceil(interval * 2) + 1)
+  expect((await clicks(page)).map(c => c.frequency)).toEqual([1400, 900, 1400])
+  await page.getByRole('button', { name: '右手', exact: true }).click()
+  const count = (await clicks(page)).length; await page.clock.runFor(10000); expect(await clicks(page)).toHaveLength(count)
+  await page.getByRole('combobox', { name: '手本の開始位置' }).selectOption('measure:46')
+  await page.getByRole('button', { name: '手本を聴く', exact: true }).click()
+  expect((await clicks(page)).at(-1)!.frequency).toBe(1400)
+  await page.getByRole('button', { name: '停止', exact: true }).click()
+  await page.setViewportSize({ width: 390, height: 844 })
+  const label = page.locator('.metronome-controls label')
+  expect((await label.boundingBox())!.height).toBeGreaterThanOrEqual(48)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+  await page.screenshot({ path: 'test-results/metronome-mobile.png', fullPage: true })
+})
+
+test('audio failure is visible and recoverable while MIDI demo continues; leaving the page stops the click', async ({ page }) => {
+  await setup(page); await page.evaluate(() => { window.clickTest.failResume = true })
+  await metronomeToggle(page).check(); await expect(page.locator('.metronome-controls [role=alert]')).toContainText('OFF→ON')
+  await freeze(page); await page.getByRole('button', { name: '手本を聴く', exact: true }).click()
+  await page.clock.runFor(601); await expect(page.locator('.position')).toHaveText('2 / 14 音')
+  expect(await clicks(page)).toHaveLength(0)
+  await page.evaluate(() => { window.clickTest.failResume = false }); await metronomeToggle(page).uncheck(); await metronomeToggle(page).check()
+  await page.clock.runFor(600); expect(await clicks(page)).toHaveLength(1)
+  await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, value: true }); document.dispatchEvent(new Event('visibilitychange')) })
+  await expect(page.locator('.demo-controls')).toHaveAttribute('data-demo-status', 'stopped')
+  const count = (await clicks(page)).length; await page.clock.runFor(10000); expect(await clicks(page)).toHaveLength(count)
+  expect(await page.evaluate(() => window.midiTest.requests)).toBe(1)
+})
+
+test('original PDF fullscreen offers live click ON/OFF without changing the demo or MIDI selection', async ({ page }) => {
+  await setup(page); await enable(page)
+  await page.getByRole('combobox', { name: '練習する曲' }).selectOption('harvest-time')
+  await expect(page.locator('.position')).toHaveText('1 / 331 ステップ')
+  await page.getByRole('button', { name: '元の楽譜', exact: true }).click()
+  await expect(page.locator('.original-pdf canvas')).toHaveAttribute('data-rendered', 'true')
+  await page.getByRole('combobox', { name: '再生速度', exact: true }).selectOption('0.5')
+  await freeze(page); await page.getByRole('button', { name: '手本を聴く', exact: true }).click()
+  await page.getByRole('button', { name: '原譜で全画面練習', exact: true }).click()
+  await page.getByRole('button', { name: '練習・手本の操作', exact: true }).click()
+  await expect(metronomeToggle(page)).toBeVisible(); await expect(metronomeToggle(page)).toBeEnabled()
+  await metronomeToggle(page).uncheck(); const count = (await clicks(page)).length
+  await page.clock.runFor(2000); expect(await clicks(page)).toHaveLength(count)
+  await expect(page.locator('.demo-controls')).toHaveAttribute('data-demo-status', 'playing')
+  await metronomeToggle(page).check(); await page.clock.runFor(1500)
+  expect((await clicks(page)).length).toBeGreaterThan(count)
+  await page.getByRole('button', { name: '手本を停止', exact: true }).click()
+  await expect(page.locator('.metronome-controls')).toHaveAttribute('data-metronome-status', 'ready')
+  await page.getByRole('button', { name: '× 全画面終了', exact: true }).click()
+  await expect(page.getByRole('combobox', { name: '出力機器' })).toHaveValue('cme-out')
+})
