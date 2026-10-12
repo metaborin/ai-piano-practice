@@ -15,7 +15,7 @@ export function DuetControls({ song, part, partnerEnabled, duet, practiceActive,
       </select></label>
       <button onClick={onStop} disabled={!practiceActive}>連弾練習を停止</button>
     </div>
-    <p className="flow-hint">PRIMOは新作の右手単旋律です。手本ボタンでは自分のパートを聴けます。</p>
+    <p className="flow-hint">PRIMOはマイム・マイムの主旋律を弾く右手譜です。手本ボタンでは自分のパートを聴けます。</p>
     {duet.message && <p role={duet.status === 'error' ? 'alert' : 'status'}>{duet.message}</p>}
     {piece.downloads && <details className="duet-downloads"><summary>PRIMO楽譜・合奏確認用データ</summary>
       <div><a href={piece.parts.primo.musicXml.value} download>PRIMO MusicXML</a><a href={piece.downloads.primoMxl} download>PRIMO MXL</a><a href={piece.downloads.primoPdf} target="_blank" rel="noopener">PRIMO PDF</a><a href={piece.downloads.fullScore} download>合奏確認用 MusicXML</a><a href={piece.downloads.fullMxl} download>合奏確認用 MXL</a></div>

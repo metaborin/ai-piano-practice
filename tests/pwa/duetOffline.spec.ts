@@ -13,7 +13,7 @@ test('both duet originals, opposite playback and downloadable artifacts remain u
     await page.getByRole('combobox',{name:'練習する曲'}).selectOption(`maim-maim-duet-${version}`)
     await expect(page.locator('.position')).toHaveText(`1 / ${version==='once'?109:204} ステップ`)
     await page.getByRole('combobox',{name:'練習対象パート'}).selectOption('primo')
-    await expect(page.locator('.position')).toHaveText(`1 / ${version==='once'?87:164} ステップ`)
+    await expect(page.locator('.position')).toHaveText(`1 / ${version==='once'?118:218} ステップ`)
     await page.getByText('PRIMO楽譜・合奏確認用データ',{exact:true}).click()
     for(const a of await page.locator('.duet-downloads a').all()) {
       const href=(await a.getAttribute('href'))!

@@ -101,7 +101,7 @@ it('timed records right, missing, extra and absent attempts at the correct windo
   vi.advanceTimersByTime(Math.ceil(c.timeline.targetStarts[2])-performance.now())
   expect(c.session.getSnapshot().attempts[1].result).toBe('correct')
   vi.advanceTimersByTime(Math.ceil(c.timeline.endMs)-performance.now()+1)
-  expect(c.session.getSnapshot().attempts[2]).toMatchObject({playedMidiNotes:[],missingMidiNotes:[81],result:'incorrect'})
+  expect(c.session.getSnapshot().attempts[2]).toMatchObject({playedMidiNotes:[],missingMidiNotes:[77],result:'incorrect'})
   expect(c.session.getSnapshot().status).toBe('completed')
   expect(c.ons()).toHaveLength(0)
 })

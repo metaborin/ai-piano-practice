@@ -24,7 +24,7 @@ it('both originals are ready together; toggling part replaces target XML, opposi
   await c.selection.setDuetPart('primo')
   expect(c.selection.getSnapshot()).toMatchObject({status:'loading',model:null,plan:null,partnerPlan:null,practiceStart:{kind:'beginning'}})
   c.ready()
-  expect(c.selection.getSnapshot().plan!.targets).toHaveLength(87)
+  expect(c.selection.getSnapshot().plan!.targets).toHaveLength(118)
   expect(c.selection.getSnapshot().partnerPlan!.targets).toHaveLength(109)
   expect(c.position).toHaveBeenLastCalledWith(0)
 })

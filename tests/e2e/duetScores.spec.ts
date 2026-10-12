@@ -13,7 +13,7 @@ for (const version of ['once','original']) for (const extension of ['musicxml','
     await item.getByRole('button', { name: '選択', exact: true }).click()
     await expect(page.getByRole('heading', { level: 1 })).toContainText('PRIMO')
     await expect(page.locator('.practice-controls')).toHaveAttribute('data-practice-status', 'idle')
-    await expect(page.locator('.position')).toHaveText(version === 'once' ? '1 / 87 ステップ' : '1 / 164 ステップ')
+    await expect(page.locator('.position')).toHaveText(version === 'once' ? '1 / 118 ステップ' : '1 / 218 ステップ')
     await expect(page.locator('.score-renderer svg').first()).toBeVisible()
     await expect(page.locator('.score-overview')).toHaveAttribute('data-state', 'ready')
   })

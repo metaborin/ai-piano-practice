@@ -6,12 +6,12 @@ import type { Song, DuetPartId } from './Song'
 
 const duetSong = (version: 'once' | 'original', primo: string, secondo: string): Song => ({
   id: `maim-maim-duet-${version}`, title: `マイム・マイム連弾（${version}版）`, source: 'builtin',
-  composer: 'イスラエル民謡 / PRIMOは新作教育用編曲', partLabel: 'SECONDO · 両手',
+  composer: 'Emanuel Amiran / PRIMOは主旋律の教育用編曲', partLabel: 'SECONDO · 両手',
   musicXml: { type: 'url', value: secondo },
   duet: {
     id: `maim-maim-${version}`, defaultPart: 'secondo',
     parts: {
-      primo: { label: 'PRIMO', description: '高音域・右手の新作単旋律', musicXml: { type: 'url', value: primo } },
+      primo: { label: 'PRIMO', description: '高音域・主旋律の右手譜', musicXml: { type: 'url', value: primo } },
       secondo: { label: 'SECONDO', description: '既存の両手の楽譜', musicXml: { type: 'url', value: secondo } },
     },
     downloads: {

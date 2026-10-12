@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 import type { Page, Route } from '@playwright/test'
 import { mockMidi } from './midiFixture'
 
-const count = (part: string, version: string) => part === 'primo' ? version === 'once' ? 87 : 164 : version === 'once' ? 109 : 204
+const count = (part: string, version: string) => part === 'primo' ? version === 'once' ? 118 : 218 : version === 'once' ? 109 : 204
 async function setup(page:Page,part='primo',version='once') {
   await mockMidi(page)
   await page.goto('./')
@@ -72,7 +72,7 @@ for(const part of ['primo','secondo'])for(const version of ['once','original']) 
     await expect(page.locator('.practice-controls')).toHaveAttribute('data-attempt-count',String(count(part,version)))
     await expect(page.locator('.practice-controls')).toHaveAttribute('data-correct-count','0')
     await expect(page.locator('.practice-feedback')).toHaveText('通し練習が終わりました')
-    expect((await attacks(page)).every(m=>part==='primo'?m.data[1]<=65:m.data[1]>=68)).toBe(true)
+    expect((await attacks(page)).every(m=>part==='primo'?m.data[1]<=65:m.data[1]>=69)).toBe(true)
     await page.getByText('ステップごとの正解・不足・余分を見る',{exact:true}).click()
     await expect(page.locator('.attempt-review li')).toHaveCount(count(part,version))
     await expect(page.locator('.attempt-review li').first()).toContainText('不足')
@@ -93,7 +93,7 @@ test('until-correct waits quietly, resumes on a correct input and stops on part/
   await page.clock.runFor(4000)
   expect(await attacks(page)).toHaveLength(waiting)
   await strike(page,[79])
-  await expect(page.locator('.position')).toHaveText('2 / 87 ステップ')
+  await expect(page.locator('.position')).toHaveText('2 / 118 ステップ')
   await page.getByRole('combobox',{name:'練習対象パート'}).selectOption('secondo')
   await expect(page.locator('.position')).toHaveText('1 / 109 ステップ')
   await expect(page.locator('.practice-controls')).toHaveAttribute('data-practice-status','idle')
@@ -211,8 +211,8 @@ test('built-in duet downloads respect Pages base and touch layout does not overf
 test('timed no-accompaniment review shows right, missing and extra; emergency stop ends its silent clock',async({page})=>{
   await setup(page);await page.getByRole('button',{name:'通し練習',exact:true}).click();await freeze(page)
   await page.getByRole('button',{name:'練習開始',exact:true}).click()
-  await strike(page,[79,60]);await page.clock.runFor(518)
-  await strike(page,[83]);await page.clock.runFor(31000)
+  await strike(page,[79,60]);await page.clock.runFor(259)
+  await strike(page,[79]);await page.clock.runFor(31000)
   await expect(page.locator('.practice-controls')).toHaveAttribute('data-correct-count','1')
   await page.getByText('ステップごとの正解・不足・余分を見る',{exact:true}).click()
   await expect(page.locator('.attempt-review li').first()).toContainText('余分 C4')
