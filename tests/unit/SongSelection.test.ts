@@ -43,7 +43,7 @@ it('last selection wins even when earlier acquisition, rendering and errors arri
   selection.ready(aId, model(0))
   selection.fail(bId, 'old rendering failure')
   expect(selection.getSnapshot()).toMatchObject({ song: songs[2], status: 'ready', source: { id: songs[2].id }, error: null })
-  expect(apply).toHaveBeenCalledExactlyOnceWith(createPracticePlan(model(2)))
+  expect(apply).toHaveBeenCalledExactlyOnceWith(createPracticePlan(model(2)), null)
 })
 
 it('clears practice synchronously, ignores input during load, and enables only a matching rendered model', async () => {
@@ -98,6 +98,6 @@ it('retains a complex rendered model and hands its normalized targets to practic
   const model = { ...parseFixture('c-grand-staff'), id: songs[0].id, musicXml: 'xml-0' }
   selection.ready(selection.getSnapshot().requestId, model)
   expect(selection.getSnapshot()).toMatchObject({ status: 'ready', model, canPractice: true })
-  expect(apply).toHaveBeenCalledExactlyOnceWith(createPracticePlan(model))
+  expect(apply).toHaveBeenCalledExactlyOnceWith(createPracticePlan(model), null)
   expect(practice.getSnapshot()).toMatchObject({ totalNotes: 1, expectedMidiNotes: [48, 55, 72, 76] })
 })

@@ -3,18 +3,22 @@ import type { DemoPlayer } from '../audio/DemoPlayer'
 import type { MidiOutputManager } from '../midi/MidiOutputManager'
 import type { PracticeSession } from '../practice/PracticeSession'
 import { SongSelection } from './SongSelection'
+import type { DuetController } from '../practice/DuetController'
 
-export function useSongSelection(session: PracticeSession, player: DemoPlayer, output: MidiOutputManager) {
+export function useSongSelection(session: PracticeSession, player: DemoPlayer, output: MidiOutputManager, duet: DuetController) {
   const [selection] = useState(() => new SongSelection(null, {
     reset: () => {
+      session.stop()
+      duet.loadPlans(null, null)
       session.loadPlan(null)
       player.loadPlan(null)
       // Also release an active C4 test, retaining device selection and MIDIAccess.
       if (output.getSnapshot().playing) output.stopAllNotes()
     },
-    apply: (model) => {
+    apply: (model, partner) => {
       player.loadPlan(model)
       session.loadPlan(model)
+      duet.loadPlans(model, partner)
     },
     position: session.setStartTarget,
   }))

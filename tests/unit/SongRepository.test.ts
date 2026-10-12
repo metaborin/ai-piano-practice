@@ -5,14 +5,16 @@ import type { SongRepository } from '../../src/songs/SongRepository'
 
 const repository: SongRepository = new BuiltInSongRepository()
 
-it('lists the existing three songs with stable IDs, titles, builtin sources and XML locations', async () => {
+it('lists the existing songs and both duet versions with stable IDs and serializable XML locations', async () => {
   const songs = await repository.listSongs()
   expect(songs.map(({ id, title, source }) => ({ id, title, source }))).toEqual([
     { id: 'twinkle-opening', title: 'きらきら星', source: 'builtin' },
     { id: 'do-re-mi', title: 'ドレミの練習', source: 'builtin' },
     { id: 'short-melody', title: '短いメロディ', source: 'builtin' },
+    { id: 'maim-maim-duet-once', title: 'マイム・マイム連弾（once版）', source: 'builtin' },
+    { id: 'maim-maim-duet-original', title: 'マイム・マイム連弾（original版）', source: 'builtin' },
   ])
-  expect(new Set(songs.map((song) => song.id)).size).toBe(3)
+  expect(new Set(songs.map((song) => song.id)).size).toBe(5)
   for (const song of songs) {
     expect(song.musicXml.type).toBe('url')
     expect(song.musicXml.value).toContain('.musicxml')

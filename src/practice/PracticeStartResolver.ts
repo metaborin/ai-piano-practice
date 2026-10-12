@@ -6,6 +6,7 @@ import type { PracticePlan } from './PracticePlan'
 import type { RepeatPosition } from '../score/ScoreNavigation'
 
 export type PracticeStart = { readonly kind: 'beginning' } | { readonly kind: 'measure'; readonly measureIndex: number }
+  | { readonly kind: 'current'; readonly occurrenceIndex: number }
 export type PracticeStartPosition = {
   readonly requested: PracticeStart
   readonly requestedMeasure: ScoreMeasure | null
@@ -19,6 +20,13 @@ export type PracticeStartPosition = {
 
 /** Practice uses new attacks already filtered by the plan; it never synthesizes a tie attack. */
 export function resolvePracticeStart(plan: PracticePlan, requested: PracticeStart = { kind: 'beginning' }, preferredPass?: RepeatPosition): PracticeStartPosition {
+  if (requested.kind === 'current') {
+    const occurrence = plan.sequence.occurrences[requested.occurrenceIndex]
+    const measure = occurrence ? plan.score.measures[occurrence.sourceMoment.measureIndex] : null
+    return { requested, requestedMeasure: measure, resolvedTargetIndex: occurrence?.sourceTargetIndex ?? null,
+      resolvedOccurrenceIndex: occurrence ? requested.occurrenceIndex : null, resolvedMeasure: measure, adjusted: false,
+      reason: occurrence ? 'exact' : 'unavailable', message: occurrence ? '現在の位置・反復回数から開始します。' : '現在位置から開始できません。最初から、または小節を選んでください。' }
+  }
   const measure = requested.kind === 'beginning' ? plan.score.measures[0] : scoreMeasure(plan.score, requested.measureIndex)
   const index = requested.kind === 'beginning' ? (plan.targets.length ? 0 : -1) : firstTargetInOrAfterMeasure(plan, requested.measureIndex)
   const target = plan.targets[index]

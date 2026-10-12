@@ -23,6 +23,13 @@ export function PracticeFeedback({ practice, midiConnected }: Props) {
     {runThrough && status === 'completed' && <div className="run-through-summary">
       <p>正しく弾けた：{practice.correctNoteCount} / {practice.attempts.length} ステップ</p>
       <p>確認したい小節：{[...new Set(practice.attempts.filter(a => a.result === 'incorrect').map(a => a.measureNumber))].map(number => `${number}小節目`).join('、') || 'ありません'}</p>
+      <details className="attempt-review"><summary>ステップごとの正解・不足・余分を見る</summary>
+        <ol>{practice.attempts.map((attempt, index) => <li key={attempt.sequenceOccurrenceId}>
+          {index + 1}. {attempt.measureNumber}小節目：{attempt.result === 'correct' ? '正解' : '確認'}
+          {attempt.missingMidiNotes.length > 0 && ` / 不足 ${attempt.missingMidiNotes.map(midiNoteName).join('・')}`}
+          {attempt.unexpectedMidiNotes.length > 0 && ` / 余分 ${attempt.unexpectedMidiNotes.map(midiNoteName).join('・')}`}
+        </li>)}</ol>
+      </details>
     </div>}
   </div>
 }

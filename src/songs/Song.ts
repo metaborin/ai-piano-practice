@@ -13,6 +13,16 @@ export type MusicXmlLocation =
   | { readonly type: 'url'; readonly value: string }
   | { readonly type: 'text'; readonly value: string }
 
+export type DuetPartId = 'primo' | 'secondo'
+export type DuetPart = { readonly label: string; readonly description: string; readonly musicXml: MusicXmlLocation }
+/** Two separate single-part originals; practice and playback never share a pitch array. */
+export type DuetPiece = {
+  readonly id: string
+  readonly defaultPart: DuetPartId
+  readonly parts: Readonly<Record<DuetPartId, DuetPart>>
+  readonly downloads?: { readonly primoMxl: string; readonly primoPdf: string; readonly fullScore: string; readonly fullMxl: string }
+}
+
 /** Reference only. The original PDF/image is stored separately from musical data. */
 export type OriginalScore = {
   readonly type: 'pdf' | 'image'
@@ -40,6 +50,7 @@ export type Song = {
   readonly originalFileName?: string
   readonly fileFormat?: 'musicxml' | 'mxl'
   readonly compatibility?: Compatibility
+  readonly duet?: DuetPiece
 }
 
 export type ImportedSong = Song & {

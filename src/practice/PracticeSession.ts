@@ -38,6 +38,11 @@ export class PracticeSession {
   private blockedUntilRelease = new Set<string>()
   private listeners = new Set<() => void>()
   private resumeStatus: 'idle' | 'practicing' | 'completed' | null = null
+  private clockMode: 'input' | 'paced' | 'timed' = 'input'
+  private pacedResult: MomentMatchFeedback | null = null
+  private timedPlayed = new Set<number>()
+  private targetStartedAt = 0
+  private suppressInput = 0
   private snapshot: PracticeSnapshot = {
     flowMode: 'until-correct', attempts: [],
     currentNoteIndex: 0, totalNotes: 0, expectedMidiNote: null, expectedMidiNotes: [],
@@ -75,6 +80,37 @@ export class PracticeSession {
     this.runMatcher.reset()
     this.activeNotes.forEach(key => this.blockedUntilRelease.add(key))
     this.activeNotes.clear()
+    this.pacedResult = null; this.timedPlayed.clear(); this.targetStartedAt = performance.now()
+  }
+  /** The duet transport owns time; the existing matcher still owns pitch decisions. */
+  setClockMode = (mode: 'input' | 'paced' | 'timed') => { this.resetInput(); this.clockMode = mode }
+  isTargetSatisfied = () => this.pacedResult?.status === 'correct'
+  withoutMidiInput = <T,>(action: () => T): T => {
+    ++this.suppressInput
+    try { return action() } finally { --this.suppressInput }
+  }
+  stop = () => {
+    this.resetInput(); this.resumeStatus = null
+    if (this.snapshot.status !== 'idle') this.publish({ status: 'idle', feedback: null, matchFeedback: null })
+  }
+  finishClockTarget = () => {
+    if (this.snapshot.status !== 'practicing') return false
+    if (this.clockMode === 'paced') {
+      if (!this.pacedResult) return false
+      const result = this.pacedResult
+      this.resetInput()
+      this.advanceCorrect(result)
+      return true
+    }
+    if (this.clockMode !== 'timed') return false
+    const expected = this.snapshot.expectedMidiNotes, played = [...this.timedPlayed].sort((a,b) => a-b)
+    const missing = expected.filter(n => !this.timedPlayed.has(n)), unexpected = played.filter(n => !expected.includes(n))
+    const result: AttemptMatch = { expectedMidiNotes: [...expected], playedMidiNotes: played,
+      matchedMidiNotes: expected.filter(n => this.timedPlayed.has(n)), missingMidiNotes: missing, unexpectedMidiNotes: unexpected,
+      result: missing.length || unexpected.length ? 'incorrect' : 'correct', startedAt: this.targetStartedAt, completedAt: performance.now() }
+    this.resetInput()
+    this.handleAttempt(result)
+    return true
   }
   /** The resolver/coordinator owns score positions; this machine accepts only a validated index. */
   setStartTarget = (index: number | null) => {
@@ -133,6 +169,7 @@ export class PracticeSession {
   dispose = () => { this.matcher.reset(); this.runMatcher.reset() }
 
   handleMidiEvent = (event: MidiNoteEvent) => {
+    if (this.suppressInput) return
     const key = `${event.channel}:${event.midiNote}`
     if (event.type === 'noteoff' || event.velocity === 0) {
       this.activeNotes.delete(key)
@@ -142,6 +179,8 @@ export class PracticeSession {
     if (this.activeNotes.has(key) || this.blockedUntilRelease.has(key)) return
     this.activeNotes.add(key)
     if (this.snapshot.status !== 'practicing' || this.snapshot.expectedMidiNote === null) return
+    if (this.clockMode === 'timed') { this.timedPlayed.add(event.midiNote); return }
+    if (this.pacedResult) return
 
     if (this.snapshot.flowMode === 'run-through') {
       this.runMatcher.flushExpired()
@@ -170,6 +209,15 @@ export class PracticeSession {
       this.publish({ feedback: result.status === 'pending' ? null : 'incorrect', matchFeedback })
       return
     }
+    if (this.clockMode === 'paced') {
+      this.pacedResult = result
+      this.publish({ feedback: 'correct', matchFeedback })
+      return
+    }
+    this.advanceCorrect(result)
+  }
+  private advanceCorrect(result: MomentMatchFeedback) {
+    const matchFeedback = { ...result, targetIndex: this.snapshot.currentNoteIndex }
     const feedback = 'correct'
     const correctNoteCount = this.snapshot.correctNoteCount + 1
     if (this.snapshot.currentNoteIndex === this.targets.length - 1) {

@@ -26,6 +26,8 @@ import { FLOW_LABELS } from './practice/PracticeAttemptResult'
 import type { PracticeFlowMode } from './practice/PracticeAttemptResult'
 import { useOriginalFullscreen } from './components/useOriginalFullscreen'
 import { PwaControls } from './pwa/PwaControls'
+import { useDuetController } from './practice/useDuetController'
+import { DuetControls } from './components/DuetControls'
 import './App.css'
 
 export default function App() {
@@ -33,7 +35,12 @@ export default function App() {
   const { midi, connect, selectInput, events, output, outputManager, selectOutput, playTestNote, stopAllNotes, retryOutput } = useMidi()
   const { session, practice, start, restart, moveCursor } = usePracticeSession(events)
   const { demo, player } = useDemoPlayer(outputManager, session)
-  const { selection, songState } = useSongSelection(session, player, outputManager)
+  const { controller, duet } = useDuetController(outputManager, session)
+  const { selection, songState } = useSongSelection(session, player, outputManager, controller)
+  const [partnerEnabled, setPartnerEnabled] = useState(false)
+  const duetActive = duet.status === 'playing' || duet.status === 'waiting'
+  const emergencyStop = () => { controller.stop(); stopAllNotes() }
+  const stopDuetPractice = () => { session.stop(); controller.stop() }
   const [systems, setSystems] = useState<{ requestId: number; map: ScoreSystems } | null>(null)
   const acceptSystems = useCallback((requestId: number, map: ScoreSystems) => setSystems({ requestId, map }), [])
   useEffect(() => {
@@ -62,7 +69,7 @@ export default function App() {
   const changeFlow = (mode: PracticeFlowMode) => {
     if (mode === session.getSnapshot().flowMode) return
     // This explicit practice-method change ends the session; display changes never do.
-    session.setFlowMode(mode)
+    controller.stop(); session.setFlowMode(mode)
     player.stop(); player.resetDisplay()
     if (outputManager.getSnapshot().playing) outputManager.stopAllNotes()
     focusCursor()
@@ -84,18 +91,34 @@ export default function App() {
   const cursorIndex = showDemoCursor ? demo.currentNoteIndex : practice.currentNoteIndex
   const cursorOccurrence = songState.plan?.sequence.occurrences[cursorIndex]
   const noteCount = practice.totalNotes
-  const practiceBlocked = !scoreReady || practice.startTargetIndex === null || demo.status === 'playing' || output.playing
+  const practiceBlocked = !scoreReady || practice.startTargetIndex === null || demo.status === 'playing' || (output.playing && !duetActive)
+    || (!!songState.song?.duet && partnerEnabled && output.status !== 'connected')
   const cursorMomentId = showDemoCursor ? demo.cursorMomentId : practice.startTargetIndex === null ? null : cursorOccurrence?.sourceMoment.id ?? null
   const currentMoment = showDemoCursor ? songState.model?.moments.find(moment => moment.id === cursorMomentId) : cursorOccurrence?.sourceMoment
   const currentMeasure = currentMoment?.measureNumber
   const currentRepeat = currentMoment && songState.model?.navigation.repeats.find(region => currentMoment.measureIndex >= region.startMeasureIndex && currentMoment.measureIndex <= region.endMeasureIndex)
   const repeatPass = currentRepeat ? cursorOccurrence?.repeatRegionId === currentRepeat.id ? cursorOccurrence.repeatPass : 1 : undefined
   const positionUnit = songState.model?.practiceCompatibility === 'simpleMelody' ? '音' : 'ステップ'
-  const startPractice = () => { if (!practiceBlocked) { focusCursor(); player.resetDisplay(); start() } }
-  const restartPractice = () => { if (!practiceBlocked) { focusCursor(); player.resetDisplay(); restart() } }
+  const beginPractice = (again: boolean) => {
+    if (practiceBlocked) return
+    focusCursor(); player.resetDisplay()
+    const requested = songState.practiceStart.kind === 'current' && !again
+      ? { kind: 'current' as const, occurrenceIndex: session.getSnapshot().currentNoteIndex } : songState.practiceStart
+    if (requested.kind === 'current' && !again) selection.setPracticeStart(requested)
+    if (songState.song?.duet && (partnerEnabled || practice.flowMode === 'run-through')) controller.start(requested, partnerEnabled)
+    else if (again) restart()
+    else start()
+  }
+  const startPractice = () => beginPractice(false)
+  const restartPractice = () => {
+    if (practiceBlocked) return
+    controller.stop()
+    beginPractice(true)
+  }
   const missingNoteIds = useMemo(() => practice.flowMode === 'run-through' ? [] : missingSourceNoteIds(songState.plan, practice.matchFeedback), [songState.plan, practice.matchFeedback, practice.flowMode])
   const playDemo = (choice: DemoChoice) => {
     if (!scoreReady) return
+    controller.stop()
     if (choice === 'current') {
       const position = session.getSnapshot()
       player.start({ kind: 'current', occurrenceIndex: position.startTargetIndex === null ? null : position.currentNoteIndex, completed: position.status === 'completed' })
@@ -106,15 +129,15 @@ export default function App() {
     <main className="app">
       <header className="app-header">
         <div>
-          <p className="eyebrow">ピアノ練習 · Phase 2F</p>
+          <p className="eyebrow">ピアノ練習 · Phase 2 · 一人連弾</p>
           <h1>{title}</h1>
-          <p className="subtitle">{songState.song?.partLabel ?? '曲を選んで練習しましょう'}</p>
+          <p className="subtitle">{songState.source?.partLabel ?? songState.song?.partLabel ?? '曲を選んで練習しましょう'}</p>
         </div>
         <MidiStatus status={midi.status} />
       </header>
       <SongLibrary library={library} selectedId={songState.song?.id ?? ''} onSelect={selectSong} onRetry={retry} onAdd={addSong} onDelete={removeSong} originalRepository={songRepository} onOriginalSaved={originalSaved} />
       <div ref={fullscreenRoot} className={`practice-workspace${isFullscreen ? ' original-fullscreen' : ''}`} data-fullscreen={isFullscreen}>
-      <PwaControls busy={practice.status === 'practicing' || demo.status === 'playing' || output.playing} beforeReload={() => { player.stop(); if (outputManager.getSnapshot().playing) outputManager.stopAllNotes() }} />
+      <PwaControls busy={practice.status === 'practicing' || demo.status === 'playing' || output.playing} beforeReload={() => { controller.stop(); player.stop(); if (outputManager.getSnapshot().playing) outputManager.stopAllNotes() }} />
       <div className="fullscreen-toolbar" hidden={!isFullscreen}>
         <button className="fullscreen-exit" onClick={exitFullscreen}>× 全画面終了</button>
         <div className="original-zoom" role="group" aria-label="原譜の拡大縮小">
@@ -124,18 +147,23 @@ export default function App() {
         </div>
         <button aria-expanded={fullscreenControls} aria-controls="practice-setup practice-actions" onClick={() => setFullscreenControls(value => !value)}>練習・手本の操作</button>
         {showDemoCursor && <button onClick={player.stop}>手本を停止</button>}
+        {songState.song?.duet && practice.status === 'practicing' && <button onClick={stopDuetPractice}>連弾練習を停止</button>}
       </div>
       <div id="practice-setup" className="practice-setup" hidden={isFullscreen && !fullscreenControls}>
+      {songState.song?.duet && <DuetControls song={songState.song} part={songState.duetPart} partnerEnabled={partnerEnabled} duet={duet} practiceActive={practice.status === 'practicing'}
+        onPart={part => { focusCursor(); void selection.setDuetPart(part) }}
+        onPartner={enabled => { session.stop(); controller.stop(); player.stop(); player.resetDisplay(); if (outputManager.getSnapshot().playing) outputManager.stopAllNotes(); selection.setPracticeStart(songState.practiceStart); setPartnerEnabled(enabled); focusCursor() }}
+        onStop={stopDuetPractice} />}
       {songState.model?.staffCount === 2 && <section className="practice-mode" aria-label="練習するパート">
         <h2>練習するパート</h2>
-        <div className="mode-buttons">{(['right', 'left', 'both'] as PracticeMode[]).map((mode) => <button key={mode} aria-pressed={songState.mode === mode} onClick={() => { focusCursor(); selection.setMode(mode, practice.currentNoteIndex) }}>{MODE_LABELS[mode]}</button>)}</div>
+        <div className="mode-buttons">{(['right', 'left', 'both'] as PracticeMode[]).map((mode) => <button key={mode} aria-pressed={songState.mode === mode} onClick={() => { focusCursor(); selection.setMode(mode, session.getSnapshot().currentNoteIndex) }}>{MODE_LABELS[mode]}</button>)}</div>
       </section>}
       <section className="practice-flow" aria-label="練習方法">
         <h2>練習方法</h2>
         <div className="mode-buttons">{(['until-correct', 'run-through'] as const).map(mode => <button key={mode} aria-pressed={practice.flowMode === mode} onClick={() => changeFlow(mode)}>{FLOW_LABELS[mode]}</button>)}</div>
-        <p className="flow-hint">{practice.flowMode === 'run-through' ? '入力した演奏を順番に記録して進みます。無音で飛ばした音は検出しません。' : '正しく弾けたら次へ進みます。'}</p>
+        <p className="flow-hint">{practice.flowMode === 'run-through' ? songState.song?.duet ? '曲の速さで最後まで進みます。弾かなかった音も不足として記録します。' : '入力した演奏を順番に記録して進みます。無音で飛ばした音は検出しません。' : partnerEnabled && songState.song?.duet ? '正しい音を待つ間、相手パートも区切りで待ちます。正解したら一緒に続けます。' : '正しく弾けたら次へ進みます。'}</p>
       </section>
-      <PracticeStartControls plan={songState.plan} requested={songState.practiceStart}
+      <PracticeStartControls plan={songState.plan} requested={songState.practiceStart} currentIndex={songState.song?.duet ? practice.currentNoteIndex : undefined}
         onChange={start => { focusCursor(); selection.setPracticeStart(start) }} />
       </div>
       <section className="score-card" aria-label={songState.song ? title + 'の楽譜' : '楽譜'} aria-busy={!scoreReady && songState.status === 'loading'}>
@@ -170,9 +198,9 @@ export default function App() {
         {originalScore && <OriginalScoreView key={`${songState.requestId}:${originalScore.storageId}`} original={originalScore} repository={songRepository} active={originalActive} zoom={zoom} />}
       </section>
       <div id="practice-actions" className="practice-actions" hidden={isFullscreen && !fullscreenControls}>
-      <DemoControls key={`${songState.requestId}:${songState.mode}`} demo={demo} plan={songState.plan} outputReady={scoreReady && output.status === 'connected'} outputBusy={output.playing} currentAvailable={practice.startTargetIndex !== null} onPlay={playDemo} onStop={player.stop} />
+      <DemoControls key={`${songState.requestId}:${songState.mode}`} demo={demo} plan={songState.plan} outputReady={scoreReady && output.status === 'connected'} outputBusy={output.playing && !duetActive} currentAvailable={practice.startTargetIndex !== null} onPlay={playDemo} onStop={player.stop} />
       <PracticeControls practice={practice} midiConnected={midi.status === 'connected'} blocked={practiceBlocked} onStart={startPractice} onRestart={restartPractice} />
-      {isFullscreen && <button onClick={stopAllNotes}>すべての音を停止</button>}
+      {isFullscreen && <button onClick={emergencyStop}>すべての音を停止</button>}
       </div>
       </div>
       <section className="midi-connection" aria-label="MIDI接続設定">
@@ -195,8 +223,8 @@ export default function App() {
       <DeveloperControls practice={practice} model={songState.model} plan={songState.plan} song={songState.song} error={songState.error} cursorIndex={cursorIndex} blocked={!scoreReady || showDemoCursor} onPrevious={() => moveCursor(-1)} onNext={() => moveCursor(1)}
         demo={demo} demoDiagnostics={player.getDiagnostics()} outputDiagnostics={outputManager.getDiagnostics()} midiTrace={outputManager.trace} />
       <MidiDebugPanel latest={midi.latestEvent} lastNoteOn={midi.lastNoteOn} lastNoteOff={midi.lastNoteOff} />
-      <MidiOutputPanel output={output} inputStatus={midi.status} onSelect={selectOutput} onPlay={playTestNote} onStop={stopAllNotes} onRetry={retryOutput} />
-      <footer>Phase 2F · 曲を選んで、順番に弾いてみよう</footer>
+      <MidiOutputPanel output={output} inputStatus={midi.status} onSelect={selectOutput} onPlay={playTestNote} onStop={emergencyStop} onRetry={retryOutput} />
+      <footer>Phase 2 · 一人連弾 · 曲を選んで、順番に弾いてみよう</footer>
     </main>
   )
 }

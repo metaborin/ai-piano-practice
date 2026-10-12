@@ -32,7 +32,7 @@ export const pwaOptions: Partial<VitePWAOptions> = {
     skipWaiting: false,
     clientsClaim: true,
     // Include lazy PDF.js, its worker, CMaps, fonts and decoders before going offline.
-    globPatterns: ['**/*.{html,js,mjs,css,svg,png,webmanifest,musicxml}', 'pdfjs/**/*'],
+    globPatterns: ['**/*.{html,js,mjs,css,svg,png,webmanifest,musicxml,mxl,pdf}', 'pdfjs/**/*'],
     maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
     navigateFallback: `${APP_BASE}index.html`,
     navigateFallbackAllowlist: [/^\/ai-piano-practice\//],

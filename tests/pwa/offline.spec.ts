@@ -32,7 +32,9 @@ test('manifest, Chrome installability, scoped worker and complete static precach
   expect(cached.scope).toBe(new URL('/ai-piano-practice/', baseURL).href)
   expect(cached.state).toBe('activated')
   expect(cached.entries.every(url => new URL(url).pathname.startsWith('/ai-piano-practice/'))).toBe(true)
-  expect(cached.entries.filter(url => url.includes('.musicxml'))).toHaveLength(3)
+  expect(cached.entries.filter(url => url.includes('.musicxml'))).toHaveLength(9)
+  expect(cached.entries.filter(url => url.includes('/duet-scores/') && new URL(url).pathname.endsWith('.mxl'))).toHaveLength(4)
+  expect(cached.entries.filter(url => url.includes('/duet-scores/') && new URL(url).pathname.endsWith('.pdf'))).toHaveLength(2)
   for (const piece of ['index.html', 'manifest.webmanifest', 'opensheetmusicdisplay', 'pdf.worker', '/pdfjs/cmaps/', '/pdfjs/standard_fonts/', '/pdfjs/wasm/']) expect(cached.entries.some(url => url.includes(piece))).toBe(true)
 })
 
