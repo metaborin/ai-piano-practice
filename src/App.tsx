@@ -86,6 +86,8 @@ export default function App() {
     await deleteSong(id)
   }
   const title = songState.song?.title ?? 'AIピアノ練習アプリ'
+  const selectedDuetPart = songState.song?.duet?.parts[songState.duetPart]
+  const partLabel = selectedDuetPart ? `${selectedDuetPart.label} · ${selectedDuetPart.description}` : songState.song?.partLabel
   const scoreReady = songState.status === 'ready' && songState.canPractice
   const showDemoCursor = demo.status === 'playing'
   const cursorIndex = showDemoCursor ? demo.currentNoteIndex : practice.currentNoteIndex
@@ -131,7 +133,7 @@ export default function App() {
         <div>
           <p className="eyebrow">ピアノ練習 · Phase 2 · 一人連弾</p>
           <h1>{title}</h1>
-          <p className="subtitle">{songState.source?.partLabel ?? songState.song?.partLabel ?? '曲を選んで練習しましょう'}</p>
+          <p className="subtitle">{partLabel ?? '曲を選んで練習しましょう'}</p>
         </div>
         <MidiStatus status={midi.status} />
       </header>

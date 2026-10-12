@@ -181,6 +181,13 @@ test('partner acquisition/parse failure clears the score and target, and another
   await expect(page.locator('.position')).toHaveText('— / — 音')
   await expect(page.locator('.score-renderer')).toHaveCount(0)
   await expect(page.getByRole('button',{name:'手本を聴く',exact:true})).toBeDisabled()
+  // The same broken XML is now the selected part. Failure must still name the
+  // selected PRIMO, never the piece's default SECONDO or its previous score.
+  await page.getByRole('combobox',{name:'練習対象パート'}).selectOption('primo')
+  await expect(page.locator('.subtitle')).toContainText('PRIMO')
+  await expect(page.getByRole('alert')).toBeVisible()
+  await expect(page.locator('.score-renderer')).toHaveCount(0)
+  await expect(page.locator('.position')).toHaveText('— / — 音')
   await page.getByRole('combobox',{name:'練習する曲'}).selectOption('maim-maim-duet-once')
   await expect(page.locator('.position')).toHaveText('1 / 109 ステップ')
 })
